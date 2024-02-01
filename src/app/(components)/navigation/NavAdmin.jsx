@@ -9,8 +9,9 @@ const NavAdmin = () => {
   console.log(pathname);
   return (
     <nav className={styles.navbar}>
+      <div className={styles.leftLinks} />
       <div className={styles.rightLinks}>
-        <Link href="/admin">User</Link>
+        <Link href="/admin">Admin</Link>
       </div>
     </nav>
   );
