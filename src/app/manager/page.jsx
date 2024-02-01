@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
 const ManagerHome = () => {
-  return (
-    <div>ManagerHome</div>
-  )
-}
+  return <div>ManagerHome</div>;
+};
 
-export default ManagerHome
+export default ManagerHome;

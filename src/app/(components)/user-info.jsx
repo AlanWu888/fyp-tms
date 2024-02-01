@@ -11,23 +11,23 @@ const UserInfo = () => {
   const { data: session } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push('/');
+      router.push("/");
     },
   });
 
   // redirect user based on user role
   useEffect(() => {
-    let role = session?.user?.role
+    let role = session?.user?.role;
     if (role == "admin") {
-      router.push('/admin/create-user');
+      router.push("/admin/create-user");
     }
     if (role == "user") {
-      router.push('/user');
+      router.push("/user");
     }
     if (role == "manager") {
-      router.push('/manager');
+      router.push("/manager");
     }
-  }, [])
+  }, [router, session?.user?.role]);
 
   return (
     <div className="grid place-items-center h-screen">
@@ -50,6 +50,6 @@ const UserInfo = () => {
       </div>
     </div>
   );
-}
+};
 
 export default UserInfo;
