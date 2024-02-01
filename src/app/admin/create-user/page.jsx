@@ -1,10 +1,8 @@
-import CreateUserForm from '@/app/(components)/forms/CreateUserForm'
-import React from 'react'
+import CreateUserForm from "@/app/(components)/forms/CreateUserForm";
+import React from "react";
 
 const CreateUser = () => {
-  return (
-    <CreateUserForm/>
-  )
-}
+  return <CreateUserForm />;
+};
 
-export default CreateUser
+export default CreateUser;

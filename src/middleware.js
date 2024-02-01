@@ -31,7 +31,9 @@ export default withAuth(
     callbacks: {
       authorised: ({ token }) => !!token,
     },
-  }
+  },
 );
 
-export const config = { matcher: ["/admin", "/user", "/manager", "/role-redirect"] };
+export const config = {
+  matcher: ["/admin", "/user", "/manager", "/role-redirect"],
+};
