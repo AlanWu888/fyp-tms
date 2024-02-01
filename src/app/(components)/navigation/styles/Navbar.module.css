@@ -1,0 +1,38 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  background-color: #281981;
+  color: white;
+  padding-left: 10%;
+  padding-right: 10%;
+  font-weight: bold;
+}
+
+.leftLinks,
+.rightLinks {
+  display: flex;
+}
+
+.leftLinks a,
+.rightLinks a {
+  padding: 1rem;
+  text-decoration: none;
+  transition: color 0.5s;
+  transition: background-color 0.5s;
+}
+
+.leftLinks a:hover,
+.rightLinks a:hover {
+  background-color: #2e2e2e;
+  color: white;
+}
+
+.active {
+  color: #281981;
+  background-color: #678cea;
+}
+
+.inactive {
+  background-color: #281981;
+  font-weight: normal;
+}
