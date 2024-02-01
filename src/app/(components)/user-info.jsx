@@ -3,15 +3,31 @@
 import { signOut } from "next-auth/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
-export default function UserInfo() {
+const UserInfo = () => {
   const router = useRouter();
+
   const { data: session } = useSession({
     required: true,
     onUnauthenticated() {
       router.push('/');
     },
   });
+
+  // redirect user based on user role
+  useEffect(() => {
+    let role = session?.user?.role
+    if (role == "admin") {
+      router.push('/admin/create-user');
+    }
+    if (role == "user") {
+      router.push('/user');
+    }
+    if (role == "manager") {
+      router.push('/manager');
+    }
+  }, [])
 
   return (
     <div className="grid place-items-center h-screen">
@@ -35,3 +51,5 @@ export default function UserInfo() {
     </div>
   );
 }
+
+export default UserInfo;
