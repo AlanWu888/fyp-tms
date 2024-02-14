@@ -3,29 +3,25 @@ import mongoose, { Schema } from "mongoose";
 mongoose.connect(process.env.MONGODB_URI);
 mongoose.Promise = global.Promise;
 
-const userSchema = new Schema(
+const logSchema = new Schema(
   {
-    firstname: {
+    clientName: {
       type: String,
       required: true,
     },
-    lastname: {
+    projectName: {
       type: String,
       required: true,
     },
-    capacity: {
-      type: Number,
-      required: true,
-    },
-    email: {
+    addedBy: {
       type: String,
       required: true,
     },
-    password: {
+    messageDescription: {
       type: String,
       required: true,
     },
-    role: {
+    messageType: {
       type: String,
       required: true,
     },
@@ -35,6 +31,7 @@ const userSchema = new Schema(
   },
 );
 
-const User = mongoose.models.User || mongoose.model("User", userSchema);
+const LogMessage =
+  mongoose.models.LogMessage || mongoose.model("LogMessage", logSchema);
 
-export default User;
+export default LogMessage;

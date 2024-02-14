@@ -3,29 +3,28 @@ import mongoose, { Schema } from "mongoose";
 mongoose.connect(process.env.MONGODB_URI);
 mongoose.Promise = global.Promise;
 
-const userSchema = new Schema(
+const TaskSchema = new Schema(
   {
-    firstname: {
+    clientName: {
       type: String,
       required: true,
     },
-    lastname: {
+    projectName: {
       type: String,
       required: true,
     },
-    capacity: {
-      type: Number,
-      required: true,
-    },
-    email: {
+    taskDescription: {
       type: String,
       required: true,
     },
-    password: {
+    taskNotes: {
+      type: String,
+    },
+    taskType: {
       type: String,
       required: true,
     },
-    role: {
+    addedBy: {
       type: String,
       required: true,
     },
@@ -35,6 +34,6 @@ const userSchema = new Schema(
   },
 );
 
-const User = mongoose.models.User || mongoose.model("User", userSchema);
+const Task = mongoose.models.Task || mongoose.model("Task", TaskSchema);
 
-export default User;
+export default Task;
