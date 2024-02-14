@@ -2,6 +2,7 @@ import User from "@/app/(models)/user";
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 
+// add a new user
 export async function POST(req) {
   try {
     const body = await req.json();
@@ -30,7 +31,9 @@ export async function POST(req) {
     await User.create(userData);
     return NextResponse.json({ message: "User Created." }, { status: 201 });
   } catch (error) {
-    console.log(err);
+    console.log(error);
     return NextResponse.json({ message: "Error", error }, { status: 500 });
   }
 }
+
+// edit user details

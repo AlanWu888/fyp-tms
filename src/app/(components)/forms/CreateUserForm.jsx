@@ -45,14 +45,35 @@ const UserForm = () => {
         className="flex flex-col gap-3 w-1/2"
       >
         <h1>Create New User</h1>
-        <label>Full Name</label>
+        <label>First Name</label>
         <input
-          id="name"
-          name="name"
+          id="firstname"
+          name="firstname"
           type="text"
           onChange={handleChange}
           required={true}
-          value={formData.name}
+          value={formData.firstname}
+          className="rounded-md border border-gray-200 py-2 px-6 bg-zinc-100/40"
+        />
+
+        <label>Last Name</label>
+        <input
+          id="lastname"
+          name="lastname"
+          type="text"
+          onChange={handleChange}
+          required={true}
+          value={formData.lastname}
+          className="rounded-md border border-gray-200 py-2 px-6 bg-zinc-100/40"
+        />
+        <label>Capacity</label>
+        <input
+          id="capacity"
+          name="capacity"
+          type="number"
+          onChange={handleChange}
+          required={true}
+          value={formData.capacity}
           className="rounded-md border border-gray-200 py-2 px-6 bg-zinc-100/40"
         />
         <label>Email</label>
