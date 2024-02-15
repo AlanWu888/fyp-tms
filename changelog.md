@@ -40,3 +40,13 @@ BT-48 Add loading spinner to cover the role-redirect screen
 - Admin pages were not routed properly previously, this has been fixed
 - Admin Navbar is now showing
 - General formatting
+
+====================================================================================================
+
+## [0.0] - 15/02/2024
+
+BT-49 change text input to dropdown menu in user creation form
+
+### Fixes
+
+- Text input for user role changed to dropdown menu
