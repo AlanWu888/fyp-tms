@@ -7,7 +7,7 @@ import React, { useState } from "react";
 
 const UserForm = () => {
   const router = useRouter();
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({ role: "none" });
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (e) => {
@@ -17,11 +17,18 @@ const UserForm = () => {
       ...prevState,
       [name]: value,
     }));
+    console.log(JSON.stringify(formData));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMessage("");
+
+    if (formData.role === "none") {
+      alert("Please select a user type.");
+      return;
+    }
+
     const res = await fetch("/api/Users", {
       method: "POST",
       body: JSON.stringify({ formData }),
@@ -97,15 +104,22 @@ const UserForm = () => {
           className="rounded-md border border-gray-200 py-2 px-6 bg-zinc-100/40"
         />
         <label>Role</label>
-        <input
+        <select
           id="role"
           name="role"
           type="text"
+          value={formData.role}
           onChange={handleChange}
           required={true}
-          value={formData.role}
-          className="rounded-md border border-gray-200 py-2 px-6 bg-zinc-100/40"
-        />
+          defaultValue={"none"}
+        >
+          <option value="none" disabled>
+            Select a user type
+          </option>
+          <option value="admin">Admin</option>
+          <option value="manager">Manager</option>
+          <option value="user">Employee</option>
+        </select>
         <input
           type="submit"
           value="Create User"
