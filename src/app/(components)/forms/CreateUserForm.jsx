@@ -7,7 +7,7 @@ import React, { useState } from "react";
 
 const UserForm = () => {
   const router = useRouter();
-  const [formData, setFormData] = useState({ role: "none" });
+  const [formData, setFormData] = useState({ role: "none" , capacity: 35});
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (e) => {
@@ -111,7 +111,6 @@ const UserForm = () => {
           value={formData.role}
           onChange={handleChange}
           required={true}
-          defaultValue={"none"}
         >
           <option value="none" disabled>
             Select a user type

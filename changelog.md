@@ -43,10 +43,25 @@ BT-48 Add loading spinner to cover the role-redirect screen
 
 ====================================================================================================
 
-## [0.0] - 15/02/2024
+## [0.04] - 15/02/2024
 
 BT-49 change text input to dropdown menu in user creation form
 
 ### Fixes
 
 - Text input for user role changed to dropdown menu
+
+====================================================================================================
+
+## [0.05] - XX/02/2024
+
+BT-48 Design and implement MongoDB schema for the timesheet management system
+
+### Added
+- Added a database name to mongodb                (commit: 1fa379c8759d1213466988911b6df870cdd311f9)
+- Added schemas and routes for system             (commit: 2420a440fc16f7360a1d0c081c41c7b522177dc2)
+
+### Fixes
+
+### Removed
+- Removed default svg images                      (commit: 1fa379c8759d1213466988911b6df870cdd311f9)
