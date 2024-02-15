@@ -5,7 +5,7 @@ mongoose.Promise = global.Promise;
 
 const projectSchema = new Schema(
   {
-    Projectname: {
+    clientname: {
       type: String,
       required: true,
     },
