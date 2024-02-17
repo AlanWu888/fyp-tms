@@ -2,6 +2,18 @@ import User from "@/app/(models)/user";
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 
+// get all users
+export async function GET() {
+  try {
+    const users = await User.find({});
+    console.log(users);
+    return NextResponse.json({ users }, { status: 201 });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json({ message: "Error", error }, { status: 500 });
+  }
+}
+
 // add a new user
 export async function POST(req) {
   try {
@@ -37,3 +49,26 @@ export async function POST(req) {
 }
 
 // edit user details
+export async function PATCH(req) {
+  try {
+    const body = await req.json();
+    const { userId, newData } = body; // Assuming you'll send userId and newData in the request body
+
+    // Check if userId is provided
+    if (!userId) {
+      return NextResponse.json({ message: "User ID is required." }, { status: 400 });
+    }
+
+    // Update the user
+    const updatedUser = await User.findByIdAndUpdate(userId, newData, { new: true });
+
+    if (!updatedUser) {
+      return NextResponse.json({ message: "User not found." }, { status: 404 });
+    }
+
+    return NextResponse.json({ message: "User updated.", user: updatedUser }, { status: 200 });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json({ message: "Error", error }, { status: 500 });
+  }
+}
