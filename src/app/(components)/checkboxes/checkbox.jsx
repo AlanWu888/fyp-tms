@@ -1,24 +1,24 @@
-import React from 'react';
+import React from "react";
 
 function Checkbox({ isChecked, onChange, label }) {
   return (
-    <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+    <label style={{ display: "flex", alignItems: "center", gap: "8px" }}>
       <input
         type="checkbox"
         checked={isChecked}
         onChange={onChange}
-        style={{ display: 'none' }}
+        style={{ display: "none" }}
       />
       <div
         style={{
-          width: '24px',
-          height: '24px',
-          border: '2px solid #282258',
-          backgroundColor: isChecked ? '#282258' : 'transparent',
-          borderRadius: '4px',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
+          width: "24px",
+          height: "24px",
+          border: "2px solid #282258",
+          backgroundColor: isChecked ? "#282258" : "transparent",
+          borderRadius: "4px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
         {isChecked && (
