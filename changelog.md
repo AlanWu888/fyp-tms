@@ -1,26 +1,22 @@
-## [0.01] - 01/02/2024
+## [0.05] - XX/02/2024
 
-BT-46 Create login page
+BT-51 Create Figma Components
 
 ### Added
 
-- Login / Logout / Authenticaion capability
-- Connection with MongoDB
-- Add/Create user capabilty
-- Role based authorisation
-- Redirect on authentication
-- Added prettier command
+- Created re-usable button component
+- Created select/dropdown menu component
+- Created checkbox component
 
 ---
 
-## [0.02] - 01/02/2024
+## [0.04] - 15/02/2024
 
-BT-45 Create Navbars for different users
+BT-49 change text input to dropdown menu in user creation form
 
-### Added
+### Fixes
 
-- Navbar UI for different users types
-- Changed font style to Mulish (as per designs)
+- Text input for user role changed to dropdown menu
 
 ---
 
@@ -41,22 +37,26 @@ BT-48 Add loading spinner to cover the role-redirect screen
 
 ---
 
-## [0.04] - 15/02/2024
+## [0.02] - 01/02/2024
 
-BT-49 change text input to dropdown menu in user creation form
-
-### Fixes
-
-- Text input for user role changed to dropdown menu
-
----
-
-## [0.05] - XX/02/2024
-
-BT-51 Create Figma Components
+BT-45 Create Navbars for different users
 
 ### Added
 
-- Created re-usable button component
-- Created select/dropdown menu component
-- Created checkbox component
+- Navbar UI for different users types
+- Changed font style to Mulish (as per designs)
+
+---
+
+## [0.01] - 01/02/2024
+
+BT-46 Create login page
+
+### Added
+
+- Login / Logout / Authentication capability
+- Connection with MongoDB
+- Add/Create user capability
+- Role-based authorization
+- Redirect on authentication
+- Added prettier command
