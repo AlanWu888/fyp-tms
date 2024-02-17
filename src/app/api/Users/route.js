@@ -52,7 +52,7 @@ export async function POST(req) {
 export async function PATCH(req) {
   try {
     const body = await req.json();
-    const { userId, newData } = body; // Assuming you'll send userId and newData in the request body
+    const { userId, newData } = body; // userId and newData sent in the request body
 
     // Check if userId is provided
     if (!userId) {
@@ -86,6 +86,7 @@ export async function PATCH(req) {
   }
 }
 
+// delete a user
 export async function DELETE(req) {
   try {
     const body = await req.json();
