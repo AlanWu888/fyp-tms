@@ -61,3 +61,4 @@ BT-51 Create Figma Components
 
 - Created re-usable button component
 - Created select/dropdown menu component
+- Created checkbox component
