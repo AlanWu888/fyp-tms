@@ -1,5 +1,3 @@
-====================================================================================================
-
 ## [0.01] - 01/02/2024
 
 BT-46 Create login page
@@ -13,7 +11,7 @@ BT-46 Create login page
 - Redirect on authentication
 - Added prettier command
 
-====================================================================================================
+---
 
 ## [0.02] - 01/02/2024
 
@@ -24,7 +22,7 @@ BT-45 Create Navbars for different users
 - Navbar UI for different users types
 - Changed font style to Mulish (as per designs)
 
-====================================================================================================
+---
 
 ## [0.03] - 01/02/2024
 
@@ -41,7 +39,7 @@ BT-48 Add loading spinner to cover the role-redirect screen
 - Admin Navbar is now showing
 - General formatting
 
-====================================================================================================
+---
 
 ## [0.04] - 15/02/2024
 
@@ -51,7 +49,7 @@ BT-49 change text input to dropdown menu in user creation form
 
 - Text input for user role changed to dropdown menu
 
-====================================================================================================
+---
 
 ## [0.05] - XX/02/2024
 
