@@ -43,10 +43,20 @@ BT-48 Add loading spinner to cover the role-redirect screen
 
 ====================================================================================================
 
-## [0.0] - 15/02/2024
+## [0.04] - 15/02/2024
 
 BT-49 change text input to dropdown menu in user creation form
 
 ### Fixes
 
 - Text input for user role changed to dropdown menu
+
+====================================================================================================
+
+## [0.05] - XX/02/2024
+
+BT-51 Create Figma Components
+
+### Added
+
+- Created re-usable button component
