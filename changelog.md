@@ -1,4 +1,4 @@
-## [0.05] - XX/02/2024
+## [0.06] - XX/02/2024
 
 BT-51 Create Figma Components
 
@@ -10,13 +10,24 @@ BT-51 Create Figma Components
 
 ---
 
-## [0.04] - 15/02/2024
+## [0.05] - 15/02/2024
 
 BT-49 change text input to dropdown menu in user creation form
 
 ### Fixes
 
 - Text input for user role changed to dropdown menu
+
+---
+
+## [0.04] - 15/02/2024
+
+BT-29 change text input to dropdown menu in user creation form
+
+### Added
+
+- Added additional mongoose models to support user functionality in the timesheet management system
+- Added GET and POST API methods to MongoDB (temporary APIs while additional API designs are done)
 
 ---
 
