@@ -5,7 +5,7 @@ mongoose.Promise = global.Promise;
 
 const timesheetSchema = new Schema(
   {
-    user: {
+    userEmail: {
       type: String,
       required: true,
     },
@@ -38,6 +38,8 @@ const timesheetSchema = new Schema(
     timestamps: true,
   },
 );
+
+timesheetSchema.index({ userEmail: 1, date: 1 }, { unique: true });
 
 const Timesheet =
   mongoose.models.Timesheet || mongoose.model("Timesheet", timesheetSchema);
