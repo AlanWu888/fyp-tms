@@ -39,32 +39,72 @@ export async function GET() {
   }
 }
 
+// need to find a way to delete users from the memberEmails too
 export async function PATCH(req) {
   try {
-    const body=await req.json()
-    const {clientname, projectname, newData} = body
+    const body = await req.json();
+    const { clientname, projectname, newData } = body;
 
-    // Check if ProjectId is provided
+    // Check if clientname and projectname are provided
     if (!clientname || !projectname) {
       return NextResponse.json(
-        { message: "Project ID is required." },
-        { status: 400 },
+        { message: "Client name and project name are required." },
+        { status: 400 }
       );
     }
-    const updatedProject = await Project.findOneAndUpdate({clientname, projectname}, newData, {
-      new: true,
-    });
 
+    let updatedProject;
+
+    // If newData contains memberEmails, handle them
+    if (newData && newData.memberEmails) {
+      // Find the existing project
+      const existingProject = await Project.findOne({ clientname, projectname });
+
+      if (!existingProject) {
+        return NextResponse.json(
+          { message: "Project not found." },
+          { status: 404 }
+        );
+      }
+
+      // Remove duplicates from newData.memberEmails and append them
+      const uniqueMemberEmails = [...new Set(newData.memberEmails)];
+
+      // Update newData with unique memberEmails
+      newData.memberEmails = uniqueMemberEmails;
+
+      // Merge newData with existing project data
+      updatedProject = await Project.findOneAndUpdate(
+        { clientname, projectname },
+        { $addToSet: newData },
+        { new: true }
+      );
+    } else {
+      // If newData does not contain memberEmails, update the project directly
+      updatedProject = await Project.findOneAndUpdate(
+        { clientname, projectname },
+        newData,
+        { new: true }
+      );
+    }
+
+    // Check if project exists and return the updated project
     if (!updatedProject) {
-      return NextResponse.json({ message: "Project not found." }, { status: 404 });
+      return NextResponse.json(
+        { message: "Project not found." },
+        { status: 404 }
+      );
     }
 
     return NextResponse.json(
       { message: "Project updated.", project: updatedProject },
-      { status: 200 },
+      { status: 200 }
     );
-  } catch(error){
+  } catch (error) {
     console.log(error);
-    return NextResponse.json({ message: "Error", error }, { status: 500 });
+    return NextResponse.json(
+      { message: "An error occurred while updating the project." },
+      { status: 500 }
+    );
   }
 }
