@@ -21,12 +21,10 @@ const projectSchema = new Schema(
       type: Number,
       required: true,
     },
-    members: [
+    memberEmails: [
       {
-        user: {
-          type: String,
-          required: true,
-        },
+        type: String,
+        required: true,
       },
     ],
   },
@@ -34,6 +32,9 @@ const projectSchema = new Schema(
     timestamps: true,
   },
 );
+
+// Define a compound index on clientname and projectname for uniqueness
+projectSchema.index({ clientname: 1, projectname: 1 }, { unique: true });
 
 const Project =
   mongoose.models.Project || mongoose.model("Project", projectSchema);
