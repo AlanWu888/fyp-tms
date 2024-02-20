@@ -14,11 +14,68 @@ export async function POST(req) {
   }
 }
 
+export async function PATCH(req) {
+  try {
+    const { taskId, taskUpdates } = await req.json();
+
+    // Check if the updated taskDescription already exists
+    const { taskDescription } = taskUpdates;
+    const existingTask = await Task.findOne({ taskDescription });
+
+    if (existingTask && existingTask._id.toString() !== taskId) {
+      return NextResponse.json(
+        { message: "Task description already exists." },
+        { status: 400 },
+      );
+    }
+
+    const updatedTask = await Task.findByIdAndUpdate(taskId, taskUpdates, {
+      new: true,
+    });
+
+    if (!updatedTask) {
+      return NextResponse.json({ message: "Task not found." }, { status: 404 });
+    }
+
+    return NextResponse.json(
+      { message: "Task updated successfully.", updatedTask },
+      { status: 200 },
+    );
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json({ message: "Error", error }, { status: 500 });
+  }
+}
+
 export async function GET() {
   try {
     const tasks = await Task.find({});
     console.log(tasks);
     return NextResponse.json({ tasks }, { status: 201 });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json({ message: "Error", error }, { status: 500 });
+  }
+}
+
+export async function DELETE(req) {
+  try {
+    const { taskId } = await req.json();
+
+    // Check if the task exists
+    const existingTask = await Task.findById(taskId);
+
+    if (!existingTask) {
+      return NextResponse.json({ message: "Task not found." }, { status: 404 });
+    }
+
+    // Delete the task
+    await Task.findByIdAndDelete(taskId);
+
+    return NextResponse.json(
+      { message: "Task deleted successfully.", deletedTask: existingTask },
+      { status: 200 },
+    );
   } catch (error) {
     console.log(error);
     return NextResponse.json({ message: "Error", error }, { status: 500 });

@@ -1,4 +1,25 @@
-## [0.06] - XX/02/2024
+## [0.07] - XX/02/2024
+
+BT-52 Create Figma Components
+
+### Added
+
+- API routes available:
+  - Users: GET, POST, PATCH, DELETE
+  - Projects: GET, POST, PATCH, DELETE
+  - Timesheets: GET, POST, PATCH, DELETE
+  - Tasks: GET, POST, PATCH, DELETE
+  - Clients: GET, POST, PATCH, DELETE
+  - LogMessages: GET, POST
+- User session information added to manager's screen (for development purposes only)
+
+## Fixes
+
+- Added a Development collection to mongoDB
+
+---
+
+## [0.06] - 17/02/2024
 
 BT-51 Create Figma Components
 
