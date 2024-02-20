@@ -14,6 +14,39 @@ export async function POST(req) {
   }
 }
 
+export async function PATCH(req) {
+  try {
+    const { taskId, taskUpdates } = await req.json();
+
+    // Check if the updated taskDescription already exists
+    const { taskDescription } = taskUpdates;
+    const existingTask = await Task.findOne({ taskDescription });
+
+    if (existingTask && existingTask._id.toString() !== taskId) {
+      return NextResponse.json(
+        { message: "Task description already exists." },
+        { status: 400 },
+      );
+    }
+
+    const updatedTask = await Task.findByIdAndUpdate(taskId, taskUpdates, {
+      new: true,
+    });
+
+    if (!updatedTask) {
+      return NextResponse.json({ message: "Task not found." }, { status: 404 });
+    }
+
+    return NextResponse.json(
+      { message: "Task updated successfully.", updatedTask },
+      { status: 200 },
+    );
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json({ message: "Error", error }, { status: 500 });
+  }
+}
+
 export async function GET() {
   try {
     const tasks = await Task.find({});
