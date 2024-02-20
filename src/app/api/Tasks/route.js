@@ -57,3 +57,27 @@ export async function GET() {
     return NextResponse.json({ message: "Error", error }, { status: 500 });
   }
 }
+
+export async function DELETE(req) {
+  try {
+    const { taskId } = await req.json();
+
+    // Check if the task exists
+    const existingTask = await Task.findById(taskId);
+
+    if (!existingTask) {
+      return NextResponse.json({ message: "Task not found." }, { status: 404 });
+    }
+
+    // Delete the task
+    await Task.findByIdAndDelete(taskId);
+
+    return NextResponse.json(
+      { message: "Task deleted successfully.", deletedTask: existingTask },
+      { status: 200 },
+    );
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json({ message: "Error", error }, { status: 500 });
+  }
+}

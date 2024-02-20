@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 export async function POST(req) {
   try {
     const body = await req.json();
-    const logMsgData = body.formData;
+    const logMsgData = body;
 
     await LogMessage.create(logMsgData);
     return NextResponse.json(
