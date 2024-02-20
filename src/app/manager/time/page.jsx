@@ -7,7 +7,7 @@ const ManagerTime = () => {
     <div>
       <NavManager />
       <div>ManagerTime</div>
-      <TestComponent/>
+      <TestComponent />
     </div>
   );
 };
