@@ -80,7 +80,17 @@ export async function PATCH(req) {
 
 export async function DELETE(req) {
   try {
-    const { id } = req.query;
+    const body = await req.json();
+    const { id } = body;
+
+    // Check if userId is provided
+    if (!id) {
+      return NextResponse.json(
+        { message: "Client ID is required." },
+        { status: 400 },
+      );
+    }
+
     await Client.findByIdAndDelete(id);
     return NextResponse.json({ message: "Client Deleted." }, { status: 200 });
   } catch (error) {

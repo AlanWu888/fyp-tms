@@ -123,3 +123,43 @@ export async function PATCH(req) {
     );
   }
 }
+
+export async function DELETE(req) {
+  try {
+    const body = await req.json();
+    const { clientname, projectname } = body;
+
+    // Check if clientname and projectname are provided
+    if (!clientname || !projectname) {
+      return NextResponse.json(
+        { message: "Client name and project name are required." },
+        { status: 400 },
+      );
+    }
+
+    // Find the project to delete
+    const deletedProject = await Project.findOneAndDelete({
+      clientname,
+      projectname,
+    });
+
+    // Check if project exists and return the deleted project
+    if (!deletedProject) {
+      return NextResponse.json(
+        { message: "Project not found." },
+        { status: 404 },
+      );
+    }
+
+    return NextResponse.json(
+      { message: "Project deleted.", project: deletedProject },
+      { status: 200 },
+    );
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
+      { message: "An error occurred while deleting the project." },
+      { status: 500 },
+    );
+  }
+}

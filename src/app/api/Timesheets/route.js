@@ -99,6 +99,39 @@ export async function PATCH(req) {
   }
 }
 
+export async function DELETE(req) {
+  try {
+    const { id } = await req.json();
+
+    if (!id) {
+      return NextResponse.json(
+        { message: "Missing id field" },
+        { status: 400 },
+      );
+    }
+
+    const deletedTimesheet = await Timesheet.findByIdAndDelete(id);
+
+    if (!deletedTimesheet) {
+      return NextResponse.json(
+        { message: "Timesheet not found" },
+        { status: 404 },
+      );
+    }
+
+    return NextResponse.json(
+      { message: "Timesheet deleted successfully" },
+      { status: 200 },
+    );
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
+      { message: "An error occurred while deleting the timesheet" },
+      { status: 500 },
+    );
+  }
+}
+
 /*
 Find way to filter data at read level
 export async function GET(req) {
