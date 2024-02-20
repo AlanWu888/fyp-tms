@@ -40,9 +40,8 @@ export async function POST(req) {
 }
 
 export async function GET() {
-  // TODO: need to find a way to get timesheets based on user emails
   try {
-    const timesheets = await Timesheet.find({});
+    const timesheets = await Timesheet.find();
     console.log(timesheets);
     return NextResponse.json({ timesheets }, { status: 201 });
   } catch (error) {
@@ -50,3 +49,70 @@ export async function GET() {
     return NextResponse.json({ message: "Error", error }, { status: 500 });
   }
 }
+
+export async function PATCH(req) {
+  try {
+    const { id, updatedFields } = await req.json();
+
+    if (!id || !updatedFields) {
+      return NextResponse.json({ message: "Missing fields" }, { status: 400 });
+    }
+
+    const timesheet = await Timesheet.findById(id);
+
+    if (!timesheet) {
+      return NextResponse.json(
+        { message: "Timesheet not found" },
+        { status: 404 },
+      );
+    }
+
+    // Update taskDescription and time if they exist in the updatedFields
+    if (updatedFields.taskDescription) {
+      timesheet.entries.forEach((entry) => {
+        if (entry._id.toString() === updatedFields.entryId) {
+          entry.taskDescription = updatedFields.taskDescription;
+        }
+      });
+    }
+
+    if (updatedFields.time) {
+      timesheet.entries.forEach((entry) => {
+        if (entry._id.toString() === updatedFields.entryId) {
+          entry.time = updatedFields.time;
+        }
+      });
+    }
+
+    await timesheet.save();
+
+    return NextResponse.json(
+      { message: "Timesheet updated successfully" },
+      { status: 200 },
+    );
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
+      { message: "An error occurred while updating the timesheet" },
+      { status: 500 },
+    );
+  }
+}
+
+/*
+Find way to filter data at read level
+export async function GET(req) {
+  try {
+    const {name} = req.query;
+
+    console.log(name)
+    console.log(userEmail)
+    const timesheets = await Timesheet.find({userEmail: "manager_test@bast.com"});
+    console.log(timesheets);
+    return NextResponse.json({ timesheets }, { status: 201 });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json({ message: "Error", error }, { status: 500 });
+  }
+}
+*/
