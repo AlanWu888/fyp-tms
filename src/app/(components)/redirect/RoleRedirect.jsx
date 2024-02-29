@@ -22,10 +22,10 @@ const RoleRedirect = () => {
       router.push("/admin");
     }
     if (role == "user") {
-      router.push("/user");
+      router.push("/user/time");
     }
     if (role == "manager") {
-      router.push("/manager");
+      router.push("/manager/time");
     }
   }, [router, session?.user?.role]);
 

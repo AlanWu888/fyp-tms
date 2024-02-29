@@ -31,12 +31,7 @@ const NavUser = () => {
       </div>
 
       <div className={styles.rightLinks}>
-        <Link
-          href="/user"
-          className={pathname === "/user" ? styles.active : ""}
-        >
-          User
-        </Link>
+        <Link href="/api/auth/signout">Sign Out</Link>
       </div>
     </nav>
   );
