@@ -1,4 +1,17 @@
-## [0.07] - XX/02/2024
+## [0.08] - 29/02/2024
+
+BT-50 Add log out functionality for all users
+
+## Added
+
+- Logout capability using next.js api auth signout route
+- Changes made to redirect routes for different user types
+
+## Fixes
+
+- Brought back middleware route authorisation
+
+## [0.07] - 20/02/2024
 
 BT-52 Create Figma Components
 
