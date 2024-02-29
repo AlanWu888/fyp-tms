@@ -7,7 +7,7 @@ const ManagerProjects = () => {
     <div>
       <NavManager />
       <div>ManagerProjects</div>
-      <ProjectsComponent/>
+      <ProjectsComponent />
     </div>
   );
 };

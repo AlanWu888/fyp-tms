@@ -5,8 +5,8 @@ import React from "react";
 const Components = () => {
   return (
     <div>
-    <MyComponents />
-    <NavTabs items={['Home', 'About', 'Services', 'Contact']}/>
+      <MyComponents />
+      <NavTabs items={["Home", "About", "Services", "Contact"]} />
     </div>
   );
 };
