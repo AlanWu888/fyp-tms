@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation"; // usePathname is a hook now impo
 const NavManager = () => {
   const pathname = usePathname();
   console.log(pathname);
+
   return (
     <nav className={styles.navbar}>
       <div className={styles.leftLinks}>
@@ -43,12 +44,7 @@ const NavManager = () => {
       </div>
 
       <div className={styles.rightLinks}>
-        <Link
-          href="/manager"
-          className={pathname === "/manager" ? styles.active : ""}
-        >
-          Manager
-        </Link>
+        <Link href="/api/auth/signout">Sign Out</Link>
       </div>
     </nav>
   );

@@ -11,7 +11,9 @@ const NavAdmin = () => {
     <nav className={styles.navbar}>
       <div className={styles.leftLinks} />
       <div className={styles.rightLinks}>
-        <Link href="/admin">Admin</Link>
+        <div className={styles.rightLinks}>
+          <Link href="/api/auth/signout">Sign Out</Link>
+        </div>
       </div>
     </nav>
   );
