@@ -1,0 +1,45 @@
+.button-view {
+  width: 80px;
+  height: 36px;
+  border: 1px solid black;
+  background-color: white;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 10px;
+}
+
+.button-left {
+  border-radius: 10px 0 0 10px;
+}
+
+.button-right {
+  border-radius: 0 10px 10px 0;
+}
+
+.active {
+  background-color: #7ccaee;
+}
+
+.button-dates {
+  width: 36px;
+  height: 36px;
+  border-radius: 5px;
+  border: 1px solid black;
+  background-color: transparent;
+  padding: 0;
+  margin-right: 10px;
+}
+
+.button-dates img {
+  width: 20px;
+  height: 20px;
+  display: block;
+  margin: auto;
+}
+
+.date-text {
+  margin-left: 10px;
+  font-size: 24px;
+}

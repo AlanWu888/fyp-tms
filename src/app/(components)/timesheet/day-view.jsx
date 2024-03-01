@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import Button from "../buttons/Button";
 import { COLOURS } from "@/app/constants";
 
-function TimesheetComponent() {
+function DayViewTimesheet({ date }) {
   const { data: session } = useSession();
   const userEmail = session?.user?.email;
 
@@ -33,6 +33,7 @@ function TimesheetComponent() {
     const filterTimesheets = () => {
       const filteredTimesheets = timesheets.filter(
         (timesheet) => timesheet.userEmail === userEmail,
+        (timesheet) => timesheet.date === mydate,
       );
       setFilteredTimesheets(filteredTimesheets);
     };
@@ -69,6 +70,7 @@ function TimesheetComponent() {
 
   return (
     <div>
+      <p>{date}</p>
       <ul>
         {filteredTimesheets.map((timesheet) =>
           timesheet.entries.map((entry, index) => (
@@ -76,7 +78,6 @@ function TimesheetComponent() {
               key={index}
               className="timesheet-entry border border-black p-3 mb-2"
             >
-              {console.log(timesheet.entries)}
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <div className="entry-details ">
                   <div>
@@ -160,4 +161,4 @@ function TimesheetComponent() {
   );
 }
 
-export default TimesheetComponent;
+export default DayViewTimesheet;
