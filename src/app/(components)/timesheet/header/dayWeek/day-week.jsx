@@ -3,21 +3,18 @@
 import React, { useState } from "react";
 import "./day-week.css";
 
-const ViewSelector = () => {
-  const [mode, setView] = useState("day");
-
+const ViewSelector = ({ mode, updateMode }) => {
   const setDay = () => {
-    setView("day");
+    updateMode("day");
   };
 
   const setWeek = () => {
-    setView("week");
+    updateMode("week");
   };
 
   return (
     <div>
       <div style={{ display: "flex", alignItems: "center" }}>
-        <div>chosen: {mode}</div>
         <button
           onClick={setDay}
           className={
