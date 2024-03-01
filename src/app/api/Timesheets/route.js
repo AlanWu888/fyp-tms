@@ -42,7 +42,7 @@ export async function POST(req) {
 export async function GET() {
   try {
     const timesheets = await Timesheet.find();
-    console.log(timesheets);
+    // console.log(timesheets);
     return NextResponse.json({ timesheets }, { status: 201 });
   } catch (error) {
     console.log(error);

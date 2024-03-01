@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import "./date-counter.css";
 
-const DateCounter = ({ mode }) => {
+const DateCounter = ({ mode, onDateChange }) => {
   const [date, setDate] = useState(new Date());
 
   const incrementDate = () => {
@@ -14,6 +14,7 @@ const DateCounter = ({ mode }) => {
       newDate.setDate(newDate.getDate() + 7);
     }
     setDate(newDate);
+    onDateChange(newDate.toISOString()); // Pass ISO string
   };
 
   const decrementDate = () => {
@@ -24,6 +25,7 @@ const DateCounter = ({ mode }) => {
       newDate.setDate(newDate.getDate() - 7);
     }
     setDate(newDate);
+    onDateChange(newDate.toISOString()); // Pass ISO string
   };
 
   const renderDateText = () => {
