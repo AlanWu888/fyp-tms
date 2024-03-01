@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
+import Button from "../buttons/Button";
+import { COLOURS } from "@/app/constants";
 
 function TimesheetComponent() {
   const { data: session } = useSession();
@@ -25,7 +27,7 @@ function TimesheetComponent() {
     };
 
     fetchData();
-  }, []); // Empty dependency array to fetch data only once when component mounts
+  }, []);
 
   useEffect(() => {
     const filterTimesheets = () => {
@@ -36,36 +38,123 @@ function TimesheetComponent() {
     };
 
     filterTimesheets();
-  }, [timesheets, userEmail]); // Dependencies: timesheets and userEmail
+  }, [timesheets, userEmail]);
+
+  const handleClickButton = () => {
+    alert("button pressed");
+  };
+
+  const handleTimeChange = () => {
+    alert("time change");
+  };
+
+  function convertToTime(number) {
+    const integerPart = Math.floor(number);
+    const decimalPart = number % 1;
+
+    let hours = integerPart < 10 ? "0" + integerPart : integerPart;
+    let minutes = Math.round(decimalPart * 60);
+
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+
+    return `${hours}:${minutes}`;
+  }
+
+  function convertToDecimal(time) {
+    const [hours, minutes] = time.split(":").map(Number);
+    const decimalHours = hours + minutes / 60;
+
+    return decimalHours;
+  }
 
   return (
     <div>
-      <h2>Timesheets</h2>
       <ul>
-        {filteredTimesheets.map((timesheet) => (
-          <li key={timesheet._id}>
-            {/* Render timesheet details here */}
-            {/* For example: */}
-            <div className="border border-black p-3 m-3">
-              <div>User Email: {timesheet.userEmail}</div>
-              <div>Date: {timesheet.date}</div>
-              <h3>Entries:</h3>
-              <ul>
-                {timesheet.entries.map((entry, index) => (
-                  <li key={index}>
-                    {/* Render entry details here */}
-                    <div>Client Name: {entry.clientName}</div>
-                    <div>Project Name: {entry.projectName}</div>
-                    <div>Task Description: {entry.taskDescription}</div>
-                    <div>Time: {entry.time}</div>
-                  </li>
-                ))}
-              </ul>
-            </div>
+        {filteredTimesheets.map((timesheet) =>
+          timesheet.entries.map((entry, index) => (
+            <li
+              key={index}
+              className="timesheet-entry border border-black p-3 mb-2"
+            >
+              {console.log(timesheet.entries)}
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <div className="entry-details ">
+                  <div>
+                    <p style={{ fontSize: "24px" }}>
+                      {entry.clientName} - {entry.projectName}
+                    </p>
+                  </div>
+                  <div
+                    className="task-description"
+                    style={{ fontSize: "16px" }}
+                  >
+                    {entry.taskDescription}
+                  </div>
+                </div>
+                <div
+                  className="timesheet-entry"
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      marginTop: "auto",
+                      marginBottom: "auto",
+                      marginRight: "30px",
+                    }}
+                  >
+                    <input
+                      type="text"
+                      id={entry._id}
+                      value={convertToTime(entry.time)}
+                      onChange={handleTimeChange}
+                      style={{
+                        border: "1px solid black",
+                        fontSize: "24px",
+                        borderRadius: "5px",
+                        fontWeight: "bold",
+                        width: "100px",
+                        textAlign: "center",
+                        marginRight: "50px",
+                      }}
+                    />
+                  </div>
 
-            {/* Render other timesheet details as needed */}
-          </li>
-        ))}
+                  <div
+                    style={{
+                      marginRight: "20px",
+                      marginTop: "auto",
+                      marginBottom: "auto",
+                    }}
+                  >
+                    <Button
+                      bgcolour={COLOURS.GREY}
+                      colour={"black"}
+                      label="Edit"
+                      onClick={handleClickButton}
+                    />
+                  </div>
+
+                  <div
+                    style={{
+                      marginRight: "20px",
+                      marginTop: "auto",
+                      marginBottom: "auto",
+                    }}
+                  >
+                    <Button
+                      bgcolour={COLOURS.GREY}
+                      colour={"black"}
+                      label="Delete"
+                      onClick={handleClickButton}
+                    />
+                  </div>
+                </div>
+              </div>
+            </li>
+          )),
+        )}
       </ul>
     </div>
   );

@@ -1,7 +1,7 @@
 import React from "react";
 import NavManager from "@/app/(components)/navigation/NavManager";
 import TestComponent from "@/app/(components)/timesheet/test";
-import TimesheetComponent from "@/app/(components)/timesheet/json";
+import TimesheetComponent from "@/app/(components)/timesheet/day-view";
 import TimesheetHeader from "@/app/(components)/timesheet/header/header";
 
 const ManagerTime = () => {

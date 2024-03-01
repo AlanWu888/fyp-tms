@@ -18,7 +18,6 @@ function TimesheetHeader() {
         <DateCounter mode={mode} />
         <ViewSelector mode={mode} updateMode={updateMode} />
       </div>
-      <div>State from Child: {mode}</div>
     </div>
   );
 }
