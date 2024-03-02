@@ -7,7 +7,7 @@ const ManagerTime = () => {
   return (
     <div>
       <NavManager />
-      <TimesheetContainer/>
+      <TimesheetContainer />
     </div>
   );
 };
