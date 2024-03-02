@@ -32,14 +32,16 @@ function DayViewTimesheet({ date }) {
   useEffect(() => {
     const filterTimesheets = () => {
       const filteredTimesheets = timesheets.filter(
-        (timesheet) => timesheet.userEmail === userEmail,
-        (timesheet) => timesheet.date === mydate,
+        (timesheet) =>
+          timesheet.userEmail === userEmail &&
+          new Date(timesheet.date).toISOString().split("T")[0] ===
+            date.split("T")[0],
       );
       setFilteredTimesheets(filteredTimesheets);
     };
 
     filterTimesheets();
-  }, [timesheets, userEmail]);
+  }, [timesheets, userEmail, date]);
 
   const handleClickButton = () => {
     alert("button pressed");
