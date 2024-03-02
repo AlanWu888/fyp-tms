@@ -1,39 +1,9 @@
-// "use client";
-
-// import React, { useState } from "react";
-
-// import DateCounter from "@/app/(components)/timesheet/header/dateCounter/date-counter";
-// import ViewSelector from "@/app/(components)/timesheet/header/dayWeek/day-week";
-
-// function TimesheetHeader({ setDate }) {
-//   const [mode, setMode] = useState("day");
-
-//   const updateMode = (newMode) => {
-//     setMode(newMode);
-//   };
-
-//   const handleDateChange = (newDate) => {
-//     setDate(newDate);
-//   };
-
-//   return (
-//     <div className="timesheet-header">
-//       <div style={{ display: "flex", justifyContent: "space-between" }}>
-//       <DateCounter mode={mode} onDateChange={handleDateChange} />
-//         <ViewSelector mode={mode} updateMode={updateMode} />
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default TimesheetHeader;
-
 "use client";
 
 import React, { useState } from "react";
 import "./header.css";
 
-const TimesheetHeader = () => {
+const TimesheetHeader = ({ setNewDate }) => {
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState("day");
 
@@ -53,6 +23,7 @@ const TimesheetHeader = () => {
       newDate.setDate(newDate.getDate() + 7);
     }
     setDate(newDate);
+    setNewDate(newDate); // Update parent state
   };
 
   const decrementDate = () => {
@@ -63,6 +34,7 @@ const TimesheetHeader = () => {
       newDate.setDate(newDate.getDate() - 7);
     }
     setDate(newDate);
+    setNewDate(newDate); // Update parent state
   };
 
   const renderDateText = () => {
@@ -82,9 +54,14 @@ const TimesheetHeader = () => {
   };
 
   return (
-    <div className="timesheet-header" style={{ display: "flex", justifyContent: "space-between" }}>
-      <div className="date-counter" style={{ display: "flex", alignItems: "center" }}
+    <div
+      className="timesheet-header"
+      style={{ display: "flex", justifyContent: "space-between" }}
     >
+      <div
+        className="date-counter"
+        style={{ display: "flex", alignItems: "center" }}
+      >
         <div>
           <button onClick={decrementDate} className="button-dates">
             <img src={"/arrow-l.png"} alt="Previous Day" />
@@ -98,30 +75,30 @@ const TimesheetHeader = () => {
           {renderDateText()}
         </h2>
       </div>
-      
+
       <div className="day-or-week">
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <button
-          onClick={setDay}
-          className={
-            mode === "day"
-              ? "button-view button-left active"
-              : "button-view button-left"
-          }
-        >
-          Day
-        </button>
-        <button
-          onClick={setWeek}
-          className={
-            mode === "week"
-              ? "button-view button-right active"
-              : "button-view button-right"
-          }
-        >
-          Week
-        </button>
-      </div>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <button
+            onClick={setDay}
+            className={
+              mode === "day"
+                ? "button-view button-left active"
+                : "button-view button-left"
+            }
+          >
+            Day
+          </button>
+          <button
+            onClick={setWeek}
+            className={
+              mode === "week"
+                ? "button-view button-right active"
+                : "button-view button-right"
+            }
+          >
+            Week
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -70,7 +70,7 @@ function DayViewTimesheet({ date }) {
 
   return (
     <div>
-      <p>{date}</p>
+      <p>day view: {date}</p>
       <ul>
         {filteredTimesheets.map((timesheet) =>
           timesheet.entries.map((entry, index) => (
