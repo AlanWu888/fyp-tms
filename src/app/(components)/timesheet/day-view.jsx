@@ -1,7 +1,10 @@
+"use client";
+
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import Button from "../buttons/Button";
 import { COLOURS } from "@/app/constants";
+import NavTabs from "../navigation/NavTabs";
 
 function DayViewTimesheet({ date }) {
   const { data: session } = useSession();
@@ -99,12 +102,50 @@ function DayViewTimesheet({ date }) {
   return (
     <div>
       <p>day view: {date}</p>
+      <p>{new Date(date).getDay()}</p>
+      <div
+        className="timesheet-rows-header"
+        style={{
+          borderBottom: "1px solid black",
+          paddingBottom: "3px",
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
+        <NavTabs
+          items={[
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday",
+          ]}
+          selectedDay={
+            [
+              "Sunday",
+              "Monday",
+              "Tuesday",
+              "Wednesday",
+              "Thursday",
+              "Friday",
+              "Saturday",
+            ][new Date(date).getDay()]
+          }
+        />
+        <div>
+          week total
+          {/*week total here*/}
+        </div>
+      </div>
       <ul>
         {filteredTimesheets.map((timesheet) =>
           timesheet.entries.map((entry, index) => (
             <li
               key={index}
-              className="timesheet-entry border border-black p-3 mb-2"
+              className="timesheet-entry p-3 mb-2"
+              style={{ borderBottom: "1px solid black" }}
             >
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <div className="entry-details">
