@@ -10,7 +10,7 @@ function EntryModal({ timesheetId, entry, onClose, onTimesheetUpdate }) {
   const [clientName, setClientName] = useState(entry.clientName);
   const [projectName, setProjectName] = useState(entry.projectName);
   const [taskDescription, setTaskDescription] = useState(entry.taskDescription);
-  const [time, setTime] = useState(entry.time);
+
   const [additionalNotes, setAdditionalNotes] = useState(entry.additionalNotes);
   const [isDirty, setIsDirty] = useState(false);
 
@@ -59,6 +59,19 @@ function EntryModal({ timesheetId, entry, onClose, onTimesheetUpdate }) {
     setClientProjects(updatedClientProjects);
   }, [filteredProjects]);
 
+  const convertTimeToDecimal = (timeString) => {
+    const [hours, minutes] = timeString.split(":").map(parseFloat);
+    return Number(hours + minutes / 60).toPrecision(5);
+  };
+
+  const convertDecimalToTime = (decimalTime) => {
+    const hours = Math.floor(decimalTime);
+    const minutes = Math.round((decimalTime - hours) * 60);
+    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
+  };
+
+  const [time, setTime] = useState(convertDecimalToTime(entry.time));
+
   useEffect(() => {
     setIsDirty(
       clientName !== entry.clientName ||
@@ -96,7 +109,7 @@ function EntryModal({ timesheetId, entry, onClose, onTimesheetUpdate }) {
             clientName,
             projectName,
             taskDescription,
-            time,
+            time: convertTimeToDecimal(time),
             additionalNotes,
           },
         }),
@@ -263,6 +276,8 @@ function EntryModal({ timesheetId, entry, onClose, onTimesheetUpdate }) {
                       paddingLeft: "10px",
                       paddingRight: "10px",
                       fontWeight: "normal",
+                      fontSize: "40px",
+                      textAlign: "center",
                     }}
                   />
                 </label>
