@@ -11,6 +11,7 @@ function DayViewTimesheet({ date }) {
 
   const [timesheets, setTimesheets] = useState([]);
   const [filteredTimesheets, setFilteredTimesheets] = useState([]);
+  const [editedTimes, setEditedTimes] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,11 +45,12 @@ function DayViewTimesheet({ date }) {
   }, [timesheets, userEmail, date]);
 
   const handleClickButton = () => {
-    alert("button pressed");
+    alert(JSON.stringify(editedTimes));
   };
 
-  const handleTimeChange = () => {
-    alert("time change");
+  const handleTimeChange = (e, entryId) => {
+    const newEditedTimes = { ...editedTimes, [entryId]: e.target.value };
+    setEditedTimes(newEditedTimes);
   };
 
   function convertToTime(number) {
@@ -110,8 +112,10 @@ function DayViewTimesheet({ date }) {
                     <input
                       type="text"
                       id={entry._id}
-                      value={convertToTime(entry.time)}
-                      onChange={handleTimeChange}
+                      value={
+                        editedTimes[entry._id] || convertToTime(entry.time)
+                      }
+                      onChange={(e) => handleTimeChange(e, entry._id)}
                       style={{
                         border: "1px solid black",
                         fontSize: "24px",
