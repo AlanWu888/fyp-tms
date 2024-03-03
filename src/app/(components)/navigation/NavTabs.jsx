@@ -3,18 +3,7 @@
 import React, { useState, useEffect } from "react";
 import styles from "./styles/NavTabs.module.css"; // Import CSS module styles
 
-const NavTabs = ({ items, selectedDay }) => {
-  const [selectedItem, setSelectedItem] = useState(items[0]);
-
-  // Update selectedItem based on selectedDay prop
-  useEffect(() => {
-    setSelectedItem(selectedDay);
-  }, [selectedDay]);
-
-  const handleItemClick = (item) => {
-    setSelectedItem(item);
-  };
-
+const NavTabs = ({ items, selectedDay, onItemClick }) => {
   return (
     <nav className={styles.navbarContainer}>
       {items.map((item, index) => (
@@ -22,9 +11,9 @@ const NavTabs = ({ items, selectedDay }) => {
           key={index}
           href="#"
           className={`${styles.navItem} ${
-            item === selectedItem ? styles.selected : ""
+            item === selectedDay ? styles.selected : ""
           }`}
-          onClick={() => handleItemClick(item)}
+          onClick={() => onItemClick(item)}
         >
           {item}
         </a>

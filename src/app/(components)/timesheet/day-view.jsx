@@ -1,12 +1,10 @@
-"use client";
-
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import Button from "../buttons/Button";
 import { COLOURS } from "@/app/constants";
 import NavTabs from "../navigation/NavTabs";
 
-function DayViewTimesheet({ date }) {
+function DayViewTimesheet({ date, setDate }) {
   const { data: session } = useSession();
   const userEmail = session?.user?.email;
 
@@ -14,6 +12,18 @@ function DayViewTimesheet({ date }) {
   const [filteredTimesheets, setFilteredTimesheets] = useState([]);
   const [editedTimes, setEditedTimes] = useState({});
   const [inputErrors, setInputErrors] = useState({});
+  const [dayOfWeek, setDayOfWeek] = useState("");
+  const [dailyTotal, setDailyTotal] = useState(0);
+  const [weeklyTotal, setWeeklyTotal] = useState(0);
+  const days = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -45,6 +55,40 @@ function DayViewTimesheet({ date }) {
 
     filterTimesheets();
   }, [timesheets, userEmail, date]);
+
+  useEffect(() => {
+    const isoDate = date.split("T")[0];
+    const dateObj = new Date(isoDate);
+    const dayIndex = dateObj.getDay();
+    const day = days[dayIndex];
+    setDayOfWeek(day);
+  }, [date]);
+
+  // Calculate daily and weekly totals
+  useEffect(() => {
+    let daily = 0;
+    let weekly = 0;
+
+    filteredTimesheets.forEach((timesheet) => {
+      timesheet.entries.forEach((entry) => {
+        daily += parseFloat(entry.time);
+        weekly += parseFloat(entry.time);
+      });
+    });
+
+    setDailyTotal(daily);
+    setWeeklyTotal(weekly);
+  }, [filteredTimesheets]);
+
+  const handleNavTabClick = (selectedDay) => {
+    const today = new Date(date);
+    const currentDay = today.getDay();
+    const diff = currentDay - days.indexOf(selectedDay);
+    const newDate = new Date(
+      today.setDate(today.getDate() - diff),
+    ).toISOString();
+    setDate(newDate);
+  };
 
   const handleClickButton = () => {
     alert(JSON.stringify(editedTimes));
@@ -101,8 +145,6 @@ function DayViewTimesheet({ date }) {
 
   return (
     <div>
-      <p>day view: {date}</p>
-      <p>{new Date(date).getDay()}</p>
       <div
         className="timesheet-rows-header"
         style={{
@@ -114,29 +156,29 @@ function DayViewTimesheet({ date }) {
       >
         <NavTabs
           items={[
+            "Sunday",
             "Monday",
             "Tuesday",
             "Wednesday",
             "Thursday",
             "Friday",
             "Saturday",
-            "Sunday",
           ]}
-          selectedDay={
-            [
-              "Sunday",
-              "Monday",
-              "Tuesday",
-              "Wednesday",
-              "Thursday",
-              "Friday",
-              "Saturday",
-            ][new Date(date).getDay()]
-          }
+          selectedDay={dayOfWeek}
+          onItemClick={handleNavTabClick}
         />
-        <div>
-          week total
-          {/*week total here*/}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          <div style={{ marginRight: "20px" }}>
+            Daily Total: {dailyTotal.toFixed(2)}
+          </div>
+          <div style={{ marginRight: "20px" }}>
+            Weekly Total: {weeklyTotal.toFixed(2)}
+          </div>
         </div>
       </div>
       <ul>
