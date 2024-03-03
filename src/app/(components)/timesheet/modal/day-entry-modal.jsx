@@ -11,7 +11,7 @@ function EntryModal({ timesheetId, entry, onClose, onTimesheetUpdate }) {
   const [projectName, setProjectName] = useState(entry.projectName);
   const [taskDescription, setTaskDescription] = useState(entry.taskDescription);
   const [time, setTime] = useState(entry.time);
-  const [additionalNotes, setAdditionalNotes] = useState("");
+  const [additionalNotes, setAdditionalNotes] = useState(entry.additionalNotes);
   const [isDirty, setIsDirty] = useState(false);
 
   const [projects, setProjects] = useState([]);
@@ -84,19 +84,6 @@ function EntryModal({ timesheetId, entry, onClose, onTimesheetUpdate }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log(
-        JSON.stringify({
-          id: timesheetId,
-          updatedFields: {
-            entryId: entry._id,
-            clientName,
-            projectName,
-            taskDescription,
-            time,
-            additionalNotes,
-          },
-        }),
-      );
       const response = await fetch("/api/Timesheets", {
         method: "PATCH",
         headers: {
@@ -127,98 +114,185 @@ function EntryModal({ timesheetId, entry, onClose, onTimesheetUpdate }) {
   return (
     <div className="modal" style={modalStyle}>
       <div className="modal-content" style={modalContentStyle}>
-        <div className="modal-header">
+        <div
+          className="modal-header"
+          style={{
+            backgroundColor: COLOURS.GREY,
+            margin: "auto",
+            padding: "10px",
+            justifyContent: "center",
+            display: "flex",
+            fontWeight: "bold",
+            borderTopLeftRadius: "10px",
+            borderTopRightRadius: "10px",
+            borderBottom: "1px solid black",
+          }}
+        >
           <h2>Editing time entry for task</h2>
         </div>
 
-        <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: "10px" }}>
-            <label>
-              Client Name:
-              <br />
-              <select
-                value={clientName}
-                onChange={handleClientChange}
-                style={{ width: "100%" }}
-              >
-                <option value="">Select Client</option>
-                {Object.keys(clientProjects).map((client) => (
-                  <option key={client} value={client}>
-                    {client}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
-          <div style={{ marginBottom: "10px" }}>
-            <label>
-              Project Name:
-              <br />
-              <select
-                value={projectName}
-                onChange={handleProjectChange}
-                style={{ width: "100%" }}
-                disabled={!clientName}
-              >
-                <option value="">Select Project</option>
-                {clientProjects[clientName]?.map((project) => (
-                  <option key={project} value={project}>
-                    {project}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
-          <div style={{ marginBottom: "10px" }}>
-            <label>
-              Task Description:
-              <br />
-              <input
-                type="text"
-                value={taskDescription}
-                onChange={(e) => setTaskDescription(e.target.value)}
-                style={{ width: "100%" }}
-              />
-            </label>
-          </div>
-          <div style={{ marginBottom: "10px" }}>
-            <label>
-              Time:
-              <br />
-              <input
-                type="text"
-                value={time}
-                onChange={(e) => setTime(e.target.value)}
-                style={{ width: "100%" }}
-              />
-            </label>
-          </div>
-          <div style={{ marginBottom: "10px" }}>
-            <label>
-              Additional Notes:
-              <br />
-              <textarea
-                value={additionalNotes}
-                onChange={(e) => setAdditionalNotes(e.target.value)}
-                style={{ width: "100%" }}
-              />
-            </label>
-          </div>
+        <div
+          style={{
+            paddingLeft: "20px",
+            paddingRight: "20px",
+            paddingBottom: "20px",
+          }}
+        >
+          <form onSubmit={handleSubmit}>
+            <div style={{ marginBottom: "10px" }}>
+              <label style={{ fontSize: "16px", fontWeight: "bold" }}>
+                Client Name:
+                <br />
+                <select
+                  value={clientName}
+                  onChange={handleClientChange}
+                  style={{
+                    width: "100%",
+                    fontSize: "16px",
+                    border: "1px solid black",
+                    borderRadius: "10px",
+                    fontSize: "16px",
+                    height: "45px",
+                    paddingLeft: "10px",
+                    paddingRight: "10px",
+                    fontWeight: "normal",
+                  }}
+                >
+                  <option value="">Select Client</option>
+                  {Object.keys(clientProjects).map((client) => (
+                    <option key={client} value={client}>
+                      {client}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+            <div style={{ marginBottom: "10px" }}>
+              <label style={{ fontSize: "16px", fontWeight: "bold" }}>
+                Project Name:
+                <br />
+                <select
+                  value={projectName}
+                  onChange={handleProjectChange}
+                  style={{
+                    width: "100%",
+                    fontSize: "16px",
+                    border: "1px solid black",
+                    borderRadius: "10px",
+                    fontSize: "16px",
+                    height: "45px",
+                    paddingLeft: "10px",
+                    paddingRight: "10px",
+                    fontWeight: "normal",
+                  }}
+                  disabled={!clientName}
+                >
+                  <option value="">Select Project</option>
+                  {clientProjects[clientName]?.map((project) => (
+                    <option key={project} value={project}>
+                      {project}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+            <div style={{ marginBottom: "10px" }}>
+              <label style={{ fontSize: "16px", fontWeight: "bold" }}>
+                Task Description:
+                <br />
+                <input
+                  type="text"
+                  value={taskDescription}
+                  onChange={(e) => setTaskDescription(e.target.value)}
+                  style={{
+                    width: "100%",
+                    fontSize: "16px",
+                    border: "1px solid black",
+                    borderRadius: "10px",
+                    fontSize: "16px",
+                    height: "45px",
+                    paddingLeft: "10px",
+                    paddingRight: "10px",
+                    fontWeight: "normal",
+                  }}
+                />
+              </label>
+            </div>
 
-          <Button
-            bgcolour={COLOURS.GREEN_ENABLED}
-            colour="#000"
-            label="Save"
-            type="submit"
-            disabled={!isDirty}
-          />
-          <Button
-            bgcolour={COLOURS.GREY}
-            colour="#000"
-            label="Close"
-            onClick={onClose}
-          />
-        </form>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginBottom: "10px",
+              }}
+            >
+              <div style={{ width: "75%", marginRight: "20px" }}>
+                <label style={{ fontSize: "16px", fontWeight: "bold" }}>
+                  Additional Notes:
+                  <br />
+                  <textarea
+                    value={additionalNotes}
+                    onChange={(e) => setAdditionalNotes(e.target.value)}
+                    style={{
+                      width: "100%",
+                      fontSize: "16px",
+                      border: "1px solid black",
+                      borderRadius: "10px",
+                      height: "70px",
+                      paddingLeft: "10px",
+                      paddingRight: "10px",
+                      fontWeight: "normal",
+                    }}
+                  />
+                </label>
+              </div>
+              <div style={{ width: "25%" }}>
+                <label style={{ fontSize: "16px", fontWeight: "bold" }}>
+                  Time:
+                  <br />
+                  <input
+                    type="text"
+                    value={time}
+                    onChange={(e) => setTime(e.target.value)}
+                    style={{
+                      width: "100%",
+                      fontSize: "16px",
+                      border: "1px solid black",
+                      borderRadius: "10px",
+                      height: "70px",
+                      paddingLeft: "10px",
+                      paddingRight: "10px",
+                      fontWeight: "normal",
+                    }}
+                  />
+                </label>
+              </div>
+            </div>
+
+            <div
+              className="modal-button-group"
+              style={{ display: "flex", marginTop: "55px" }}
+            >
+              <div style={{ marginRight: "10px" }}>
+                <Button
+                  bgcolour={COLOURS.GREEN_ENABLED}
+                  colour="#000"
+                  label="Save"
+                  type="submit"
+                  disabled={!isDirty}
+                />
+              </div>
+              <div>
+                <Button
+                  bgcolour={COLOURS.GREY}
+                  colour="#000"
+                  label="Close"
+                  onClick={onClose}
+                />
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );
@@ -236,13 +310,13 @@ const modalStyle = {
   top: "0",
   width: "100%",
   height: "100%",
+
   backgroundColor: "rgba(0,0,0,0.4)",
 };
 
 const modalContentStyle = {
-  width: "610px",
-  height: "700px",
+  width: "700px",
+  height: "500px",
   backgroundColor: "#fff",
-  padding: "20px",
-  borderRadius: "5px",
+  borderRadius: "10px",
 };
