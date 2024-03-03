@@ -1,11 +1,16 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./header.css";
 
-const TimesheetHeader = ({ setNewDate }) => {
-  const [date, setDate] = useState(new Date());
+const TimesheetHeader = ({ date: dateString, setNewDate }) => {
+  const [date, setDate] = useState(new Date(dateString));
   const [mode, setMode] = useState("day");
+
+  // Update date when dateString changes
+  useEffect(() => {
+    setDate(new Date(dateString));
+  }, [dateString]);
 
   const setDay = () => {
     setMode("day");

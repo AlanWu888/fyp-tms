@@ -1,4 +1,3 @@
-// TimesheetContainer.jsx
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -15,8 +14,8 @@ const TimesheetContainer = () => {
 
   return (
     <div>
-      <TimesheetHeader setNewDate={handleDateChange} />
-      <TimesheetComponent date={date} />
+      <TimesheetHeader date={date} setNewDate={handleDateChange} />
+      <TimesheetComponent date={date} setDate={setDate} />
     </div>
   );
 };
