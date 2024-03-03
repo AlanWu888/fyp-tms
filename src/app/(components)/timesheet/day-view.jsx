@@ -3,6 +3,7 @@ import { useSession } from "next-auth/react";
 import Button from "../buttons/Button";
 import { COLOURS } from "@/app/constants";
 import NavTabs from "../navigation/NavTabs";
+import EntryModal from "./modal/day-entry-modal";
 
 function DayViewTimesheet({ date, setDate }) {
   const { data: session } = useSession();
@@ -10,11 +11,11 @@ function DayViewTimesheet({ date, setDate }) {
 
   const [timesheets, setTimesheets] = useState([]);
   const [filteredTimesheets, setFilteredTimesheets] = useState([]);
-  const [editedTimes, setEditedTimes] = useState({});
-  const [inputErrors, setInputErrors] = useState({});
   const [dayOfWeek, setDayOfWeek] = useState("");
   const [dailyTotal, setDailyTotal] = useState(0);
-  const [weeklyTotal, setWeeklyTotal] = useState(0);
+  const [selectedEntry, setSelectedEntry] = useState(null);
+  const [selectedTimesheetId, setSelectedTimesheetId] = useState(null); // State to hold the selected timesheet ID
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const days = [
     "Sunday",
     "Monday",
@@ -25,20 +26,20 @@ function DayViewTimesheet({ date, setDate }) {
     "Saturday",
   ];
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("/api/Timesheets");
-        if (!response.ok) {
-          throw new Error("Failed to fetch timesheets");
-        }
-        const data = await response.json();
-        setTimesheets(data.timesheets);
-      } catch (error) {
-        console.error("Error fetching timesheets:", error);
+  const fetchData = async () => {
+    try {
+      const response = await fetch("/api/Timesheets");
+      if (!response.ok) {
+        throw new Error("Failed to fetch timesheets");
       }
-    };
+      const data = await response.json();
+      setTimesheets(data.timesheets);
+    } catch (error) {
+      console.error("Error fetching timesheets:", error);
+    }
+  };
 
+  useEffect(() => {
     fetchData();
   }, []);
 
@@ -64,20 +65,16 @@ function DayViewTimesheet({ date, setDate }) {
     setDayOfWeek(day);
   }, [date]);
 
-  // Calculate daily and weekly totals
   useEffect(() => {
     let daily = 0;
-    let weekly = 0;
 
     filteredTimesheets.forEach((timesheet) => {
       timesheet.entries.forEach((entry) => {
         daily += parseFloat(entry.time);
-        weekly += parseFloat(entry.time);
       });
     });
 
     setDailyTotal(daily);
-    setWeeklyTotal(weekly);
   }, [filteredTimesheets]);
 
   const handleNavTabClick = (selectedDay) => {
@@ -90,38 +87,14 @@ function DayViewTimesheet({ date, setDate }) {
     setDate(newDate);
   };
 
-  const handleClickButton = () => {
-    alert(JSON.stringify(editedTimes));
+  const handleClickEdit = (entry, timesheetId) => {
+    setSelectedEntry(entry);
+    setSelectedTimesheetId(timesheetId); // Set the selected timesheet ID
+    setIsModalOpen(true);
   };
 
-  const handleTimeChange = (e, entryId) => {
-    const { value } = e.target;
-
-    // Check if the input is empty
-    if (!value.trim()) {
-      setInputErrors((prevErrors) => ({
-        ...prevErrors,
-        [entryId]: null, // Clear the error message
-      }));
-      const newEditedTimes = { ...editedTimes, [entryId]: value };
-      setEditedTimes(newEditedTimes);
-      return; // Exit the function early if the input is empty
-    }
-
-    const timeRegex = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/; // Regular expression for 24-hour format HH:mm or H:mm
-    if (!timeRegex.test(value)) {
-      setInputErrors((prevErrors) => ({
-        ...prevErrors,
-        [entryId]: "Please enter time in the format HH:mm",
-      }));
-    } else {
-      setInputErrors((prevErrors) => ({
-        ...prevErrors,
-        [entryId]: null, // Clear the error message
-      }));
-    }
-    const newEditedTimes = { ...editedTimes, [entryId]: value };
-    setEditedTimes(newEditedTimes);
+  const handleClickDelete = () => {
+    // Implement delete functionality here
   };
 
   function convertToTime(number) {
@@ -134,13 +107,6 @@ function DayViewTimesheet({ date, setDate }) {
     minutes = minutes < 10 ? "0" + minutes : minutes;
 
     return `${hours}:${minutes}`;
-  }
-
-  function convertToDecimal(time) {
-    const [hours, minutes] = time.split(":").map(Number);
-    const decimalHours = hours + minutes / 60;
-
-    return decimalHours;
   }
 
   return (
@@ -171,16 +137,20 @@ function DayViewTimesheet({ date, setDate }) {
           style={{
             display: "flex",
             justifyContent: "space-between",
+            textAlign: "right",
           }}
         >
           <div style={{ marginRight: "20px" }}>
-            Daily Total: {dailyTotal.toFixed(2)}
-          </div>
-          <div style={{ marginRight: "20px" }}>
-            Weekly Total: {weeklyTotal.toFixed(2)}
+            <p>Day Total:</p>
+            <p>{dailyTotal.toFixed(2)}</p>
           </div>
         </div>
       </div>
+      {filteredTimesheets.length === 0 && (
+        <div style={{ textAlign: "center", marginTop: "20px" }}>
+          No tasks tracked
+        </div>
+      )}
       <ul>
         {filteredTimesheets.map((timesheet) =>
           timesheet.entries.map((entry, index) => (
@@ -205,45 +175,19 @@ function DayViewTimesheet({ date, setDate }) {
                 </div>
                 <div
                   className="timesheet-entry"
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                  }}
+                  style={{ display: "flex", justifyContent: "space-between" }}
                 >
                   <div
                     style={{
-                      display: "flex",
-                      justifyContent: "space-between",
+                      marginRight: "120px",
                       marginTop: "auto",
                       marginBottom: "auto",
-                      marginRight: "30px",
+                      fontSize: "24px",
+                      fontWeight: "bold",
                     }}
                   >
-                    {inputErrors[entry._id] && (
-                      <span style={{ color: "red" }}>
-                        {inputErrors[entry._id]}
-                      </span>
-                    )}
-                    <input
-                      type="text"
-                      id={entry._id}
-                      value={
-                        editedTimes[entry._id] || convertToTime(entry.time)
-                      }
-                      onChange={(e) => handleTimeChange(e, entry._id)}
-                      style={{
-                        border: "1px solid black",
-                        fontSize: "24px",
-                        borderRadius: "5px",
-                        fontWeight: "bold",
-                        width: "100px",
-                        textAlign: "center",
-                        marginRight: "50px",
-                        marginLeft: "50px",
-                      }}
-                    />
+                    {convertToTime(entry.time)}
                   </div>
-
                   <div
                     style={{
                       marginRight: "20px",
@@ -255,10 +199,9 @@ function DayViewTimesheet({ date, setDate }) {
                       bgcolour={COLOURS.GREY}
                       colour={"black"}
                       label="Edit"
-                      onClick={handleClickButton}
+                      onClick={() => handleClickEdit(entry, timesheet._id)} // Pass the entry and timesheet ID to the edit handler
                     />
                   </div>
-
                   <div
                     style={{
                       marginRight: "20px",
@@ -270,7 +213,7 @@ function DayViewTimesheet({ date, setDate }) {
                       bgcolour={COLOURS.GREY}
                       colour={"black"}
                       label="Delete"
-                      onClick={handleClickButton}
+                      onClick={handleClickDelete}
                     />
                   </div>
                 </div>
@@ -279,6 +222,14 @@ function DayViewTimesheet({ date, setDate }) {
           )),
         )}
       </ul>
+      {isModalOpen && (
+        <EntryModal
+          timesheetId={selectedTimesheetId}
+          entry={selectedEntry}
+          onClose={() => setIsModalOpen(false)}
+          onTimesheetUpdate={fetchData} // Pass the callback function to update timesheet data
+        />
+      )}
     </div>
   );
 }
