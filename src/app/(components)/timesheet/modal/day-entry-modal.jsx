@@ -1,31 +1,102 @@
-"use client";
-
 import React, { useState, useEffect } from "react";
 import Button from "../../buttons/Button";
 import { COLOURS } from "@/app/constants";
+import { useSession } from "next-auth/react";
 
 function EntryModal({ timesheetId, entry, onClose, onTimesheetUpdate }) {
+  const { data: session } = useSession();
+  const userEmail = session?.user?.email;
+
   const [clientName, setClientName] = useState(entry.clientName);
   const [projectName, setProjectName] = useState(entry.projectName);
   const [taskDescription, setTaskDescription] = useState(entry.taskDescription);
   const [time, setTime] = useState(entry.time);
   const [additionalNotes, setAdditionalNotes] = useState("");
-  const [isDirty, setIsDirty] = useState(false); // State to track changes
+  const [isDirty, setIsDirty] = useState(false);
 
-  // Check for changes in form fields
+  const [projects, setProjects] = useState([]);
+  const [filteredProjects, setFilteredProjects] = useState([]);
+  const [clientProjects, setClientProjects] = useState({});
+
+  useEffect(() => {
+    // get projects and only show the projects user is part of
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/Projects");
+        if (!response.ok) {
+          throw new Error("Failed to fetch projects");
+        }
+        const data = await response.json();
+        setProjects(data.projects);
+      } catch (error) {
+        console.error("Error fetching projects:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (projects.length > 0) {
+      const filteredProjects = projects.filter((project) => {
+        return project.memberEmails.includes(userEmail);
+      });
+      setFilteredProjects(filteredProjects);
+    }
+  }, [projects, userEmail]);
+
+  useEffect(() => {
+    const updatedClientProjects = {};
+    filteredProjects.forEach((project) => {
+      const { clientname, projectname } = project;
+      if (!updatedClientProjects[clientname]) {
+        updatedClientProjects[clientname] = [projectname];
+      } else {
+        updatedClientProjects[clientname].push(projectname);
+      }
+    });
+
+    setClientProjects(updatedClientProjects);
+  }, [filteredProjects]);
+
   useEffect(() => {
     setIsDirty(
       clientName !== entry.clientName ||
         projectName !== entry.projectName ||
         taskDescription !== entry.taskDescription ||
         time !== entry.time ||
-        additionalNotes !== "",
+        additionalNotes !== entry.additionalNotes,
     );
   }, [clientName, projectName, taskDescription, time, additionalNotes, entry]);
+
+  const handleClientChange = (e) => {
+    const selectedClient = e.target.value;
+    setClientName(selectedClient);
+    // Reset project name when client changes
+    setProjectName("");
+  };
+
+  const handleProjectChange = (e) => {
+    const selectedProject = e.target.value;
+    setProjectName(selectedProject);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      console.log(
+        JSON.stringify({
+          id: timesheetId,
+          updatedFields: {
+            entryId: entry._id,
+            clientName,
+            projectName,
+            taskDescription,
+            time,
+            additionalNotes,
+          },
+        }),
+      );
       const response = await fetch("/api/Timesheets", {
         method: "PATCH",
         headers: {
@@ -65,24 +136,37 @@ function EntryModal({ timesheetId, entry, onClose, onTimesheetUpdate }) {
             <label>
               Client Name:
               <br />
-              <input
-                type="text"
+              <select
                 value={clientName}
-                onChange={(e) => setClientName(e.target.value)}
+                onChange={handleClientChange}
                 style={{ width: "100%" }}
-              />
+              >
+                <option value="">Select Client</option>
+                {Object.keys(clientProjects).map((client) => (
+                  <option key={client} value={client}>
+                    {client}
+                  </option>
+                ))}
+              </select>
             </label>
           </div>
           <div style={{ marginBottom: "10px" }}>
             <label>
               Project Name:
               <br />
-              <input
-                type="text"
+              <select
                 value={projectName}
-                onChange={(e) => setProjectName(e.target.value)}
+                onChange={handleProjectChange}
                 style={{ width: "100%" }}
-              />
+                disabled={!clientName}
+              >
+                <option value="">Select Project</option>
+                {clientProjects[clientName]?.map((project) => (
+                  <option key={project} value={project}>
+                    {project}
+                  </option>
+                ))}
+              </select>
             </label>
           </div>
           <div style={{ marginBottom: "10px" }}>
@@ -121,15 +205,12 @@ function EntryModal({ timesheetId, entry, onClose, onTimesheetUpdate }) {
             </label>
           </div>
 
-          <div>{JSON.stringify(timesheetId)}</div>
-          <div>{JSON.stringify(entry)}</div>
-
           <Button
             bgcolour={COLOURS.GREEN_ENABLED}
             colour="#000"
             label="Save"
             type="submit"
-            disabled={!isDirty} // Disable the Save button if there are no changes
+            disabled={!isDirty}
           />
           <Button
             bgcolour={COLOURS.GREY}

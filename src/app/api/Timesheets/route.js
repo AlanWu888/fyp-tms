@@ -84,6 +84,22 @@ export async function PATCH(req) {
       });
     }
 
+    if (updatedFields.projectName) {
+      timesheet.entries.forEach((entry) => {
+        if (entry._id.toString() === updatedFields.entryId) {
+          entry.projectName = updatedFields.projectName;
+        }
+      });
+    }
+
+    if (updatedFields.clientName) {
+      timesheet.entries.forEach((entry) => {
+        if (entry._id.toString() === updatedFields.entryId) {
+          entry.clientName = updatedFields.clientName;
+        }
+      });
+    }
+
     await timesheet.save();
 
     return NextResponse.json(

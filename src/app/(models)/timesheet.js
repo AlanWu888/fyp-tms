@@ -27,6 +27,10 @@ const timesheetSchema = new Schema(
           type: Number,
           required: true,
         },
+        additionalNotes: {
+          type: String,
+          required: false,
+        },
       },
     ],
     date: {
