@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import Button from "../buttons/Button";
@@ -12,6 +10,7 @@ function DayViewTimesheet({ date }) {
   const [timesheets, setTimesheets] = useState([]);
   const [filteredTimesheets, setFilteredTimesheets] = useState([]);
   const [editedTimes, setEditedTimes] = useState({});
+  const [inputErrors, setInputErrors] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,7 +48,32 @@ function DayViewTimesheet({ date }) {
   };
 
   const handleTimeChange = (e, entryId) => {
-    const newEditedTimes = { ...editedTimes, [entryId]: e.target.value };
+    const { value } = e.target;
+
+    // Check if the input is empty
+    if (!value.trim()) {
+      setInputErrors((prevErrors) => ({
+        ...prevErrors,
+        [entryId]: null, // Clear the error message
+      }));
+      const newEditedTimes = { ...editedTimes, [entryId]: value };
+      setEditedTimes(newEditedTimes);
+      return; // Exit the function early if the input is empty
+    }
+
+    const timeRegex = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/; // Regular expression for 24-hour format HH:mm or H:mm
+    if (!timeRegex.test(value)) {
+      setInputErrors((prevErrors) => ({
+        ...prevErrors,
+        [entryId]: "Please enter time in the format HH:mm",
+      }));
+    } else {
+      setInputErrors((prevErrors) => ({
+        ...prevErrors,
+        [entryId]: null, // Clear the error message
+      }));
+    }
+    const newEditedTimes = { ...editedTimes, [entryId]: value };
     setEditedTimes(newEditedTimes);
   };
 
@@ -83,7 +107,7 @@ function DayViewTimesheet({ date }) {
               className="timesheet-entry border border-black p-3 mb-2"
             >
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <div className="entry-details ">
+                <div className="entry-details">
                   <div>
                     <p style={{ fontSize: "24px" }}>
                       {entry.clientName} - {entry.projectName}
@@ -98,7 +122,10 @@ function DayViewTimesheet({ date }) {
                 </div>
                 <div
                   className="timesheet-entry"
-                  style={{ display: "flex", justifyContent: "space-between" }}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                  }}
                 >
                   <div
                     style={{
@@ -109,6 +136,11 @@ function DayViewTimesheet({ date }) {
                       marginRight: "30px",
                     }}
                   >
+                    {inputErrors[entry._id] && (
+                      <span style={{ color: "red" }}>
+                        {inputErrors[entry._id]}
+                      </span>
+                    )}
                     <input
                       type="text"
                       id={entry._id}
@@ -124,6 +156,7 @@ function DayViewTimesheet({ date }) {
                         width: "100px",
                         textAlign: "center",
                         marginRight: "50px",
+                        marginLeft: "50px",
                       }}
                     />
                   </div>
