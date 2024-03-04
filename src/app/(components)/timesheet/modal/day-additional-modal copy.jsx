@@ -80,6 +80,12 @@ function AdditionModal({ date, onClose, onTimesheetUpdate }) {
     setProjectName(selectedProject);
   };
 
+  //  When a duplicate timesheet is found:
+  //  find the timesheet ID
+  //    - get all, filter by date and user
+  //    - match to date from system and user from system
+  // try: https://chat.openai.com/c/a827e642-35d2-4bb5-90fe-a1852404f788
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(
