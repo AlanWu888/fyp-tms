@@ -72,9 +72,7 @@ function DayViewTimesheet({ date, setDate }) {
     let daily = 0;
 
     filteredTimesheets.forEach((timesheet) => {
-      timesheet.entries.forEach((entry) => {
-        daily += parseFloat(entry.time);
-      });
+      daily += parseFloat(timesheet.time);
     });
 
     setDailyTotal(daily);
@@ -90,9 +88,9 @@ function DayViewTimesheet({ date, setDate }) {
     setDate(newDate);
   };
 
-  const handleClickEdit = (entry, timesheetId) => {
-    setSelectedEntry(entry);
-    setSelectedTimesheetId(timesheetId); // Set the selected timesheet ID
+  const handleClickEdit = (timesheet) => {
+    setSelectedEntry(timesheet);
+    setSelectedTimesheetId(timesheet._id); // Set the selected timesheet ID
     setEditModalOpen(true);
   };
 
@@ -167,75 +165,70 @@ function DayViewTimesheet({ date, setDate }) {
         </div>
       )}
       <ul>
-        {filteredTimesheets.map((timesheet) =>
-          timesheet.entries.map((entry, index) => (
-            <li
-              key={index}
-              className="timesheet-entry p-3 mb-2"
-              style={{ borderBottom: "1px solid black" }}
-            >
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <div className="entry-details">
-                  <div>
-                    <p style={{ fontSize: "24px" }}>
-                      {entry.clientName} - {entry.projectName}
-                    </p>
-                  </div>
-                  <div
-                    className="task-description"
-                    style={{ fontSize: "16px" }}
-                  >
-                    {entry.taskDescription}
-                  </div>
+        {filteredTimesheets.map((timesheet, index) => (
+          <li
+            key={index}
+            className="timesheet-entry p-3 mb-2"
+            style={{ borderBottom: "1px solid black" }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <div className="entry-details">
+                <div>
+                  <p style={{ fontSize: "24px" }}>
+                    {timesheet.clientName} - {timesheet.projectName}
+                  </p>
                 </div>
-                <div
-                  className="timesheet-entry"
-                  style={{ display: "flex", justifyContent: "space-between" }}
-                >
-                  <div
-                    style={{
-                      marginRight: "120px",
-                      marginTop: "auto",
-                      marginBottom: "auto",
-                      fontSize: "24px",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    {convertToTime(entry.time)}
-                  </div>
-                  <div
-                    style={{
-                      marginRight: "20px",
-                      marginTop: "auto",
-                      marginBottom: "auto",
-                    }}
-                  >
-                    <Button
-                      bgcolour={COLOURS.GREY}
-                      colour={"black"}
-                      label="Edit"
-                      onClick={() => handleClickEdit(entry, timesheet._id)} // Pass the entry and timesheet ID to the edit handler
-                    />
-                  </div>
-                  <div
-                    style={{
-                      marginRight: "20px",
-                      marginTop: "auto",
-                      marginBottom: "auto",
-                    }}
-                  >
-                    <Button
-                      bgcolour={COLOURS.GREY}
-                      colour={"black"}
-                      label="Delete"
-                      onClick={handleClickDelete}
-                    />
-                  </div>
+                <div className="task-description" style={{ fontSize: "16px" }}>
+                  {timesheet.taskDescription}
                 </div>
               </div>
-            </li>
-          )),
-        )}
+              <div
+                className="timesheet-entry"
+                style={{ display: "flex", justifyContent: "space-between" }}
+              >
+                <div
+                  style={{
+                    marginRight: "120px",
+                    marginTop: "auto",
+                    marginBottom: "auto",
+                    fontSize: "24px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {convertToTime(timesheet.time)}
+                </div>
+                <div
+                  style={{
+                    marginRight: "20px",
+                    marginTop: "auto",
+                    marginBottom: "auto",
+                  }}
+                >
+                  <Button
+                    bgcolour={COLOURS.GREY}
+                    colour={"black"}
+                    label="Edit"
+                    onClick={() => handleClickEdit(timesheet)}
+                  />
+                </div>
+                <div
+                  style={{
+                    marginRight: "20px",
+                    marginTop: "auto",
+                    marginBottom: "auto",
+                  }}
+                >
+                  <Button
+                    bgcolour={COLOURS.GREY}
+                    colour={"black"}
+                    label="Delete"
+                    onClick={handleClickDelete}
+                  />
+                </div>
+              </div>
+            </div>
+          </li>
+        ))}
       </ul>
       {editModalOpen && (
         <EntryModal
