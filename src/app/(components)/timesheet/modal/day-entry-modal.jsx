@@ -12,11 +12,11 @@ function EntryModal({ timesheetId, entry, onClose, onTimesheetUpdate }) {
   const [taskDescription, setTaskDescription] = useState(entry.taskDescription);
 
   const [additionalNotes, setAdditionalNotes] = useState(entry.additionalNotes);
-  const [isDirty, setIsDirty] = useState(false);
 
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [clientProjects, setClientProjects] = useState({});
+  const [isDirty, setIsDirty] = useState(false);
 
   useEffect(() => {
     // get projects and only show the projects user is part of
@@ -297,6 +297,7 @@ function EntryModal({ timesheetId, entry, onClose, onTimesheetUpdate }) {
                   colour="#000"
                   label="Save"
                   type="submit"
+                  disabled={!isDirty}
                 />
               </div>
               <div>

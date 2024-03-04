@@ -5,37 +5,44 @@ export async function POST(req) {
   try {
     const body = await req.json();
     const timesheetData = body.formData;
-    console.log(JSON.stringify(timesheetData));
 
     // Confirm all fields have been filled
     if (
       !timesheetData?.userEmail ||
-      !timesheetData?.entries ||
+      !timesheetData?.clientName ||
+      !timesheetData?.projectName ||
+      !timesheetData?.taskDescription ||
       !timesheetData?.date
     ) {
       return NextResponse.json({ message: "Missing fields" }, { status: 400 });
     }
 
-    await Timesheet.create(timesheetData);
-    return NextResponse.json(
-      { message: "Timesheet Created." },
-      { status: 201 },
-    );
+    // Check for duplicate entries
+    try {
+      await Timesheet.create(timesheetData);
+      return NextResponse.json(
+        { message: "Timesheet Created." },
+        { status: 201 },
+      );
+    } catch (error) {
+      // Check if the error is due to duplicate key violation
+      if (error.code === 11000) {
+        return NextResponse.json(
+          { message: "Duplicate entry found." },
+          { status: 400 },
+        );
+      }
+      throw error; // Throw error if it's not due to duplicate key violation
+    }
   } catch (error) {
     console.log(error);
-    if (error.code === 11000) {
-      // Duplicate key error
-      return NextResponse.json(
-        { message: "Duplicate timesheet entry" },
-        { status: 409 },
-      );
-    } else {
-      // Other errors
-      return NextResponse.json(
-        { message: "An error occurred while saving the timesheet" },
-        { status: 500 },
-      );
-    }
+    return NextResponse.json(
+      {
+        message:
+          "An error occurred while saving the timesheet. Please try again later.",
+      },
+      { status: 500 },
+    );
   }
 }
 
@@ -67,45 +74,17 @@ export async function PATCH(req) {
       );
     }
 
-    // Update taskDescription and time if they exist in the updatedFields
-    if (updatedFields.taskDescription) {
-      timesheet.entries.forEach((entry) => {
-        if (entry._id.toString() === updatedFields.entryId) {
-          entry.taskDescription = updatedFields.taskDescription;
-        }
-      });
-    }
-
-    if (updatedFields.time) {
-      timesheet.entries.forEach((entry) => {
-        if (entry._id.toString() === updatedFields.entryId) {
-          entry.time = updatedFields.time;
-        }
-      });
-    }
-
-    if (updatedFields.additionalNotes) {
-      timesheet.entries.forEach((entry) => {
-        if (entry._id.toString() === updatedFields.entryId) {
-          entry.additionalNotes = updatedFields.additionalNotes;
-        }
-      });
-    }
-
-    if (updatedFields.projectName) {
-      timesheet.entries.forEach((entry) => {
-        if (entry._id.toString() === updatedFields.entryId) {
-          entry.projectName = updatedFields.projectName;
-        }
-      });
-    }
-
     if (updatedFields.clientName) {
-      timesheet.entries.forEach((entry) => {
-        if (entry._id.toString() === updatedFields.entryId) {
-          entry.clientName = updatedFields.clientName;
-        }
-      });
+      timesheet.clientName = updatedFields.clientName;
+    }
+    if (updatedFields.projectName) {
+      timesheet.projectName = updatedFields.projectName;
+    }
+    if (updatedFields.taskDescription) {
+      timesheet.taskDescription = updatedFields.taskDescription;
+    }
+    if (updatedFields.time) {
+      timesheet.time = updatedFields.time;
     }
 
     await timesheet.save();
