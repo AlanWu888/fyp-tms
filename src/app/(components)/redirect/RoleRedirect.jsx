@@ -35,7 +35,7 @@ const RoleRedirect = () => {
       <div className={styles.spinnerContainer}>
         <div className={styles.spinner}></div>
       </div>
-      <p class="text">Redirecting</p>
+      <p className="text">Redirecting</p>
     </div>
   );
 };

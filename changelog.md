@@ -1,3 +1,18 @@
+## [0.09] - 04/03/2024
+
+BT-37 Timesheet day view
+
+## Added
+
+- Time page header, able to choose between week and day view (non functional at the moment)
+- Live data to Time tab and Project tab for manager users
+- Ability to add, edit and delete a timesheet entry
+
+## Fixes
+
+- Changes made to api/Timesheet, removed entries property in the Timesheet mongoose schema
+- Removed console.logs in across the repository
+
 ## [0.08] - 29/02/2024
 
 BT-50 Add log out functionality for all users
