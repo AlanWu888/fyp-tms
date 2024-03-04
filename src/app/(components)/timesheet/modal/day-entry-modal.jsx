@@ -100,7 +100,6 @@ function EntryModal({ timesheetId, entry, onClose, onTimesheetUpdate }) {
     e.preventDefault();
 
     if (time === "00:00") {
-      console.log(time);
       setErrorMessage("Please enter a valid time.");
       return;
     }

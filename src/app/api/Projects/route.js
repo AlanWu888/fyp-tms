@@ -43,7 +43,6 @@ export async function POST(req) {
 export async function GET() {
   try {
     const projects = await Project.find({});
-    // console.log(projects);
     return NextResponse.json({ projects }, { status: 201 });
   } catch (error) {
     console.log(error);

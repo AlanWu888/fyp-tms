@@ -26,7 +26,6 @@ export async function POST(req) {
 export async function GET() {
   try {
     const clients = await Client.find({});
-    console.log(clients);
     return NextResponse.json({ clients }, { status: 200 });
   } catch (error) {
     console.log(error);
