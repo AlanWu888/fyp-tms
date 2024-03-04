@@ -27,6 +27,8 @@ function AdditionModal({ date, onClose, onTimesheetUpdate }) {
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [clientProjects, setClientProjects] = useState({});
 
+  const [errorMessage, setErrorMessage] = useState("");
+
   useEffect(() => {
     // get projects and only show the projects user is part of
     const fetchData = async () => {
@@ -80,27 +82,29 @@ function AdditionModal({ date, onClose, onTimesheetUpdate }) {
     setProjectName(selectedProject);
   };
 
-  //  When a duplicate timesheet is found:
-  //  find the timesheet ID
-  //    - get all, filter by date and user
-  //    - match to date from system and user from system
-  // try: https://chat.openai.com/c/a827e642-35d2-4bb5-90fe-a1852404f788
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!clientName || !projectName || !time || !taskDescription) {
+      setErrorMessage("Please fill in required fields.");
+      return;
+    }
+
+    if (time === "00:00") {
+      console.log(time);
+      setErrorMessage("Please enter a valid time.");
+      return;
+    }
+
     console.log(
       JSON.stringify({
         formData: {
           userEmail,
-          entries: [
-            {
-              clientName,
-              projectName,
-              taskDescription,
-              additionalNotes,
-              time: convertTimeToDecimal(time),
-            },
-          ],
+          clientName,
+          projectName,
+          taskDescription,
+          additionalNotes,
+          time: convertTimeToDecimal(time),
           date,
         },
       }),
@@ -114,32 +118,88 @@ function AdditionModal({ date, onClose, onTimesheetUpdate }) {
         body: JSON.stringify({
           formData: {
             userEmail,
-            entries: [
-              {
-                clientName,
-                projectName,
-                taskDescription,
-                additionalNotes,
-                time: convertTimeToDecimal(time),
-              },
-            ],
+            clientName,
+            projectName,
+            taskDescription,
+            additionalNotes,
+            time: convertTimeToDecimal(time),
             date,
           },
         }),
       });
       if (!response.ok) {
         throw new Error("Failed to update timesheet");
+      } else {
+        onTimesheetUpdate(); // Trigger the callback function to update timesheet data
+        onClose();
       }
-      onTimesheetUpdate(); // Trigger the callback function to update timesheet data
-      onClose();
     } catch (error) {
       console.error("Error updating timesheet:", error);
+      // Set error message state
+      setErrorMessage(
+        "Failed to update timesheet. Please try again later or check for duplicated entries.",
+      );
     }
   };
 
   return (
     <div className="modal" style={modalStyle}>
       <div className="modal-content" style={modalContentStyle}>
+        {errorMessage && (
+          <div
+            className="error-message"
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              zIndex: "9999",
+              backgroundColor: "#ffcccc",
+              paddingLeft: "10px",
+              paddingRight: "10px",
+              paddingTop: "10px",
+              paddingBottom: "30px",
+              borderRadius: "5px",
+              border: "1px solid #ff6666",
+              width: "600px",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: "10px",
+                paddingBottom: "10px",
+                borderBottom: "1px solid black",
+              }}
+            >
+              <div
+                style={{
+                  fontWeight: "bold",
+                  fontSize: "24px",
+                  textAlign: "left",
+                }}
+              >
+                <p>Error occured :(</p>
+              </div>
+              <button
+                onClick={() => setErrorMessage("")}
+                style={{
+                  padding: "5px 10px",
+                  backgroundColor: "#ffffff",
+                  border: "1px solid #ff6666",
+                  borderRadius: "3px",
+                  cursor: "pointer",
+                }}
+              >
+                Close
+              </button>
+            </div>
+            <div>{errorMessage}</div>
+          </div>
+        )}
+
         <div
           className="modal-header"
           style={{
@@ -257,6 +317,10 @@ function AdditionModal({ date, onClose, onTimesheetUpdate }) {
               <div style={{ width: "75%", marginRight: "20px" }}>
                 <label style={{ fontSize: "16px", fontWeight: "bold" }}>
                   Additional Notes:
+                  <p style={{ display: "contents", fontWeight: "normal" }}>
+                    {" "}
+                    (optional)
+                  </p>
                   <br />
                   <textarea
                     value={additionalNotes}
