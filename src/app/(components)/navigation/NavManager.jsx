@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation"; // usePathname is a hook now impo
 
 const NavManager = () => {
   const pathname = usePathname();
-  console.log(pathname);
 
   return (
     <nav className={styles.navbar}>
