@@ -4,7 +4,7 @@ import Button from "../buttons/Button";
 import { COLOURS } from "@/app/constants";
 import NavTabs from "../navigation/NavTabs";
 import EntryModal from "./modal/day-entry-modal";
-import AdditionModal from "./modal/day-additional-modal copy";
+import AdditionModal from "./modal/day-additional-modal";
 
 function DayViewTimesheet({ date, setDate }) {
   const { data: session } = useSession();
@@ -42,21 +42,21 @@ function DayViewTimesheet({ date, setDate }) {
     }
   };
 
+  const filterTimesheets = () => {
+    const filteredTimesheets = timesheets.filter(
+      (timesheet) =>
+        timesheet.userEmail === userEmail &&
+        new Date(timesheet.date).toISOString().split("T")[0] ===
+          date.split("T")[0],
+    );
+    setFilteredTimesheets(filteredTimesheets);
+  };
+
   useEffect(() => {
     fetchData();
   }, []);
 
   useEffect(() => {
-    const filterTimesheets = () => {
-      const filteredTimesheets = timesheets.filter(
-        (timesheet) =>
-          timesheet.userEmail === userEmail &&
-          new Date(timesheet.date).toISOString().split("T")[0] ===
-            date.split("T")[0],
-      );
-      setFilteredTimesheets(filteredTimesheets);
-    };
-
     filterTimesheets();
   }, [timesheets, userEmail, date]);
 
@@ -94,8 +94,35 @@ function DayViewTimesheet({ date, setDate }) {
     setEditModalOpen(true);
   };
 
-  const handleClickDelete = () => {
-    // Implement delete functionality here
+  const handleClickDelete = async (timesheet) => {
+    const isConfirmed =
+      window.confirm(`Are you sure you want to delete this entry?
+
+    Client Name: ${timesheet.clientName}
+    Project Name: ${timesheet.projectName}
+    Task Description: ${timesheet.taskDescription}`);
+    if (!isConfirmed) {
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/Timesheets", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: timesheet._id,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to delete entry");
+      }
+      fetchData();
+      filterTimesheets();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleClickNewTask = (date) => {
@@ -222,7 +249,7 @@ function DayViewTimesheet({ date, setDate }) {
                     bgcolour={COLOURS.GREY}
                     colour={"black"}
                     label="Delete"
-                    onClick={handleClickDelete}
+                    onClick={() => handleClickDelete(timesheet)}
                   />
                 </div>
               </div>
