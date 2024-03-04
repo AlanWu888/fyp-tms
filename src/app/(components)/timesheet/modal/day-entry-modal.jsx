@@ -18,6 +18,8 @@ function EntryModal({ timesheetId, entry, onClose, onTimesheetUpdate }) {
   const [clientProjects, setClientProjects] = useState({});
   const [isDirty, setIsDirty] = useState(false);
 
+  const [errorMessage, setErrorMessage] = useState("");
+
   useEffect(() => {
     // get projects and only show the projects user is part of
     const fetchData = async () => {
@@ -96,6 +98,13 @@ function EntryModal({ timesheetId, entry, onClose, onTimesheetUpdate }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (time === "00:00") {
+      console.log(time);
+      setErrorMessage("Please enter a valid time.");
+      return;
+    }
+
     try {
       const response = await fetch("/api/Timesheets", {
         method: "PATCH",
@@ -127,6 +136,60 @@ function EntryModal({ timesheetId, entry, onClose, onTimesheetUpdate }) {
   return (
     <div className="modal" style={modalStyle}>
       <div className="modal-content" style={modalContentStyle}>
+        {errorMessage && (
+          <div
+            className="error-message"
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              zIndex: "9999",
+              backgroundColor: "#ffcccc",
+              paddingLeft: "10px",
+              paddingRight: "10px",
+              paddingTop: "10px",
+              paddingBottom: "30px",
+              borderRadius: "5px",
+              border: "1px solid #ff6666",
+              width: "600px",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: "10px",
+                paddingBottom: "10px",
+                borderBottom: "1px solid black",
+              }}
+            >
+              <div
+                style={{
+                  fontWeight: "bold",
+                  fontSize: "24px",
+                  textAlign: "left",
+                }}
+              >
+                <p>Error occured :(</p>
+              </div>
+              <button
+                onClick={() => setErrorMessage("")}
+                style={{
+                  padding: "5px 10px",
+                  backgroundColor: "#ffffff",
+                  border: "1px solid #ff6666",
+                  borderRadius: "3px",
+                  cursor: "pointer",
+                }}
+              >
+                Close
+              </button>
+            </div>
+            <div>{errorMessage}</div>
+          </div>
+        )}
         <div
           className="modal-header"
           style={{
@@ -244,6 +307,10 @@ function EntryModal({ timesheetId, entry, onClose, onTimesheetUpdate }) {
               <div style={{ width: "75%", marginRight: "20px" }}>
                 <label style={{ fontSize: "16px", fontWeight: "bold" }}>
                   Additional Notes:
+                  <p style={{ display: "contents", fontWeight: "normal" }}>
+                    {" "}
+                    (optional)
+                  </p>
                   <br />
                   <textarea
                     value={additionalNotes}

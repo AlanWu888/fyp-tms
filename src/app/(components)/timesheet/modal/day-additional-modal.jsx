@@ -95,20 +95,6 @@ function AdditionModal({ date, onClose, onTimesheetUpdate }) {
       setErrorMessage("Please enter a valid time.");
       return;
     }
-
-    console.log(
-      JSON.stringify({
-        formData: {
-          userEmail,
-          clientName,
-          projectName,
-          taskDescription,
-          additionalNotes,
-          time: convertTimeToDecimal(time),
-          date,
-        },
-      }),
-    );
     try {
       const response = await fetch("/api/Timesheets", {
         method: "POST",
