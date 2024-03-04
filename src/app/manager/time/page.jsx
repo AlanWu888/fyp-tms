@@ -7,7 +7,11 @@ const ManagerTime = () => {
   return (
     <div>
       <NavManager />
-      <TimesheetContainer />
+      <div
+        style={{ paddingLeft: "10%", paddingRight: "10%", paddingTop: "30px" }}
+      >
+        <TimesheetContainer />
+      </div>
     </div>
   );
 };

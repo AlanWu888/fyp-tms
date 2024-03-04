@@ -4,6 +4,7 @@ import Button from "../buttons/Button";
 import { COLOURS } from "@/app/constants";
 import NavTabs from "../navigation/NavTabs";
 import EntryModal from "./modal/day-entry-modal";
+import AdditionModal from "./modal/day-additional-modal copy";
 
 function DayViewTimesheet({ date, setDate }) {
   const { data: session } = useSession();
@@ -15,7 +16,9 @@ function DayViewTimesheet({ date, setDate }) {
   const [dailyTotal, setDailyTotal] = useState(0);
   const [selectedEntry, setSelectedEntry] = useState(null);
   const [selectedTimesheetId, setSelectedTimesheetId] = useState(null); // State to hold the selected timesheet ID
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [newModalOpen, setNewModalOpen] = useState(false);
+
   const days = [
     "Sunday",
     "Monday",
@@ -90,11 +93,15 @@ function DayViewTimesheet({ date, setDate }) {
   const handleClickEdit = (entry, timesheetId) => {
     setSelectedEntry(entry);
     setSelectedTimesheetId(timesheetId); // Set the selected timesheet ID
-    setIsModalOpen(true);
+    setEditModalOpen(true);
   };
 
   const handleClickDelete = () => {
     // Implement delete functionality here
+  };
+
+  const handleClickNewTask = (date) => {
+    setNewModalOpen(true);
   };
 
   function convertToTime(number) {
@@ -142,13 +149,21 @@ function DayViewTimesheet({ date, setDate }) {
         >
           <div style={{ marginRight: "20px" }}>
             <p>Day Total:</p>
-            <p>{dailyTotal.toFixed(2)}</p>
+            <p>{convertToTime(dailyTotal.toFixed(2))}</p>
           </div>
         </div>
       </div>
       {filteredTimesheets.length === 0 && (
-        <div style={{ textAlign: "center", marginTop: "20px" }}>
-          No tasks tracked
+        <div
+          style={{
+            textAlign: "center",
+            marginTop: "20px",
+            paddingBottom: "20px",
+            borderBottom: "1px solid black",
+          }}
+        >
+          <p>No tasks currently kept...</p>
+          <p>Track a new task by pressing "Add new Task"</p>
         </div>
       )}
       <ul>
@@ -222,14 +237,29 @@ function DayViewTimesheet({ date, setDate }) {
           )),
         )}
       </ul>
-      {isModalOpen && (
+      {editModalOpen && (
         <EntryModal
           timesheetId={selectedTimesheetId}
           entry={selectedEntry}
-          onClose={() => setIsModalOpen(false)}
+          onClose={() => setEditModalOpen(false)}
           onTimesheetUpdate={fetchData} // Pass the callback function to update timesheet data
         />
       )}
+      {newModalOpen && (
+        <AdditionModal
+          date={date}
+          onClose={() => setNewModalOpen(false)}
+          onTimesheetUpdate={fetchData} // Pass the callback function to update timesheet data
+        />
+      )}
+      <div style={{ marginTop: "20px" }}>
+        <Button
+          bgcolour={COLOURS.GREY}
+          colour="#000"
+          label="+ Track another Task"
+          onClick={handleClickNewTask}
+        />
+      </div>
     </div>
   );
 }

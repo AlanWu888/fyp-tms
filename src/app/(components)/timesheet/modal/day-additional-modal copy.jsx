@@ -3,17 +3,26 @@ import Button from "../../buttons/Button";
 import { COLOURS } from "@/app/constants";
 import { useSession } from "next-auth/react";
 
-function EntryModal({ timesheetId, entry, onClose, onTimesheetUpdate }) {
+function AdditionModal({ date, onClose, onTimesheetUpdate }) {
   const { data: session } = useSession();
   const userEmail = session?.user?.email;
 
-  const [clientName, setClientName] = useState(entry.clientName);
-  const [projectName, setProjectName] = useState(entry.projectName);
-  const [taskDescription, setTaskDescription] = useState(entry.taskDescription);
+  const convertDecimalToTime = (decimalTime) => {
+    const hours = Math.floor(decimalTime);
+    const minutes = Math.round((decimalTime - hours) * 60);
+    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
+  };
 
-  const [additionalNotes, setAdditionalNotes] = useState(entry.additionalNotes);
-  const [isDirty, setIsDirty] = useState(false);
+  const convertTimeToDecimal = (timeString) => {
+    const [hours, minutes] = timeString.split(":").map(parseFloat);
+    return Number(hours + minutes / 60).toPrecision(5);
+  };
 
+  const [time, setTime] = useState(convertDecimalToTime(0.0));
+  const [clientName, setClientName] = useState();
+  const [projectName, setProjectName] = useState();
+  const [taskDescription, setTaskDescription] = useState();
+  const [additionalNotes, setAdditionalNotes] = useState();
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [clientProjects, setClientProjects] = useState({});
@@ -59,29 +68,6 @@ function EntryModal({ timesheetId, entry, onClose, onTimesheetUpdate }) {
     setClientProjects(updatedClientProjects);
   }, [filteredProjects]);
 
-  const convertTimeToDecimal = (timeString) => {
-    const [hours, minutes] = timeString.split(":").map(parseFloat);
-    return Number(hours + minutes / 60).toPrecision(5);
-  };
-
-  const convertDecimalToTime = (decimalTime) => {
-    const hours = Math.floor(decimalTime);
-    const minutes = Math.round((decimalTime - hours) * 60);
-    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
-  };
-
-  const [time, setTime] = useState(convertDecimalToTime(entry.time));
-
-  useEffect(() => {
-    setIsDirty(
-      clientName !== entry.clientName ||
-        projectName !== entry.projectName ||
-        taskDescription !== entry.taskDescription ||
-        time !== entry.time ||
-        additionalNotes !== entry.additionalNotes,
-    );
-  }, [clientName, projectName, taskDescription, time, additionalNotes, entry]);
-
   const handleClientChange = (e) => {
     const selectedClient = e.target.value;
     setClientName(selectedClient);
@@ -96,21 +82,42 @@ function EntryModal({ timesheetId, entry, onClose, onTimesheetUpdate }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(
+      JSON.stringify({
+        formData: {
+          userEmail,
+          entries: [
+            {
+              clientName,
+              projectName,
+              taskDescription,
+              additionalNotes,
+              time: convertTimeToDecimal(time),
+            },
+          ],
+          date,
+        },
+      }),
+    );
     try {
       const response = await fetch("/api/Timesheets", {
-        method: "PATCH",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          id: timesheetId,
-          updatedFields: {
-            entryId: entry._id,
-            clientName,
-            projectName,
-            taskDescription,
-            time: convertTimeToDecimal(time),
-            additionalNotes,
+          formData: {
+            userEmail,
+            entries: [
+              {
+                clientName,
+                projectName,
+                taskDescription,
+                additionalNotes,
+                time: convertTimeToDecimal(time),
+              },
+            ],
+            date,
           },
         }),
       });
@@ -141,7 +148,7 @@ function EntryModal({ timesheetId, entry, onClose, onTimesheetUpdate }) {
             borderBottom: "1px solid black",
           }}
         >
-          <h2>Editing time entry for task</h2>
+          <h2>Add a new time entry</h2>
         </div>
 
         <div
@@ -315,7 +322,7 @@ function EntryModal({ timesheetId, entry, onClose, onTimesheetUpdate }) {
   );
 }
 
-export default EntryModal;
+export default AdditionModal;
 
 const modalStyle = {
   display: "flex",
