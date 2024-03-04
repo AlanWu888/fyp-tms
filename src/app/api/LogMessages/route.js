@@ -20,7 +20,6 @@ export async function POST(req) {
 export async function GET() {
   try {
     const logMsgs = await LogMessage.find({});
-    console.log(logMsgs);
     return NextResponse.json({ logMsgs }, { status: 201 });
   } catch (error) {
     console.log(error);

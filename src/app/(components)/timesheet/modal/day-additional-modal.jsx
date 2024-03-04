@@ -91,7 +91,6 @@ function AdditionModal({ date, onClose, onTimesheetUpdate }) {
     }
 
     if (time === "00:00") {
-      console.log(time);
       setErrorMessage("Please enter a valid time.");
       return;
     }

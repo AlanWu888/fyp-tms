@@ -49,7 +49,6 @@ export async function POST(req) {
 export async function GET() {
   try {
     const timesheets = await Timesheet.find();
-    // console.log(timesheets);
     return NextResponse.json({ timesheets }, { status: 201 });
   } catch (error) {
     console.log(error);
@@ -134,21 +133,3 @@ export async function DELETE(req) {
     );
   }
 }
-
-/*
-Find way to filter data at read level
-export async function GET(req) {
-  try {
-    const {name} = req.query;
-
-    console.log(name)
-    console.log(userEmail)
-    const timesheets = await Timesheet.find({userEmail: "manager_test@bast.com"});
-    console.log(timesheets);
-    return NextResponse.json({ timesheets }, { status: 201 });
-  } catch (error) {
-    console.log(error);
-    return NextResponse.json({ message: "Error", error }, { status: 500 });
-  }
-}
-*/

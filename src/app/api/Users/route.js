@@ -6,7 +6,6 @@ import bcrypt from "bcrypt";
 export async function GET() {
   try {
     const users = await User.find({});
-    console.log(users);
     return NextResponse.json({ users }, { status: 201 });
   } catch (error) {
     console.log(error);

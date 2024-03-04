@@ -10,7 +10,8 @@ BT-37 Timesheet day view
 
 ## Fixes
 
-- changes made to api/Timesheet, removed entries property in the Timesheet mongoose schema
+- Changes made to api/Timesheet, removed entries property in the Timesheet mongoose schema
+- Removed console.logs in across the repository
 
 ## [0.08] - 29/02/2024
 

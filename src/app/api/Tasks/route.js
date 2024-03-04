@@ -50,7 +50,6 @@ export async function PATCH(req) {
 export async function GET() {
   try {
     const tasks = await Task.find({});
-    console.log(tasks);
     return NextResponse.json({ tasks }, { status: 201 });
   } catch (error) {
     console.log(error);
