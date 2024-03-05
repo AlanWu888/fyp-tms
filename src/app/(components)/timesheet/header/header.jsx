@@ -3,9 +3,8 @@
 import React, { useState, useEffect } from "react";
 import "./header.css";
 
-const TimesheetHeader = ({ date: dateString, setNewDate }) => {
+const TimesheetHeader = ({ date: dateString, setNewDate, mode, setMode }) => {
   const [date, setDate] = useState(new Date(dateString));
-  const [mode, setMode] = useState("day");
 
   // Update date when dateString changes
   useEffect(() => {
