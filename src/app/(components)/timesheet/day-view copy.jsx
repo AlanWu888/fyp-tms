@@ -12,50 +12,22 @@ function DayViewTimesheet2({ date, setDate }) {
 
   const [timesheets, setTimesheets] = useState([]);
   const [filteredTimesheets, setFilteredTimesheets] = useState([]);
+  const [dayOfWeek, setDayOfWeek] = useState("");
   const [dailyTotal, setDailyTotal] = useState(0);
   const [selectedEntry, setSelectedEntry] = useState(null);
   const [selectedTimesheetId, setSelectedTimesheetId] = useState(null); // State to hold the selected timesheet ID
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [newModalOpen, setNewModalOpen] = useState(false);
 
-  const [dayOfWeek, setDayOfWeek] = useState("");
-  const [weekDates, setWeekDates] = useState([]);
-
   const days = [
+    "Sunday",
     "Monday",
     "Tuesday",
     "Wednesday",
     "Thursday",
     "Friday",
     "Saturday",
-    "Sunday",
   ];
-
-  function getStartOfWeek(isoDateString) {
-    const date = new Date(isoDateString);
-    const dayOfWeek = date.getDay();
-    const diff = date.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1); // Adjust for Sunday
-    const monday = new Date(date.setDate(diff));
-    return monday.toISOString();
-  }
-
-  useEffect(() => {
-    function getWeekDates(isoDateString) {
-      const days = [];
-      const monday = getStartOfWeek(isoDateString); // Assuming getStartOfWeek is defined
-
-      // Loop from Monday to Sunday and push ISO strings to the array
-      for (let i = 0; i < 7; i++) {
-        const date = new Date(monday);
-        date.setDate(date.getDate() + i);
-        days.push(date.toISOString());
-      }
-
-      return days;
-    }
-
-    setWeekDates(getWeekDates(date));
-  }, [date]);
 
   const fetchData = async () => {
     try {
@@ -91,7 +63,7 @@ function DayViewTimesheet2({ date, setDate }) {
   useEffect(() => {
     const isoDate = date.split("T")[0];
     const dateObj = new Date(isoDate);
-    const dayIndex = (dateObj.getDay() + 6) % 7;
+    const dayIndex = dateObj.getDay();
     const day = days[dayIndex];
     setDayOfWeek(day);
   }, [date]);
@@ -107,8 +79,13 @@ function DayViewTimesheet2({ date, setDate }) {
   }, [filteredTimesheets]);
 
   const handleNavTabClick = (selectedDay) => {
-    const selectedIndex = days.indexOf(selectedDay);
-    setDate(weekDates[selectedIndex]);
+    const today = new Date(date);
+    const currentDay = today.getDay();
+    const diff = currentDay - days.indexOf(selectedDay);
+    const newDate = new Date(
+      today.setDate(today.getDate() - diff),
+    ).toISOString();
+    setDate(newDate);
   };
 
   const handleClickEdit = (timesheet) => {
@@ -177,13 +154,13 @@ function DayViewTimesheet2({ date, setDate }) {
       >
         <NavTabs
           items={[
+            "Sunday",
             "Monday",
             "Tuesday",
             "Wednesday",
             "Thursday",
             "Friday",
             "Saturday",
-            "Sunday",
           ]}
           selectedDay={dayOfWeek}
           onItemClick={handleNavTabClick}
