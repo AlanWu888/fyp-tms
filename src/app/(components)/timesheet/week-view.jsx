@@ -70,35 +70,15 @@ function WeekViewTimesheet({ date }) {
       weekDates.includes(timesheet.date.split("T")[0]),
     );
     setWeekFilteredTimesheets(weekFilteredTimesheets);
+    console.log(weekFilteredTimesheets);
   }, [filteredTimesheets, weekDates]);
 
   return (
     <div>
-      {/* Render week dates */}
-      {weekDates.map((date, index) => (
-        <div key={index}>{date}</div>
-      ))}
-      <br />
       {weekFilteredTimesheets.map((timesheet, index) => (
         <div
           key={index}
           style={{ marginBottom: "10px", border: "1px solid red" }}
-        >
-          <p>User Email: {timesheet.userEmail}</p>
-          <p>Client Name: {timesheet.clientName}</p>
-          <p>Project Name: {timesheet.projectName}</p>
-          <p>Task Description: {timesheet.taskDescription}</p>
-          <p>Time: {timesheet.time}</p>
-          <p>Date: {timesheet.date}</p>
-          <p>Created At: {timesheet.createdAt}</p>
-          <p>Updated At: {timesheet.updatedAt}</p>
-        </div>
-      ))}
-      <br />
-      {filteredTimesheets.map((timesheet, index) => (
-        <div
-          key={index}
-          style={{ marginBottom: "10px", border: "1px solid black" }}
         >
           <p>User Email: {timesheet.userEmail}</p>
           <p>Client Name: {timesheet.clientName}</p>

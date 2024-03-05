@@ -173,6 +173,7 @@ function DayViewTimesheet2({ date, setDate }) {
           paddingBottom: "3px",
           display: "flex",
           justifyContent: "space-between",
+          marginTop: "10px",
         }}
       >
         <NavTabs
@@ -229,7 +230,7 @@ function DayViewTimesheet2({ date, setDate }) {
                   </p>
                 </div>
                 <div className="task-description" style={{ fontSize: "16px" }}>
-                  {timesheet.taskDescription}
+                  {timesheet.taskDescription} - ({timesheet.taskType})
                 </div>
               </div>
               <div

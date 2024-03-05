@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Button from "../../buttons/Button";
 import { COLOURS } from "@/app/constants";
 import { useSession } from "next-auth/react";
+import MySelect from "../../selects/select";
 
 function AdditionModal({ date, onClose, onTimesheetUpdate }) {
   const { data: session } = useSession();
@@ -26,8 +27,19 @@ function AdditionModal({ date, onClose, onTimesheetUpdate }) {
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [clientProjects, setClientProjects] = useState({});
+  const [taskType, setTaskType] = useState(null);
 
   const [errorMessage, setErrorMessage] = useState("");
+
+  const taskOptions = [
+    { value: "r", label: "Research" },
+    { value: "b", label: "Billable" },
+    { value: "n", label: "Non-Billable" },
+  ];
+
+  const handleTaskSelect = (taskType) => {
+    setTaskType(taskType);
+  };
 
   useEffect(() => {
     // get projects and only show the projects user is part of
@@ -85,7 +97,7 @@ function AdditionModal({ date, onClose, onTimesheetUpdate }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!clientName || !projectName || !time || !taskDescription) {
+    if (!clientName || !projectName || !time || !taskDescription || !taskType) {
       setErrorMessage("Please fill in required fields.");
       return;
     }
@@ -109,6 +121,7 @@ function AdditionModal({ date, onClose, onTimesheetUpdate }) {
             additionalNotes,
             time: convertTimeToDecimal(time),
             date,
+            taskType: taskType.label,
           },
         }),
       });
@@ -228,6 +241,7 @@ function AdditionModal({ date, onClose, onTimesheetUpdate }) {
                     paddingRight: "10px",
                     fontWeight: "normal",
                   }}
+                  required={true}
                 >
                   <option value="">Select Client</option>
                   {Object.keys(clientProjects).map((client) => (
@@ -257,6 +271,7 @@ function AdditionModal({ date, onClose, onTimesheetUpdate }) {
                     fontWeight: "normal",
                   }}
                   disabled={!clientName}
+                  required={true}
                 >
                   <option value="">Select Project</option>
                   {clientProjects[clientName]?.map((project) => (
@@ -288,6 +303,7 @@ function AdditionModal({ date, onClose, onTimesheetUpdate }) {
                     paddingTop: "auto",
                     paddingBottom: "auto",
                   }}
+                  required={true}
                 />
               </label>
             </div>
@@ -344,8 +360,30 @@ function AdditionModal({ date, onClose, onTimesheetUpdate }) {
                       fontSize: "40px",
                       textAlign: "center",
                     }}
+                    required={true}
                   />
                 </label>
+              </div>
+            </div>
+
+            <div
+              className="task-type"
+              style={{
+                marginBottom: "10px",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <label style={{ fontSize: "16px", fontWeight: "bold" }}>
+                Task Type
+              </label>
+              <div style={{ marginLeft: "100px" }}>
+                <MySelect
+                  options={taskOptions}
+                  value={taskType}
+                  onChange={handleTaskSelect}
+                  isRequired={true}
+                />
               </div>
             </div>
 
@@ -395,7 +433,7 @@ const modalStyle = {
 
 const modalContentStyle = {
   width: "700px",
-  height: "500px",
+  height: "550px",
   backgroundColor: "#fff",
   borderRadius: "10px",
 };
