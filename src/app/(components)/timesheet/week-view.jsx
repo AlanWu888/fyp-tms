@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
+import { COLOURS } from "@/app/constants";
 
 function WeekViewTimesheet({ date }) {
   const { data: session } = useSession();
@@ -10,6 +11,26 @@ function WeekViewTimesheet({ date }) {
   const [weekDates, setWeekDates] = useState([]);
   const [weekFilteredTimesheets, setWeekFilteredTimesheets] = useState([]);
   const [transformedWeek, setTransformedWeek] = useState([]);
+
+  const daysOfTheWeek = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
+
+  // const daysOfTheWeek = [
+  //   "Mon",
+  //   "Tue",
+  //   "Wed",
+  //   "Thu",
+  //   "Fri",
+  //   "Sat",
+  //   "Sun",
+  // ];
 
   const fetchData = async () => {
     try {
@@ -104,7 +125,7 @@ function WeekViewTimesheet({ date }) {
           clientName: entry.clientName,
           projectName: entry.projectName,
           taskDescription: entry.taskDescription,
-          taskType: "Billable", // Assuming all tasks are billable
+          taskType: entry.taskType,
           entries: [
             {
               _id: entry._id,
@@ -123,50 +144,223 @@ function WeekViewTimesheet({ date }) {
       }
     });
 
+    transformedJson.sort((a, b) => {
+      if (a.clientName === b.clientName) {
+        if (a.projectName === b.projectName) {
+          return a.taskDescription.localeCompare(b.taskDescription);
+        }
+        return a.projectName.localeCompare(b.projectName);
+      }
+      return a.clientName.localeCompare(b.clientName);
+    });
+
     return transformedJson;
+  }
+
+  const convertDecimalToTime = (decimalTime) => {
+    const hours = Math.floor(decimalTime);
+    const minutes = Math.round((decimalTime - hours) * 60);
+    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
+  };
+
+  function getValue(date, entries) {
+    const matchingEntry = entries.find(
+      (entry) => date === entry.date.split("T")[0],
+    );
+    return matchingEntry
+      ? convertDecimalToTime(JSON.stringify(matchingEntry.time))
+      : "";
+  }
+
+  function getProjectTotalTime(entries) {
+    let total = 0;
+    entries.forEach((entry) => {
+      total += entry.time;
+    });
+
+    return total;
+  }
+
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const monthNames = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    const monthIndex = date.getMonth();
+    const monthName = monthNames[monthIndex];
+    return `${day.toString().padStart(2, "0")} ${monthName}`;
   }
 
   return (
     <div>
-      {weekFilteredTimesheets.map((timesheet, index) => (
+      {/* Header */}
+      <div
+        className="timesheet-rows-header"
+        style={{
+          borderTop: "1px solid black",
+          borderBottom: "1px solid black",
+          paddingTop: "10px",
+          paddingBottom: "10px",
+          paddingLeft: "20px",
+          paddingRight: "20px",
+          display: "flex",
+          justifyContent: "space-between",
+          marginTop: "10px",
+          backgroundColor: COLOURS.GREY,
+        }}
+      >
         <div
-          key={index}
-          style={{ marginBottom: "10px", border: "1px solid red" }}
+          className="timesheet-rows-header-left"
+          style={{
+            fontSize: "20px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
         >
-          <p>User Email: {timesheet.userEmail}</p>
-          <p>Client Name: {timesheet.clientName}</p>
-          <p>Project Name: {timesheet.projectName}</p>
-          <p>Task Description: {timesheet.taskDescription}</p>
-          <p>Time: {timesheet.time}</p>
-          <p>Date: {timesheet.date}</p>
-          <p>Created At: {timesheet.createdAt}</p>
-          <p>Updated At: {timesheet.updatedAt}</p>
+          Project
         </div>
-      ))}
-
-      <br style={{ margin: "20px" }} />
-
-      {transformedWeek.map((task, index) => (
         <div
-          key={index}
-          style={{ marginBottom: "10px", border: "1px solid green" }}
+          className="timesheet-rows-header-right"
+          style={{ display: "flex" }}
         >
-          <p>Client Name: {task.clientName}</p>
-          <p>Project Name: {task.projectName}</p>
-          <p>Task Description: {task.taskDescription}</p>
-          <div style={{ marginLeft: "20px" }}>
-            {task.entries.map((entry, entryIndex) => (
-              <div
-                key={entryIndex}
-                style={{ border: "1px dotted blue", marginBottom: "5px" }}
-              >
-                <p>Entry ID: {entry._id}</p>
-                <p>Date: {entry.date}</p>
-                <p>Time: {entry.time}</p>
-              </div>
-            ))}
+          {Array.from({ length: 7 }, (_, i) => (
+            <div
+              key={i}
+              className={weekDates[i]}
+              style={{
+                marginRight: "10px",
+                width: "95px",
+                textAlign: "center",
+                fontSize: "14px",
+              }}
+            >
+              <p>{daysOfTheWeek[i]}</p>
+              <p>{formatDate(weekDates[i])}</p>
+            </div>
+          ))}
+          <div
+            style={{
+              width: "70px",
+              marginLeft: "30px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            Total
           </div>
         </div>
+      </div>
+
+      {transformedWeek.map((week, index) => (
+        <>
+          {index > 0 &&
+          transformedWeek[index - 1].clientName !== week.clientName ? (
+            <div
+              style={{
+                backgroundColor: COLOURS.GREY,
+                paddingTop: "10px",
+                paddingBottom: "10px",
+                paddingLeft: "20px",
+                borderBottom: "1px solid black",
+                fontSize: "16px",
+              }}
+            >
+              {week.clientName}
+            </div>
+          ) : null}
+
+          {index > 0 &&
+          transformedWeek[index - 1].clientName === week.clientName &&
+          transformedWeek[index - 1].projectName !== week.projectName ? (
+            <div
+              style={{
+                backgroundColor: COLOURS.GREY,
+                height: "10px",
+                borderBottom: "1px solid black",
+              }}
+            />
+          ) : null}
+
+          <div
+            className="timesheet-row"
+            style={{
+              borderBottom: "1px solid black",
+              paddingTop: "15px",
+              paddingBottom: "15px",
+              paddingLeft: "20px",
+              paddingRight: "20px",
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            <div className="timesheet-rows-left">
+              <p style={{ fontSize: "20px" }}>
+                {week.clientName} - {week.projectName}
+              </p>
+              <p style={{ fontSize: "14px" }}>
+                {week.taskDescription} - ({week.taskType})
+              </p>
+            </div>
+            <div className="timesheet-rows-right" style={{ display: "flex" }}>
+              {Array.from({ length: 7 }, (_, i) => (
+                <div
+                  key={i}
+                  className={weekDates[i]}
+                  style={{
+                    marginRight: "10px",
+                    width: "95px",
+                    textAlign: "center",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    fontSize: "24px",
+                  }}
+                >
+                  <input
+                    className={`${weekDates[i]}_${index}`}
+                    style={{
+                      width: "100%",
+                      height: "40px",
+                      textAlign: "center",
+                      border: "1px solid black",
+                      borderRadius: "5px",
+                    }}
+                    type="text"
+                    value={getValue(weekDates[i], week.entries)}
+                  />
+                </div>
+              ))}
+
+              <div
+                style={{
+                  width: "70px",
+                  marginLeft: "30px",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  fontSize: "22px",
+                  fontWeight: "bold",
+                }}
+              >
+                {convertDecimalToTime(getProjectTotalTime(week.entries))}
+              </div>
+            </div>
+          </div>
+        </>
       ))}
     </div>
   );
