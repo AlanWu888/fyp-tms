@@ -290,11 +290,7 @@ function WeekViewTimesheet({ date }) {
     alert(JSON.stringify(modifiedTimesheets));
   };
 
-  const handleSave = () => {
-    console.log("edit: ");
-    console.log(edittedFields);
-    console.log(modifiedTimesheets[6].entries);
-
+  const handleSave = async () => {
     for (let valueChange of edittedFields) {
       for (let entry of modifiedTimesheets[valueChange.index].entries) {
         // Convert both dates to the same format before comparing
@@ -307,20 +303,95 @@ function WeekViewTimesheet({ date }) {
 
         if (formattedValueChangeDate === formattedEntryDate) {
           if (entry._id === "new_value") {
+            console.log(
+              `POST method, ${formattedValueChangeDate}, ${formattedEntryDate} :: ${entry._id} :: ${entry.time}`,
+            );
+            const postParams = {
+              userEmail: userEmail,
+              clientName: modifiedTimesheets[valueChange.index].clientName,
+              projectName: modifiedTimesheets[valueChange.index].projectName,
+              taskDescription:
+                modifiedTimesheets[valueChange.index].taskDescription,
+              time: entry.time,
+              date: new Date(entry.date),
+              taskType: modifiedTimesheets[valueChange.index].taskType,
+            };
+            await postDB(postParams); // Call postDB function here
+          } else {
             // PATCH method
             console.log(
-              `PATCH method, ${formattedValueChangeDate}, ${formattedEntryDate} :: ${entry._id}`,
+              `POST method, ${formattedValueChangeDate}, ${formattedEntryDate} :: ${entry._id} // ${entry.time}`,
             );
-          } else {
-            // POST method
-            console.log(
-              `POST method, ${formattedValueChangeDate}, ${formattedEntryDate} :: ${entry._id}`,
-            );
+            console.log(modifiedTimesheets[valueChange.index]);
+            /*
+              make a new object!
+              >> Figure out how to get timesheetId
+              {
+                id: timesheetId,
+                updatedFields: {
+                  entryId: entry._id,
+                  clientName: modifiedTimesheets[valueChange.index].clientName
+                  projectName: modifiedTimesheets[valueChange.index].clientName
+                  taskDescription: modifiedTimesheets[valueChange.index].clientName
+                  time: convertTimeToDecimal(entry.time),
+                  taskType: modifiedTimesheets[valueChange.index].taskType
+                },
+              }
+            */
           }
         }
       }
     }
   };
+
+  async function postDB(postParams) {
+    console.log("post DB called");
+    console.log(postParams.time);
+    console.log(
+      JSON.stringify({
+        formData: {
+          userEmail: postParams.userEmail,
+          clientName: postParams.clientName,
+          projectName: postParams.projectName,
+          taskDescription: postParams.taskDescription,
+          time: postParams.time,
+          date: postParams.date,
+          taskType: postParams.taskType,
+        },
+      }),
+    );
+    try {
+      const response = await fetch("/api/Timesheets", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          formData: {
+            userEmail: postParams.userEmail,
+            clientName: postParams.clientName,
+            projectName: postParams.projectName,
+            taskDescription: postParams.taskDescription,
+            time: parseFloat(postParams.time),
+            date: postParams.date,
+            taskType: postParams.taskType,
+          },
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to update timesheet");
+      } else {
+        console.log("successful post");
+        fetchData();
+        filterTimesheets();
+        // Trigger the callback function to update timesheet data
+      }
+    } catch (error) {
+      console.error("Error updating timesheet:", error);
+    }
+  }
+
+  async function patchDB(patchParams) {}
 
   return (
     <div>
@@ -357,7 +428,7 @@ function WeekViewTimesheet({ date }) {
         >
           {Array.from({ length: 7 }, (_, i) => (
             <div
-              key={i}
+              key={weekDates[i]}
               className={weekDates[i]}
               style={{
                 marginRight: "10px",
@@ -391,7 +462,7 @@ function WeekViewTimesheet({ date }) {
       )}
 
       {transformedWeek.map((week, index) => (
-        <>
+        <React.Fragment key={`${week.clientName}_${week.projectName}_${index}`}>
           {index > 0 &&
           transformedWeek[index - 1].clientName !== week.clientName ? (
             <div
@@ -443,8 +514,8 @@ function WeekViewTimesheet({ date }) {
             <div className="timesheet-rows-right" style={{ display: "flex" }}>
               {Array.from({ length: 7 }, (_, i) => (
                 <div
-                  key={i}
-                  className={weekDates[i]}
+                  key={`${week.clientName}_${week.projectName}_${weekDates[i]}_${index}`}
+                  className={`${weekDates[i]}_${index}_input--container`}
                   style={{
                     marginRight: "10px",
                     width: "95px",
@@ -456,6 +527,7 @@ function WeekViewTimesheet({ date }) {
                   }}
                 >
                   <input
+                    key={`${week.clientName}_${week.projectName}_${weekDates[i]}_${index}`} // Add a unique key based on weekDates and index
                     className={`${weekDates[i]}_${index}`}
                     style={{
                       width: "100%",
@@ -488,7 +560,7 @@ function WeekViewTimesheet({ date }) {
               </div>
             </div>
           </div>
-        </>
+        </React.Fragment>
       ))}
 
       <div
@@ -524,7 +596,7 @@ function WeekViewTimesheet({ date }) {
             <p>Please fix the following input errors at:</p>
             <ul>
               {inputError.map((error, idx) => (
-                <li key={idx}>
+                <li key={`${error.date}_${idx}`}>
                   [ {error.date} ]:{" "}
                   {transformedWeek[error.index] &&
                     transformedWeek[error.index].clientName}
