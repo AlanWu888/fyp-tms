@@ -14,6 +14,7 @@ function WeekViewTimesheet({ date }) {
   const [transformedWeek, setTransformedWeek] = useState([]);
   const [modifiedTimesheets, setModifiedTimesheets] = useState([]);
   const [inputError, setInputError] = useState([]);
+  const [edittedFields, setEdittedFields] = useState([]);
 
   const daysOfTheWeek = [
     "Monday",
@@ -94,12 +95,6 @@ function WeekViewTimesheet({ date }) {
     setModifiedTimesheets(transformedWeekFilteredTimesheets);
   }, [filteredTimesheets, weekDates]);
 
-  useEffect(() => {
-    console.log("new week");
-    console.log(weekFilteredTimesheets);
-    console.log(transformedWeek); // Log the updated transformedWeek state
-  }, [weekFilteredTimesheets, transformedWeek]);
-
   function transformJson(originalJson) {
     let transformedJson = [];
 
@@ -152,7 +147,6 @@ function WeekViewTimesheet({ date }) {
   }
 
   const convertTimeToDecimal = (timeString) => {
-    console.log("time converter, ", timeString);
     const [hours, minutes] = timeString.split(":").map(parseFloat);
     return Number(hours + minutes / 60).toPrecision(5);
   };
@@ -203,14 +197,12 @@ function WeekViewTimesheet({ date }) {
     return `${day.toString().padStart(2, "0")} ${monthName}`;
   }
 
-  const handleInputChange = (date, index, newValue) => {
+  const handleInputChange = (date, index, newValue, column) => {
     console.log("Handle input change:", date, index, newValue);
 
     // const timePattern = /^(0?[1-9]|1[0-2]):[0-5][0-9]?$/;
     const timePattern = /^(?:2[0-3]|[01]?\d):[0-5]?\d$/;
     const isValidTime = timePattern.test(newValue);
-
-    console.log(isValidTime);
 
     if (newValue === "") {
       setInputError((prevErrors) => {
@@ -221,6 +213,7 @@ function WeekViewTimesheet({ date }) {
       });
     } else {
       // Update input error based on time pattern validation
+      // update edittedFields state with `${date}_${column}`
       setInputError((prevErrors) => {
         const newErrors = [...prevErrors];
         const errorIndex = newErrors.findIndex(
@@ -235,16 +228,47 @@ function WeekViewTimesheet({ date }) {
       });
     }
 
-    // Create a copy of the modified timesheets state
+    const editedInput = {
+      date: date,
+      index: index,
+      newValue: newValue,
+    };
+
+    setEdittedFields((prevEdittedFields) => {
+      // Clone the previous state
+      const updatedEdittedFields = [...prevEdittedFields];
+
+      // Check if the input value is empty
+      if (newValue === "") {
+        // Remove any existing entry with the same date and index
+        return updatedEdittedFields.filter(
+          (item) => !(item.date === date && item.index === index),
+        );
+      } else {
+        // Check if the edited input already exists in the state
+        const existingIndex = updatedEdittedFields.findIndex(
+          (item) => item.date === date && item.index === index,
+        );
+
+        // If it exists, update the value
+        if (existingIndex !== -1) {
+          updatedEdittedFields[existingIndex] = editedInput;
+        } else {
+          // If it doesn't exist, add it to the state
+          updatedEdittedFields.push(editedInput);
+        }
+
+        return updatedEdittedFields;
+      }
+    });
+
     const updatedTimesheets = [...modifiedTimesheets];
 
     console.log(JSON.stringify(transformedWeek[index].entries));
-    console.log("");
 
     let foundMatch = false;
     for (let entry of transformedWeek[index].entries) {
       if (date === entry.date.split("T")[0]) {
-        console.log("match!!");
         entry.time = convertTimeToDecimal(newValue);
         foundMatch = true;
         break; // no need to continue looping once a match is found
@@ -252,7 +276,6 @@ function WeekViewTimesheet({ date }) {
     }
 
     if (!foundMatch) {
-      console.log("new!!");
       const time = convertTimeToDecimal(newValue);
       updatedTimesheets[index].entries.push({
         _id: "new_value",
@@ -260,13 +283,43 @@ function WeekViewTimesheet({ date }) {
         time: time,
       });
     }
-
-    console.log(updatedTimesheets);
   };
 
   const handleClickButton = () => {
     console.log(JSON.stringify(modifiedTimesheets));
     alert(JSON.stringify(modifiedTimesheets));
+  };
+
+  const handleSave = () => {
+    console.log("edit: ");
+    console.log(edittedFields);
+    console.log(modifiedTimesheets[6].entries);
+
+    for (let valueChange of edittedFields) {
+      for (let entry of modifiedTimesheets[valueChange.index].entries) {
+        // Convert both dates to the same format before comparing
+        const formattedValueChangeDate = new Date(valueChange.date)
+          .toISOString()
+          .split("T")[0];
+        const formattedEntryDate = new Date(entry.date)
+          .toISOString()
+          .split("T")[0];
+
+        if (formattedValueChangeDate === formattedEntryDate) {
+          if (entry._id === "new_value") {
+            // PATCH method
+            console.log(
+              `PATCH method, ${formattedValueChangeDate}, ${formattedEntryDate} :: ${entry._id}`,
+            );
+          } else {
+            // POST method
+            console.log(
+              `POST method, ${formattedValueChangeDate}, ${formattedEntryDate} :: ${entry._id}`,
+            );
+          }
+        }
+      }
+    }
   };
 
   return (
@@ -414,7 +467,7 @@ function WeekViewTimesheet({ date }) {
                     type="text"
                     defaultValue={getValue(weekDates[i], week.entries)}
                     onChange={(e) =>
-                      handleInputChange(weekDates[i], index, e.target.value)
+                      handleInputChange(weekDates[i], index, e.target.value, i)
                     }
                   />
                 </div>
@@ -459,8 +512,8 @@ function WeekViewTimesheet({ date }) {
               bgcolour={COLOURS.GREEN_ENABLED}
               colour={COLOURS.WHITE}
               label="Save"
-              onClick={handleClickButton}
-              disabled={inputError.length > 0} // Disable the button if there are input errors
+              onClick={handleSave}
+              disabled={inputError.length > 0 || edittedFields.length === 0}
               disabledColour={COLOURS.GREEN_DISABLED}
             />
           </div>
