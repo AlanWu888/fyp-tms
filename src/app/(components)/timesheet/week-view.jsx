@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { COLOURS } from "@/app/constants";
+import Button from "../buttons/Button";
 
 function WeekViewTimesheet({ date }) {
   const { data: session } = useSession();
@@ -11,6 +12,8 @@ function WeekViewTimesheet({ date }) {
   const [weekDates, setWeekDates] = useState([]);
   const [weekFilteredTimesheets, setWeekFilteredTimesheets] = useState([]);
   const [transformedWeek, setTransformedWeek] = useState([]);
+  const [modifiedTimesheets, setModifiedTimesheets] = useState([]);
+  const [inputError, setInputError] = useState([]);
 
   const daysOfTheWeek = [
     "Monday",
@@ -21,16 +24,6 @@ function WeekViewTimesheet({ date }) {
     "Saturday",
     "Sunday",
   ];
-
-  // const daysOfTheWeek = [
-  //   "Mon",
-  //   "Tue",
-  //   "Wed",
-  //   "Thu",
-  //   "Fri",
-  //   "Sat",
-  //   "Sun",
-  // ];
 
   const fetchData = async () => {
     try {
@@ -98,6 +91,7 @@ function WeekViewTimesheet({ date }) {
       weekFilteredTimesheets,
     );
     setTransformedWeek(transformedWeekFilteredTimesheets);
+    setModifiedTimesheets(transformedWeekFilteredTimesheets);
   }, [filteredTimesheets, weekDates]);
 
   useEffect(() => {
@@ -157,6 +151,12 @@ function WeekViewTimesheet({ date }) {
     return transformedJson;
   }
 
+  const convertTimeToDecimal = (timeString) => {
+    console.log("time converter, ", timeString);
+    const [hours, minutes] = timeString.split(":").map(parseFloat);
+    return Number(hours + minutes / 60).toPrecision(5);
+  };
+
   const convertDecimalToTime = (decimalTime) => {
     const hours = Math.floor(decimalTime);
     const minutes = Math.round((decimalTime - hours) * 60);
@@ -202,6 +202,72 @@ function WeekViewTimesheet({ date }) {
     const monthName = monthNames[monthIndex];
     return `${day.toString().padStart(2, "0")} ${monthName}`;
   }
+
+  const handleInputChange = (date, index, newValue) => {
+    console.log("Handle input change:", date, index, newValue);
+
+    // const timePattern = /^(0?[1-9]|1[0-2]):[0-5][0-9]?$/;
+    const timePattern = /^(?:2[0-3]|[01]?\d):[0-5]?\d$/;
+    const isValidTime = timePattern.test(newValue);
+
+    console.log(isValidTime);
+
+    if (newValue === "") {
+      setInputError((prevErrors) => {
+        // Remove the error for this input
+        return prevErrors.filter(
+          (error) => !(error.date === date && error.index === index),
+        );
+      });
+    } else {
+      // Update input error based on time pattern validation
+      setInputError((prevErrors) => {
+        const newErrors = [...prevErrors];
+        const errorIndex = newErrors.findIndex(
+          (error) => error.date === date && error.index === index,
+        );
+        if (!isValidTime && errorIndex === -1) {
+          newErrors.push({ date, index });
+        } else if (isValidTime && errorIndex !== -1) {
+          newErrors.splice(errorIndex, 1);
+        }
+        return newErrors;
+      });
+    }
+
+    // Create a copy of the modified timesheets state
+    const updatedTimesheets = [...modifiedTimesheets];
+
+    console.log(JSON.stringify(transformedWeek[index].entries));
+    console.log("");
+
+    let foundMatch = false;
+    for (let entry of transformedWeek[index].entries) {
+      if (date === entry.date.split("T")[0]) {
+        console.log("match!!");
+        entry.time = convertTimeToDecimal(newValue);
+        foundMatch = true;
+        break; // no need to continue looping once a match is found
+      }
+    }
+
+    if (!foundMatch) {
+      console.log("new!!");
+      const time = convertTimeToDecimal(newValue);
+      updatedTimesheets[index].entries.push({
+        _id: "new_value",
+        date: date,
+        time: time,
+      });
+    }
+
+    console.log(updatedTimesheets);
+  };
+
+  const handleClickButton = () => {
+    console.log(JSON.stringify(modifiedTimesheets));
+    alert(JSON.stringify(modifiedTimesheets));
+  };
 
   return (
     <div>
@@ -264,6 +330,12 @@ function WeekViewTimesheet({ date }) {
           </div>
         </div>
       </div>
+
+      {transformedWeek.length === 0 && (
+        <div style={{ padding: "20px", textAlign: "center" }}>
+          No timesheets found
+        </div>
+      )}
 
       {transformedWeek.map((week, index) => (
         <>
@@ -340,7 +412,10 @@ function WeekViewTimesheet({ date }) {
                       borderRadius: "5px",
                     }}
                     type="text"
-                    value={getValue(weekDates[i], week.entries)}
+                    defaultValue={getValue(weekDates[i], week.entries)}
+                    onChange={(e) =>
+                      handleInputChange(weekDates[i], index, e.target.value)
+                    }
                   />
                 </div>
               ))}
@@ -362,6 +437,60 @@ function WeekViewTimesheet({ date }) {
           </div>
         </>
       ))}
+
+      <div
+        className="timesheet-rows-footer"
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
+        <div style={{ marginTop: "20px", display: "flex" }}>
+          <div style={{ marginRight: "10px" }}>
+            <Button
+              bgcolour={COLOURS.GREY}
+              colour={COLOURS.BLACK}
+              label="+ Track another Task"
+              onClick={handleClickButton}
+            />
+          </div>
+          <div>
+            <Button
+              bgcolour={COLOURS.GREEN_ENABLED}
+              colour={COLOURS.WHITE}
+              label="Save"
+              onClick={handleClickButton}
+              disabled={inputError.length > 0} // Disable the button if there are input errors
+              disabledColour={COLOURS.GREEN_DISABLED}
+            />
+          </div>
+        </div>
+
+        {inputError.length > 0 && (
+          <div style={{ color: "red", marginTop: "10px" }}>
+            <p>Please fix the following input errors at:</p>
+            <ul>
+              {inputError.map((error, idx) => (
+                <li key={idx}>
+                  [ {error.date} ]:{" "}
+                  {transformedWeek[error.index] &&
+                    transformedWeek[error.index].clientName}
+                  ,{" "}
+                  {transformedWeek[error.index] &&
+                    transformedWeek[error.index].projectName}{" "}
+                  -{" "}
+                  {transformedWeek[error.index] &&
+                    transformedWeek[error.index].taskDescription}{" "}
+                  (
+                  {transformedWeek[error.index] &&
+                    transformedWeek[error.index].taskType}
+                  )
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
