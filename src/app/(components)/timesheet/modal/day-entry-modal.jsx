@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Button from "../../buttons/Button";
 import { COLOURS } from "@/app/constants";
 import { useSession } from "next-auth/react";
+import MySelect from "../../selects/select";
 
 function EntryModal({ timesheetId, entry, onClose, onTimesheetUpdate }) {
   const { data: session } = useSession();
@@ -12,6 +13,7 @@ function EntryModal({ timesheetId, entry, onClose, onTimesheetUpdate }) {
   const [taskDescription, setTaskDescription] = useState(entry.taskDescription);
 
   const [additionalNotes, setAdditionalNotes] = useState(entry.additionalNotes);
+  const [taskType, setTaskType] = useState(entry.taskType);
 
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
@@ -19,6 +21,20 @@ function EntryModal({ timesheetId, entry, onClose, onTimesheetUpdate }) {
   const [isDirty, setIsDirty] = useState(false);
 
   const [errorMessage, setErrorMessage] = useState("");
+
+  const taskOptions = [
+    { value: "r", label: "Research" },
+    { value: "b", label: "Billable" },
+    { value: "n", label: "Non-Billable" },
+  ];
+
+  const handleTaskSelect = (taskType) => {
+    setTaskType(taskType);
+  };
+
+  function findOptionByLabel(label) {
+    return taskOptions.find((taskOptions) => taskOptions.label === label);
+  }
 
   useEffect(() => {
     // get projects and only show the projects user is part of
@@ -119,6 +135,7 @@ function EntryModal({ timesheetId, entry, onClose, onTimesheetUpdate }) {
             taskDescription,
             time: convertTimeToDecimal(time),
             additionalNotes,
+            taskType: taskType.label,
           },
         }),
       });
@@ -354,6 +371,27 @@ function EntryModal({ timesheetId, entry, onClose, onTimesheetUpdate }) {
             </div>
 
             <div
+              className="task-type"
+              style={{
+                marginBottom: "10px",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <label style={{ fontSize: "16px", fontWeight: "bold" }}>
+                Task Type
+              </label>
+              <div style={{ marginLeft: "100px" }}>
+                <MySelect
+                  options={taskOptions}
+                  value={findOptionByLabel(taskType)}
+                  onChange={handleTaskSelect}
+                  isRequired={true}
+                />
+              </div>
+            </div>
+
+            <div
               className="modal-button-group"
               style={{ display: "flex", marginTop: "55px" }}
             >
@@ -400,7 +438,7 @@ const modalStyle = {
 
 const modalContentStyle = {
   width: "700px",
-  height: "500px",
+  height: "550px",
   backgroundColor: "#fff",
   borderRadius: "10px",
 };

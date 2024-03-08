@@ -33,6 +33,10 @@ const timesheetSchema = new Schema(
       type: Date,
       required: true,
     },
+    taskType: {
+      type: String,
+      required: true,
+    },
   },
   {
     timestamps: true,
