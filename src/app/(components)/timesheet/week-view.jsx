@@ -197,9 +197,7 @@ function WeekViewTimesheet({ date }) {
     return `${day.toString().padStart(2, "0")} ${monthName}`;
   }
 
-  const handleInputChange = (date, index, newValue, column) => {
-    console.log("Handle input change:", date, index, newValue);
-
+  const handleInputChange = (date, index, newValue) => {
     // const timePattern = /^(0?[1-9]|1[0-2]):[0-5][0-9]?$/;
     const timePattern = /^(?:2[0-3]|[01]?\d):[0-5]?\d$/;
     const isValidTime = timePattern.test(newValue);
@@ -264,8 +262,6 @@ function WeekViewTimesheet({ date }) {
 
     const updatedTimesheets = [...modifiedTimesheets];
 
-    console.log(JSON.stringify(transformedWeek[index].entries));
-
     let foundMatch = false;
     for (let entry of transformedWeek[index].entries) {
       if (date === entry.date.split("T")[0]) {
@@ -285,11 +281,6 @@ function WeekViewTimesheet({ date }) {
     }
   };
 
-  const handleClickButton = () => {
-    console.log(JSON.stringify(modifiedTimesheets));
-    alert(JSON.stringify(modifiedTimesheets));
-  };
-
   const handleSave = async () => {
     for (let valueChange of edittedFields) {
       for (let entry of modifiedTimesheets[valueChange.index].entries) {
@@ -303,9 +294,6 @@ function WeekViewTimesheet({ date }) {
 
         if (formattedValueChangeDate === formattedEntryDate) {
           if (entry._id === "new_value") {
-            console.log(
-              `POST method, ${formattedValueChangeDate}, ${formattedEntryDate} :: ${entry._id} :: ${entry.time}`,
-            );
             const postParams = {
               userEmail: userEmail,
               clientName: modifiedTimesheets[valueChange.index].clientName,
@@ -318,48 +306,50 @@ function WeekViewTimesheet({ date }) {
             };
             await postDB(postParams); // Call postDB function here
           } else {
-            // PATCH method
-            console.log(
-              `POST method, ${formattedValueChangeDate}, ${formattedEntryDate} :: ${entry._id} // ${entry.time}`,
-            );
-            console.log(modifiedTimesheets[valueChange.index]);
-            /*
-              make a new object!
-              >> Figure out how to get timesheetId
-              {
-                id: timesheetId,
-                updatedFields: {
-                  entryId: entry._id,
-                  clientName: modifiedTimesheets[valueChange.index].clientName
-                  projectName: modifiedTimesheets[valueChange.index].clientName
-                  taskDescription: modifiedTimesheets[valueChange.index].clientName
-                  time: convertTimeToDecimal(entry.time),
-                  taskType: modifiedTimesheets[valueChange.index].taskType
-                },
-              }
-            */
+            // check if entry.time is 0, potential floating-point precision issues
+            if (Math.abs(entry.time - 0) < 0.0001) {
+              // DELETE method
+              await deleteDB(entry._id);
+            } else {
+              // PATCH method
+              const patchParams = {
+                entryId: entry._id,
+                time: entry.time,
+              };
+              await patchDB(patchParams);
+            }
           }
         }
       }
     }
+
+    // after saving logic, fetch and filter new data
+    fetchData();
+    filterTimesheets();
   };
 
-  async function postDB(postParams) {
-    console.log("post DB called");
-    console.log(postParams.time);
-    console.log(
-      JSON.stringify({
-        formData: {
-          userEmail: postParams.userEmail,
-          clientName: postParams.clientName,
-          projectName: postParams.projectName,
-          taskDescription: postParams.taskDescription,
-          time: postParams.time,
-          date: postParams.date,
-          taskType: postParams.taskType,
+  async function deleteDB(entryId) {
+    try {
+      const response = await fetch("/api/Timesheets", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
         },
-      }),
-    );
+        body: JSON.stringify({
+          id: entryId,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to delete entry");
+      }
+      fetchData();
+      filterTimesheets();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async function postDB(postParams) {
     try {
       const response = await fetch("/api/Timesheets", {
         method: "POST",
@@ -381,17 +371,38 @@ function WeekViewTimesheet({ date }) {
       if (!response.ok) {
         throw new Error("Failed to update timesheet");
       } else {
-        console.log("successful post");
-        fetchData();
-        filterTimesheets();
-        // Trigger the callback function to update timesheet data
+        console.log("successful post update to timesheet");
       }
     } catch (error) {
       console.error("Error updating timesheet:", error);
     }
   }
 
-  async function patchDB(patchParams) {}
+  async function patchDB(patchParams) {
+    try {
+      const response = await fetch("/api/Timesheets", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: patchParams.entryId,
+          updatedFields: {
+            entryId: patchParams.entryId,
+            time: patchParams.time,
+          },
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to update timesheet");
+      } else {
+        console.log("successful patch update to timesheet");
+        // Trigger the callback function to update timesheet data
+      }
+    } catch (error) {
+      console.error("Error updating timesheet:", error);
+    }
+  }
 
   return (
     <div>
@@ -571,14 +582,14 @@ function WeekViewTimesheet({ date }) {
         }}
       >
         <div style={{ marginTop: "20px", display: "flex" }}>
-          <div style={{ marginRight: "10px" }}>
+          {/* <div style={{ marginRight: "10px" }}>
             <Button
               bgcolour={COLOURS.GREY}
               colour={COLOURS.BLACK}
               label="+ Track another Task"
-              onClick={handleClickButton}
+              onClick={handleSave}
             />
-          </div>
+          </div> */}
           <div>
             <Button
               bgcolour={COLOURS.GREEN_ENABLED}
