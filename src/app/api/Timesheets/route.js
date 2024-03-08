@@ -12,7 +12,8 @@ export async function POST(req) {
       !timesheetData?.clientName ||
       !timesheetData?.projectName ||
       !timesheetData?.taskDescription ||
-      !timesheetData?.date
+      !timesheetData?.date ||
+      !timesheetData?.taskType
     ) {
       return NextResponse.json({ message: "Missing fields" }, { status: 400 });
     }
@@ -84,6 +85,9 @@ export async function PATCH(req) {
     }
     if (updatedFields.time) {
       timesheet.time = updatedFields.time;
+    }
+    if (updatedFields.taskType) {
+      timesheet.taskType = updatedFields.taskType;
     }
 
     await timesheet.save();

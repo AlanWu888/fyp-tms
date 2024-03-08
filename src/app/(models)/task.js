@@ -17,14 +17,7 @@ const TaskSchema = new Schema(
       type: String,
       required: true,
     },
-    taskNotes: {
-      type: String,
-    },
     taskType: {
-      type: String,
-      required: true,
-    },
-    addedBy: {
       type: String,
       required: true,
     },
