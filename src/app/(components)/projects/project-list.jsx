@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Button from "../buttons/Button";
 import { COLOURS } from "@/app/constants";
 import SearchBox from "../searchBox/SearchBox";
+import Link from "next/link";
 
 function ProjectsList() {
   const [projects, setProjects] = useState([]);
@@ -91,11 +92,13 @@ function ProjectsList() {
           style={{ display: "flex", justifyContent: "space-between" }}
         >
           <div className="add-project-button">
-            <Button
-              bgcolour={COLOURS.GREEN_ENABLED}
-              colour={COLOURS.WHITE}
-              label="+ Add Project"
-            />
+            <Link href="/manager/project/new-project">
+              <Button
+                bgcolour={COLOURS.GREEN_ENABLED}
+                colour={COLOURS.WHITE}
+                label="+ Add Project"
+              />
+            </Link>
           </div>
           <div className="project-search" style={{ marginLeft: "10px" }}>
             <SearchBox
