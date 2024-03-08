@@ -1,3 +1,18 @@
+## [0.10] - 08/03/2024
+
+BT-37 Timesheet week view
+
+## Added
+
+- Time page header, able to choose between week and day view (completely functional)
+- Live data displayed to Week Time tab for manager users
+- Ability to add, edit and delete a timesheet entry on the week view
+
+## Fixes
+
+- Day view now displays Monday to Sunday rather than Sunday to Monday
+- Disabled state added to Button component (styling)
+
 ## [0.09] - 04/03/2024
 
 BT-37 Timesheet day view
