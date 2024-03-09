@@ -26,22 +26,22 @@ const GoBack = () => {
       >
         <img
           src={"/arrow-l.png"}
-          style={{ height: "16px", marginRight: "10px" }}
+          style={{ height: "16px", marginRight: "20px" }}
           alt="Left Arrow"
         />
         <p
           style={{
             fontSize: "16px",
             textDecoration: "none",
-            transition: "text-decoration 0.3s", // Transition for smooth effect
-            borderBottom: "1px solid transparent", // Initially transparent underline
+            transition: "text-decoration 0.3s",
+            borderBottom: "1px solid transparent",
           }}
           onMouseEnter={(e) =>
             (e.target.style.borderBottom = "1px solid black")
-          } // On hover, change underline color
+          }
           onMouseLeave={(e) =>
             (e.target.style.borderBottom = "1px solid transparent")
-          } // On leaving hover, revert to transparent underline
+          }
         >
           Go Back
         </p>

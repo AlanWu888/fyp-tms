@@ -1,0 +1,7 @@
+.bold-navigation .react-calendar__navigation {
+  font-weight: bold;
+}
+
+.react-calendar__navigation button {
+  margin-right: 10px;
+}
