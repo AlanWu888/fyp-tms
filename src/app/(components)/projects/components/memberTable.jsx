@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { COLOURS } from "@/app/constants";
-import Button from "../../buttons/Button";
-import Link from "next/link";
 
 function MemberTable({ clickedSuggestions, setClickedSuggestions }) {
   const [users, setUsers] = useState([]);
-  // const [clickedSuggestions, setClickedSuggestions] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [filteredSuggestions, setFilteredSuggestions] = useState([]);
   const [hoveredIndex, setHoveredIndex] = useState(-1);

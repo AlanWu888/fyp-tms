@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState } from "react";
 import Calendar from "react-calendar";
 import "./CalendarPicker-styles.css";
@@ -20,6 +18,17 @@ const CalendarPicker = ({ onDateChange }) => {
 
   const handleCloseCalendar = () => {
     setShowCalendar(false);
+  };
+
+  const isDateDisabled = ({ activeStartDate, date, view }) => {
+    return date < new Date();
+  };
+
+  const tileClassName = ({ date, view }) => {
+    if (view === "month" && date < new Date()) {
+      return "disabled-date";
+    }
+    return null;
   };
 
   return (
@@ -85,7 +94,9 @@ const CalendarPicker = ({ onDateChange }) => {
           <Calendar
             onChange={handleDateChange}
             value={selectedDate}
-            className="bold-navigation" // Add custom class for Calendar component
+            tileDisabled={isDateDisabled}
+            tileClassName={tileClassName}
+            className="bold-navigation"
           />
         </div>
       )}
