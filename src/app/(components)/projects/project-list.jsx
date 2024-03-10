@@ -5,8 +5,12 @@ import Button from "../buttons/Button";
 import { COLOURS } from "@/app/constants";
 import SearchBox from "../searchBox/SearchBox";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 function ProjectsList() {
+  const { data: session } = useSession();
+  const userEmail = session?.user?.email;
+
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -27,7 +31,12 @@ function ProjectsList() {
       }
 
       const data = await response.json();
-      setProjects(data.projects);
+
+      const userProjects = data.projects.filter((project) =>
+        project.memberEmails.includes(userEmail),
+      );
+
+      setProjects(userProjects);
       setLoading(false);
     } catch (error) {
       setError(error.message);

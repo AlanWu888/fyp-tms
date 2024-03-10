@@ -8,8 +8,12 @@ import { COLOURS } from "@/app/constants";
 import GoBack from "../../buttons/GoBack";
 import CalendarPicker from "../../buttons/CalendarPicker";
 import MemberTable from "../components/memberTable";
+import { useSession } from "next-auth/react";
 
 function NewProject() {
+  const { data: session } = useSession();
+  const userEmail = session?.user?.email;
+
   const router = useRouter();
   const [clickedSuggestions, setClickedSuggestions] = useState([]);
   const [clientName, setClientName] = useState("");
@@ -40,6 +44,54 @@ function NewProject() {
     setDeadline(event.target.value);
   };
 
+  async function addProject(formData) {
+    try {
+      const res = await fetch("/api/Projects", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          formData: formData,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to create the project");
+      } else {
+        console.log("successfully created a new project");
+      }
+    } catch (error) {
+      console.error("Error creating the project:", error);
+    }
+  }
+
+  async function updateLogs(formData) {
+    try {
+      const res = await fetch("/api/LogMessages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          clientName: formData.clientname,
+          projectName: formData.projectname,
+          addedBy: userEmail,
+          messageDescription: "Project Created",
+          messageType: "new project",
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to update log messages");
+      } else {
+        console.log("successfully updated log messages");
+      }
+    } catch (error) {
+      console.error("Error updating log messages:", error);
+    }
+  }
+
   const handleAddProject = async (e) => {
     if (clickedSuggestions.length > 0) {
       e.preventDefault();
@@ -69,29 +121,11 @@ function NewProject() {
         memberEmails: memberEmails,
       };
 
-      console.log(formData);
+      await addProject(formData);
+      await updateLogs(formData);
 
-      try {
-        const res = await fetch("/api/Projects", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            formData: formData,
-          }),
-        });
-
-        if (!res.ok) {
-          throw new Error("Failed to create the project");
-        } else {
-          console.log("successfully created a new project");
-          router.refresh();
-          router.push("/manager/project");
-        }
-      } catch (error) {
-        console.error("Error creating the project:", error);
-      }
+      router.refresh();
+      router.push("/manager/project");
     } else {
       alert("Please select at least one member.");
     }
