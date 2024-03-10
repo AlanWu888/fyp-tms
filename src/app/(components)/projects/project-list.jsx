@@ -16,6 +16,21 @@ function ProjectsList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [timesheets, setTimesheets] = useState([]);
+  const [totalTime, setTotalTime] = useState({});
+
+  async function fetchTimesheets() {
+    try {
+      const response = await fetch("/api/Timesheets");
+      if (!response.ok) {
+        throw new Error("Failed to fetch timesheets");
+      }
+      const data = await response.json();
+      setTimesheets(data.timesheets);
+    } catch (error) {
+      console.error("Error fetching timesheets:", error);
+    }
+  }
 
   async function fetchData() {
     try {
@@ -45,8 +60,22 @@ function ProjectsList() {
   }
 
   useEffect(() => {
+    fetchTimesheets();
     fetchData();
   }, []);
+
+  useEffect(() => {
+    const newTotalTimePerClientProject = {};
+    timesheets.forEach((entry) => {
+      const key = `${entry.clientName}_${entry.projectName}`;
+      if (!newTotalTimePerClientProject[key]) {
+        newTotalTimePerClientProject[key] = entry.time;
+      } else {
+        newTotalTimePerClientProject[key] += entry.time;
+      }
+    });
+    setTotalTime(newTotalTimePerClientProject);
+  }, [timesheets]);
 
   useEffect(() => {
     if (searchTerm.trim() === "") {
@@ -73,6 +102,26 @@ function ProjectsList() {
   const handleChange = (event) => {
     setSearchTerm(event.target.value);
   };
+
+  const convertDecimalToTime = (decimalTime) => {
+    const hours = Math.floor(decimalTime);
+    const minutes = Math.round((decimalTime - hours) * 60);
+    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
+  };
+
+  function getTotalTime(clientName, projectName) {
+    const filteredTotalTime = {};
+    Object.keys(totalTime).forEach((key) => {
+      const [client, project] = key.split("_");
+      if (
+        client.toLowerCase() === clientName.toLowerCase() &&
+        project.toLowerCase() === projectName.toLowerCase()
+      ) {
+        filteredTotalTime[key] = totalTime[key];
+      }
+    });
+    return Object.values(filteredTotalTime)[0];
+  }
 
   if (loading) {
     return <div>Loading...</div>;
@@ -117,7 +166,6 @@ function ProjectsList() {
           </div>
         </div>
       </div>
-
       <div
         className="project-list-table-header"
         style={{
@@ -152,7 +200,6 @@ function ProjectsList() {
             style={{
               marginRight: "80px",
               width: "150px",
-              border: "1px solid black",
               alignItems: "center",
               display: "flex",
               justifyContent: "center",
@@ -164,7 +211,6 @@ function ProjectsList() {
             style={{
               marginRight: "80px",
               width: "130px",
-              border: "1px solid black",
               alignItems: "center",
               display: "flex",
               justifyContent: "center",
@@ -175,7 +221,6 @@ function ProjectsList() {
           <div
             style={{
               width: "80px",
-              border: "1px solid black",
               alignItems: "center",
               display: "flex",
               justifyContent: "center",
@@ -224,7 +269,6 @@ function ProjectsList() {
                     style={{
                       marginRight: "80px",
                       width: "150px",
-                      border: "1px solid black",
                       alignItems: "center",
                       display: "flex",
                       justifyContent: "center",
@@ -241,20 +285,22 @@ function ProjectsList() {
                     style={{
                       marginRight: "80px",
                       width: "130px",
-                      border: "1px solid black",
                       alignItems: "center",
                       display: "flex",
                       justifyContent: "center",
                     }}
                   >
-                    placeholder
+                    {convertDecimalToTime(
+                      JSON.stringify(
+                        getTotalTime(project.clientname, project.projectname),
+                      ),
+                    )}
                   </div>
                   <div
                     style={{
                       fontWeight: "normal",
                       fontSize: "16px",
                       width: "80px",
-                      border: "1px solid black",
                       textAlign: "right",
                     }}
                   >
