@@ -46,15 +46,31 @@ function NewProject() {
 
       const memberEmails = clickedSuggestions.map((user) => user.email);
 
+      const currentDate = new Date();
+      const selectedDeadline = new Date(deadline);
+
+      // Check if the deadline is in the past
+      if (selectedDeadline < currentDate) {
+        alert("The deadline cannot be in the past.");
+        return;
+      }
+
+      // Check if budget is a valid number
+      if (isNaN(budget) || parseFloat(budget) <= 0) {
+        alert("Please enter a valid budget.");
+        return;
+      }
+
       const formData = {
         clientname: clientName,
         projectname: projectName,
-        deadline: new Date(deadline).toISOString(),
+        deadline: selectedDeadline.toISOString(),
         budget: parseFloat(budget),
         memberEmails: memberEmails,
       };
 
       console.log(formData);
+
       try {
         const res = await fetch("/api/Projects", {
           method: "POST",
