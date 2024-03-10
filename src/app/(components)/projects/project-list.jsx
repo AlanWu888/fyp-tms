@@ -32,7 +32,7 @@ function ProjectsList() {
     }
   }
 
-  async function fetchData() {
+  async function fetchProjects() {
     try {
       const response = await fetch("/api/Projects", {
         method: "GET",
@@ -61,7 +61,7 @@ function ProjectsList() {
 
   useEffect(() => {
     fetchTimesheets();
-    fetchData();
+    fetchProjects();
   }, []);
 
   useEffect(() => {
@@ -304,11 +304,21 @@ function ProjectsList() {
                       textAlign: "right",
                     }}
                   >
-                    <Button
-                      bgcolour={COLOURS.WHITE}
-                      colour={COLOURS.BLACK}
-                      label="View"
-                    />
+                    <Link
+                      href={{
+                        pathname: `/manager/project/view-project`,
+                        query: {
+                          clientName: project.clientname,
+                          projectName: project.projectname,
+                        },
+                      }}
+                    >
+                      <Button
+                        bgcolour={COLOURS.WHITE}
+                        colour={COLOURS.BLACK}
+                        label="View"
+                      />
+                    </Link>
                   </div>
                 </div>
               </div>
