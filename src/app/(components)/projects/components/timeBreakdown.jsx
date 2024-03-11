@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import NavTabs from "../../navigation/NavTabs-project";
 import MySelect from "../../selects/select";
 
-function TimeBreakdownComponent() {
+function TimeBreakdownComponent({ timesheets }) {
   const selectOptions = [
     { value: "day", label: "Today" },
     { value: "week", label: "Week" },
@@ -11,11 +11,14 @@ function TimeBreakdownComponent() {
     { value: "all", label: "All Time" },
   ];
 
-  const [activeTab, setActiveTab] = useState("Tasks");
+  const [activeTab, setActiveTab] = useState("timesheets");
   const [mode, setMode] = useState(selectOptions[0]);
   const [date, setDate] = useState(new Date());
+  const [timeByTask, setTimeByTask] = useState({});
+  const [timeByUser, setTimeByUser] = useState({});
 
   const handleSelectChange = (mode) => {
+    console.log(timesheets);
     setMode(mode);
   };
 
@@ -71,11 +74,55 @@ function TimeBreakdownComponent() {
     }
   };
 
+  function transformDataByTasks() {
+    const transformedData = {
+      Billable: [],
+      "Non-Billable": [],
+      Research: [],
+    };
+
+    timesheets.forEach((item) => {
+      const { taskDescription, time, date, taskType } = item;
+
+      const newItem = { taskDescription, time, date };
+
+      if (taskType === "Billable") {
+        transformedData.Billable.push(newItem);
+      } else if (taskType === "Non-Billable") {
+        transformedData["Non-Billable"].push(newItem);
+      } else if (taskType === "Research") {
+        transformedData.Research.push(newItem);
+      }
+    });
+
+    return transformedData;
+  }
+
+  function transformDataByUser() {
+    const transformedData = {};
+
+    timesheets.forEach((item) => {
+      const { userEmail, time, date } = item;
+
+      if (!transformedData[userEmail]) {
+        transformedData[userEmail] = [];
+      }
+      transformedData[userEmail].push({ time, date });
+    });
+
+    return transformedData;
+  }
+
+  useEffect(() => {
+    setTimeByTask(transformDataByTasks);
+    setTimeByUser(transformDataByUser);
+  }, [timesheets]);
+
   return (
     <div style={{ marginBottom: "300px" }}>
       <div style={{ borderBottom: "1px solid black", paddingBottom: "3px" }}>
         <NavTabs
-          items={["Tasks", "Team"]}
+          items={["timesheets", "Team"]}
           activeTab={activeTab}
           onTabChange={handleTabChange}
         />
@@ -126,11 +173,11 @@ function TimeBreakdownComponent() {
           </div>
         </div>
 
-        {activeTab === "Tasks" && (
+        {activeTab === "timesheets" && (
           <div>
-            {/* Content for Tasks tab */}
-            <h2>Tasks Content</h2>
-            <p>This is the content for the Tasks tab.</p>
+            {/* Content for timesheets tab */}
+            <h2>timesheets Content</h2>
+            <p>This is the content for the timesheets tab.</p>
           </div>
         )}
         {activeTab === "Team" && (
@@ -141,6 +188,11 @@ function TimeBreakdownComponent() {
           </div>
         )}
       </div>
+      {/* {JSON.stringify(timesheets)} */}
+      <br />
+      {JSON.stringify(timeByTask)}
+      <br />
+      {/* {JSON.stringify(timeByUser)} */}
     </div>
   );
 }
