@@ -210,10 +210,6 @@ const ViewProjectComponent = () => {
   }, []);
 
   useEffect(() => {
-    calculateTimeByProperty("taskDescription", setHoursByTaskDesc);
-    calculateTimeByProperty("taskType", setHoursByTaskType);
-    calculateTimeByProperty("userEmail", setHoursByUser);
-
     const totalHours = calculateTotalHours();
 
     setTotalHoursPerDay(totalHours.totalHoursPerDay);
@@ -430,8 +426,9 @@ const ViewProjectComponent = () => {
             className="time-breakdown-component"
             style={{ marginTop: "30px" }}
           >
-            <TimeBreakdownComponent />
+            <TimeBreakdownComponent timesheets={timesheets} />
           </div>
+          {/* {JSON.stringify(timesheets)} */}
         </div>
       ) : (
         <div
