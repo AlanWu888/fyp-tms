@@ -8,6 +8,7 @@ import LineChart from "../components/lineChart";
 import "./viewProject.css";
 import Button from "../../buttons/Button";
 import { COLOURS } from "@/app/constants";
+import TimeBreakdownComponent from "../components/timeBreakdown";
 
 const ViewProjectComponent = () => {
   const { data: session } = useSession();
@@ -424,6 +425,12 @@ const ViewProjectComponent = () => {
                 />
               </div>
             </div>
+          </div>
+          <div
+            className="time-breakdown-component"
+            style={{ marginTop: "30px" }}
+          >
+            <TimeBreakdownComponent />
           </div>
         </div>
       ) : (

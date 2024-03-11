@@ -1,13 +1,9 @@
-"use client";
-
-import React, { useState } from "react";
+import React from "react";
 import styles from "./styles/NavTabs.module.css"; // Import CSS module styles
 
-const NavTabs = ({ items }) => {
-  const [selectedItem, setSelectedItem] = useState(items[0]);
-
+const NavTabs = ({ items, activeTab, onTabChange }) => {
   const handleItemClick = (item) => {
-    setSelectedItem(item);
+    onTabChange(item);
   };
 
   return (
@@ -16,7 +12,7 @@ const NavTabs = ({ items }) => {
         <a
           key={index}
           href="#"
-          className={`${styles.navItem} ${item === selectedItem ? styles.selected : ""}`}
+          className={`${styles.navItem} ${item === activeTab ? styles.selected : ""}`}
           onClick={() => handleItemClick(item)}
         >
           {item}
