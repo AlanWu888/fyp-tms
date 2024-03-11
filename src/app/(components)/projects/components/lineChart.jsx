@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import Chart from "chart.js";
 
-const LineChart = ({ data, labels, width, height }) => {
+const LineChart = ({ data, labels, mode, width, height }) => {
   const chartRef = useRef();
 
   useEffect(() => {
@@ -14,20 +14,38 @@ const LineChart = ({ data, labels, width, height }) => {
           labels: labels,
           datasets: [
             {
-              label: "Data",
+              label: `Hours contributed per ${mode}`,
               data: data,
-              fill: false,
+              fill: true,
               borderColor: "rgb(75, 192, 192)",
               tension: 0.1,
             },
           ],
         },
         options: {
-          maintainAspectRatio: false, // Disable the aspect ratio
+          maintainAspectRatio: false,
+          scales: {
+            x: {
+              type: "time",
+              time: {
+                unit: mode,
+              },
+              scaleLabel: {
+                display: true,
+                labelString: "Time",
+              },
+            },
+            y: {
+              scaleLabel: {
+                display: true,
+                labelString: "Hours contributed",
+              },
+            },
+          },
         },
       });
     }
-  }, [data, labels]);
+  }, [data, labels, mode]);
 
   return <canvas ref={chartRef} width={width} height={height} />;
 };

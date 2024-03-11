@@ -253,7 +253,6 @@ const ViewProjectComponent = () => {
 
   return (
     <div>
-      <div>{`${JSON.stringify(validProject)} - ${userEmail}`}</div>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <Link href="/manager/project">
           <GoBack />
@@ -383,6 +382,7 @@ const ViewProjectComponent = () => {
                     justifyContent: "flex-end",
                   }}
                 >
+                  <p style={{ marginRight: "10px" }}>{mode}</p>
                   <p style={{ marginRight: "10px" }}>View by:</p>
                   <button
                     onClick={() => setMode("day")}
@@ -418,6 +418,7 @@ const ViewProjectComponent = () => {
                 <LineChart
                   data={getDataForMode()}
                   labels={getLabelsForMode()}
+                  mode={mode}
                   width="100%"
                   height="100%"
                 />
