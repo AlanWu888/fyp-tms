@@ -21,9 +21,7 @@ const ViewProjectComponent = () => {
   const [currentProject, setCurrentProject] = useState([]);
   const [validProject, setValidProject] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [hoursByTaskDesc, setHoursByTaskDesc] = useState();
   const [hoursByTaskType, setHoursByTaskType] = useState();
-  const [hoursByUser, setHoursByUser] = useState();
   const [mode, setMode] = useState("day");
   const [totalHoursPerDay, setTotalHoursPerDay] = useState({});
   const [totalHoursPerWeek, setTotalHoursPerWeek] = useState({});
@@ -85,7 +83,6 @@ const ViewProjectComponent = () => {
         totalTime[key] = time;
       }
     });
-
     setResultFunction(totalTime);
   }
 
@@ -215,6 +212,8 @@ const ViewProjectComponent = () => {
     setTotalHoursPerDay(totalHours.totalHoursPerDay);
     setTotalHoursPerWeek(totalHours.totalHoursPerWeek);
     setTotalHoursPerMonth(totalHours.totalHoursPerMonth);
+
+    calculateTimeByProperty("taskType", setHoursByTaskType);
   }, [timesheets]);
 
   useEffect(() => {
@@ -238,9 +237,6 @@ const ViewProjectComponent = () => {
       setValidProject(true);
     }
 
-    calculateTimeByProperty("taskDescription", setHoursByTaskDesc);
-    calculateTimeByProperty("taskType", setHoursByTaskType);
-    calculateTimeByProperty("userEmail", setHoursByUser);
     setLoading(false);
   }, [projects]);
 

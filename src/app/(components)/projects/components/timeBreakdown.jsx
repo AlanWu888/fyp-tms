@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import NavTabs from "../../navigation/NavTabs-project";
 import MySelect from "../../selects/select";
+import BreakDownTable from "./breakdownTable";
 
 function TimeBreakdownComponent({ timesheets }) {
   const selectOptions = [
@@ -11,14 +12,13 @@ function TimeBreakdownComponent({ timesheets }) {
     { value: "all", label: "All Time" },
   ];
 
-  const [activeTab, setActiveTab] = useState("timesheets");
+  const [activeTab, setActiveTab] = useState("Tasks");
   const [mode, setMode] = useState(selectOptions[0]);
   const [date, setDate] = useState(new Date());
   const [timeByTask, setTimeByTask] = useState({});
   const [timeByUser, setTimeByUser] = useState({});
 
   const handleSelectChange = (mode) => {
-    console.log(timesheets);
     setMode(mode);
   };
 
@@ -41,6 +41,48 @@ function TimeBreakdownComponent({ timesheets }) {
       default:
         return "";
     }
+  };
+
+  const incrementDate = () => {
+    const newDate = new Date(date);
+    switch (mode.value) {
+      case "day":
+        newDate.setDate(newDate.getDate() + 1);
+        break;
+      case "week":
+        newDate.setDate(newDate.getDate() + 7);
+        break;
+      case "fortnight":
+        newDate.setDate(newDate.getDate() + 14);
+        break;
+      case "month":
+        newDate.setMonth(newDate.getMonth() + 1);
+        break;
+      default:
+        break;
+    }
+    setDate(newDate);
+  };
+
+  const decrementDate = () => {
+    const newDate = new Date(date);
+    switch (mode.value) {
+      case "day":
+        newDate.setDate(newDate.getDate() - 1);
+        break;
+      case "week":
+        newDate.setDate(newDate.getDate() - 7);
+        break;
+      case "fortnight":
+        newDate.setDate(newDate.getDate() - 14);
+        break;
+      case "month":
+        newDate.setMonth(newDate.getMonth() - 1);
+        break;
+      default:
+        break;
+    }
+    setDate(newDate);
   };
 
   const renderDateText = () => {
@@ -113,6 +155,28 @@ function TimeBreakdownComponent({ timesheets }) {
     return transformedData;
   }
 
+  function groupTasksByDescription(data) {
+    const groupedTasks = {};
+
+    data.forEach((item) => {
+      if (groupedTasks[item.taskDescription]) {
+        groupedTasks[item.taskDescription].push({
+          time: item.time,
+          date: item.date,
+        });
+      } else {
+        groupedTasks[item.taskDescription] = [
+          {
+            time: item.time,
+            date: item.date,
+          },
+        ];
+      }
+    });
+
+    return groupedTasks;
+  }
+
   useEffect(() => {
     setTimeByTask(transformDataByTasks);
     setTimeByUser(transformDataByUser);
@@ -122,7 +186,7 @@ function TimeBreakdownComponent({ timesheets }) {
     <div style={{ marginBottom: "300px" }}>
       <div style={{ borderBottom: "1px solid black", paddingBottom: "3px" }}>
         <NavTabs
-          items={["timesheets", "Team"]}
+          items={["Tasks", "Team"]}
           activeTab={activeTab}
           onTabChange={handleTabChange}
         />
@@ -144,10 +208,10 @@ function TimeBreakdownComponent({ timesheets }) {
             <div>
               {mode.value !== "all" ? (
                 <div style={{ width: "95px" }}>
-                  <button onClick={"#"} className="button-dates">
+                  <button onClick={decrementDate} className="button-dates">
                     <img src={"/arrow-l.png"} alt="Previous Day" />
                   </button>
-                  <button onClick={"#"} className="button-dates">
+                  <button onClick={incrementDate} className="button-dates">
                     <img src={"/arrow-r.png"} alt="Next Day" />
                   </button>
                 </div>
@@ -173,24 +237,41 @@ function TimeBreakdownComponent({ timesheets }) {
           </div>
         </div>
 
-        {activeTab === "timesheets" && (
+        {activeTab === "Tasks" && (
           <div>
-            {/* Content for timesheets tab */}
-            <h2>timesheets Content</h2>
-            <p>This is the content for the timesheets tab.</p>
+            {Object.keys(timeByTask).map((category) => (
+              <div key={category}>
+                <BreakDownTable
+                  header={`${category} Tasks`}
+                  mode={mode.value}
+                  data={groupTasksByDescription(timeByTask[category])}
+                  type={"tasks"}
+                  date={date}
+                />
+              </div>
+            ))}
           </div>
         )}
         {activeTab === "Team" && (
           <div>
-            {/* Content for Team tab */}
-            <h2>Team Content</h2>
-            <p>This is the content for the Team tab.</p>
+            <div>
+              <BreakDownTable
+                header={"Team Member"}
+                mode={mode.value}
+                data={timeByUser}
+                type={"users"}
+                date={date}
+              />
+            </div>
           </div>
         )}
       </div>
-      {/* {JSON.stringify(timesheets)} */}
+
+      {/* {JSON.stringify(timesheets)} 
+        Make a new component maybe
+      */}
       <br />
-      {JSON.stringify(timeByTask)}
+      {/* {JSON.stringify(timeByTask)} */}
       <br />
       {/* {JSON.stringify(timeByUser)} */}
     </div>
