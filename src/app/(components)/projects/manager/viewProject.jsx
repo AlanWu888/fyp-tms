@@ -422,7 +422,10 @@ const ViewProjectComponent = () => {
             className="time-breakdown-component"
             style={{ marginTop: "30px" }}
           >
-            <TimeBreakdownComponent timesheets={timesheets} />
+            <TimeBreakdownComponent
+              timesheets={timesheets}
+              currentProject={currentProject}
+            />
           </div>
           {/* {JSON.stringify(timesheets)} */}
         </div>

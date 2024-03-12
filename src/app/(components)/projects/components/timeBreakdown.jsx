@@ -2,8 +2,11 @@ import React, { useEffect, useState } from "react";
 import NavTabs from "../../navigation/NavTabs-project";
 import MySelect from "../../selects/select";
 import BreakDownTable from "./breakdownTable";
+import Button from "../../buttons/Button";
+import { COLOURS } from "@/app/constants";
+import AddUserModal from "../manager/modals/addUser";
 
-function TimeBreakdownComponent({ timesheets }) {
+function TimeBreakdownComponent({ timesheets, currentProject }) {
   const selectOptions = [
     { value: "day", label: "Today" },
     { value: "week", label: "Week" },
@@ -17,6 +20,7 @@ function TimeBreakdownComponent({ timesheets }) {
   const [date, setDate] = useState(new Date());
   const [timeByTask, setTimeByTask] = useState({});
   const [timeByUser, setTimeByUser] = useState({});
+  const [addMember, setAddMember] = useState(false);
 
   const handleSelectChange = (mode) => {
     setMode(mode);
@@ -177,6 +181,10 @@ function TimeBreakdownComponent({ timesheets }) {
     return groupedTasks;
   }
 
+  const handleAddUser = () => {
+    setAddMember(true);
+  };
+
   useEffect(() => {
     setTimeByTask(transformDataByTasks);
     setTimeByUser(transformDataByUser);
@@ -184,12 +192,29 @@ function TimeBreakdownComponent({ timesheets }) {
 
   return (
     <div style={{ marginBottom: "300px" }}>
-      <div style={{ borderBottom: "1px solid black", paddingBottom: "3px" }}>
+      <div
+        style={{
+          borderBottom: "1px solid black",
+          paddingBottom: "3px",
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
         <NavTabs
           items={["Tasks", "Team"]}
           activeTab={activeTab}
           onTabChange={handleTabChange}
         />
+        <div>
+          {activeTab === "Team" && (
+            <Button
+              bgcolour={COLOURS.GREEN_ENABLED}
+              colour={COLOURS.WHITE}
+              label="+ Add user"
+              onClick={handleAddUser}
+            />
+          )}
+        </div>
       </div>
       <div>
         <div
@@ -266,7 +291,15 @@ function TimeBreakdownComponent({ timesheets }) {
           </div>
         )}
       </div>
-
+      {addMember && (
+        <AddUserModal
+          onClose={() => setAddMember(false)}
+          currentProject={currentProject}
+          // onTimesheetUpdate={fetchData} // Pass
+          // date={date}
+          // onClose={() => setAddMember(false)}
+        />
+      )}
       {/* {JSON.stringify(timesheets)} 
         Make a new component maybe
       */}
