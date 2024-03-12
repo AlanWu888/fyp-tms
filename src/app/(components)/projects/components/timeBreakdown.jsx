@@ -12,7 +12,7 @@ function TimeBreakdownComponent({ timesheets }) {
     { value: "all", label: "All Time" },
   ];
 
-  const [activeTab, setActiveTab] = useState("Tasks");
+  const [activeTab, setActiveTab] = useState();
   const [mode, setMode] = useState(selectOptions[0]);
   const [date, setDate] = useState(new Date());
   const [timeByTask, setTimeByTask] = useState({});

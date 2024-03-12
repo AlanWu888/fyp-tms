@@ -9,11 +9,6 @@ function BreakDownTable({ header, mode, data, type, date }) {
 
   useEffect(() => {
     getRanges();
-    filterDataByDateRange();
-  });
-
-  useEffect(() => {
-    getRanges();
   }, [date, mode]);
 
   useEffect(() => {
@@ -23,9 +18,6 @@ function BreakDownTable({ header, mode, data, type, date }) {
   const filterDataByDateRange = () => {
     const { rangeStart, rangeEnd } = dateRange;
     const filteredData = {};
-    console.log(dateRange);
-    console.log(rangeStart);
-    console.log(rangeEnd);
     for (const key in data) {
       filteredData[key] = data[key].filter((entry) => {
         const entryDate = new Date(entry.date);
