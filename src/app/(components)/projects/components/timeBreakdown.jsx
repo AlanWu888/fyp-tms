@@ -5,6 +5,7 @@ import BreakDownTable from "./breakdownTable";
 import Button from "../../buttons/Button";
 import { COLOURS } from "@/app/constants";
 import AddUserModal from "../manager/modals/addUser";
+import UsersTable from "./usersTable";
 
 function TimeBreakdownComponent({ timesheets, currentProject }) {
   const selectOptions = [
@@ -286,11 +287,11 @@ function TimeBreakdownComponent({ timesheets, currentProject }) {
         {activeTab === "Team" && (
           <div>
             <div>
-              <BreakDownTable
+              <UsersTable
                 header={"Team Member"}
                 mode={mode.value}
                 data={timeByUser}
-                type={"users"}
+                currentProject={currentProject}
                 date={date}
               />
             </div>
