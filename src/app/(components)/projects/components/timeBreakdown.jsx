@@ -156,6 +156,12 @@ function TimeBreakdownComponent({ timesheets, currentProject }) {
       transformedData[userEmail].push({ time, date });
     });
 
+    currentProject[0].memberEmails.forEach((email) => {
+      if (!transformedData[email]) {
+        transformedData[email] = [{ time: 0, date: null }];
+      }
+    });
+
     return transformedData;
   }
 
@@ -295,18 +301,8 @@ function TimeBreakdownComponent({ timesheets, currentProject }) {
         <AddUserModal
           onClose={() => setAddMember(false)}
           currentProject={currentProject}
-          // onTimesheetUpdate={fetchData} // Pass
-          // date={date}
-          // onClose={() => setAddMember(false)}
         />
       )}
-      {/* {JSON.stringify(timesheets)} 
-        Make a new component maybe
-      */}
-      <br />
-      {/* {JSON.stringify(timeByTask)} */}
-      <br />
-      {/* {JSON.stringify(timeByUser)} */}
     </div>
   );
 }
