@@ -12,7 +12,8 @@ export async function POST(req) {
       !projectData?.projectname ||
       !projectData?.deadline ||
       !projectData?.budget ||
-      !projectData?.memberEmails
+      !projectData?.memberEmails ||
+      !projectData?.removedEmails
     ) {
       return NextResponse.json(
         { message: "All fields are required." },

@@ -20,6 +20,9 @@ function AddUserModal({ onClose, currentProject }) {
           projectname: currentProject[0].projectname,
           newData: {
             memberEmails: currentProject[0].memberEmails.concat(inputValue),
+            removedEmails: currentProject[0].removedEmails.filter(
+              (email) => email !== inputValue,
+            ),
           },
         }),
       });
@@ -44,10 +47,6 @@ function AddUserModal({ onClose, currentProject }) {
   const handleChange = (event) => {
     const value = event.target.value;
     setInputValue(value);
-    console.log("USERS");
-    console.log(users);
-    console.log("currentProject");
-    console.log(currentProject[0].memberEmails);
 
     const filteredSuggestions = users.filter(
       (user) =>
