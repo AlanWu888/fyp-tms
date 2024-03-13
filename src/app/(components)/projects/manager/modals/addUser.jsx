@@ -27,32 +27,40 @@ function AddUserModal({ onClose, currentProject }) {
         throw new Error("Failed to update timesheet");
       } else {
         console.log("successful patch update to timesheet");
-        // Trigger the callback function to update timesheet data
+        alert(
+          `successfully added ${inputValue} to the project\nThe user will appear next time you load this project`,
+        );
       }
     } catch (error) {
       console.error("Error updating timesheet:", error);
     }
   }
 
-  const handleSubmit = async (event) => {
-    // alert(JSON.stringify(currentProject[0].memberEmails))
-    // alert(JSON.stringify(currentProject[0].memberEmails.concat(inputValue)))
-    // alert(inputValue)
+  const handleSubmit = async () => {
     patchDB();
+    onClose();
   };
 
   const handleChange = (event) => {
     const value = event.target.value;
     setInputValue(value);
+    console.log("USERS");
+    console.log(users);
+    console.log("currentProject");
+    console.log(currentProject[0].memberEmails);
 
     const filteredSuggestions = users.filter(
       (user) =>
-        `${user.firstname} ${user.lastname}`
+        (`${user.firstname} ${user.lastname}`
           .toLowerCase()
           .includes(value.toLowerCase()) ||
-        (user.email.toLowerCase().includes(value.toLowerCase()) &&
-          !currentProject[0].memberEmails.includes(user.email)),
+          user.email.toLowerCase().includes(value.toLowerCase())) &&
+        !currentProject[0].memberEmails.some(
+          (memberEmail) =>
+            memberEmail.toLowerCase() === user.email.toLowerCase(),
+        ),
     );
+
     setUserSuggestions(filteredSuggestions);
   };
 
@@ -168,11 +176,18 @@ function AddUserModal({ onClose, currentProject }) {
           }}
         >
           <form onSubmit={handleSubmit}>
-            <div style={{ marginBottom: "10px", position: "relative" }}>
+            <div
+              style={{
+                marginBottom: "10px",
+                position: "relative",
+                paddingTop: "20px",
+              }}
+            >
               <label style={{ fontSize: "16px", fontWeight: "bold" }}>
-                Task Description:
+                Enter a name or email:
                 <br />
                 <input
+                  placeholder="Start typing a user's name or email..."
                   type="text"
                   value={inputValue}
                   onChange={handleChange}
@@ -234,7 +249,7 @@ function AddUserModal({ onClose, currentProject }) {
 
             <div
               className="modal-button-group"
-              style={{ display: "flex", marginTop: "55px" }}
+              style={{ display: "flex", marginTop: "35px" }}
             >
               <div style={{ marginRight: "10px" }}>
                 <Button
