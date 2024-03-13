@@ -12,16 +12,31 @@ const Button = ({
     backgroundColor: disabled ? disabledColour : bgcolour,
     color: colour,
     pointerEvents: disabled ? "none" : "auto",
+    border: "1px solid black",
+    borderRadius: "5px",
+    cursor: "pointer",
+    textDecoration: "none",
+    height: "42px",
+    paddingLeft: "10px",
+    paddingRight: "10px",
   };
 
   return (
-    <button
-      style={buttonStyle}
-      className={`px-4 py-2 rounded-md border border-black transition-all duration-300 ${disabled ? "" : "hover:underline"}`}
-      onClick={onClick}
-      disabled={disabled}
-    >
-      {label}
+    <button style={buttonStyle} onClick={onClick} disabled={disabled}>
+      <p
+        style={{
+          fontSize: "16px",
+          textDecoration: "none",
+          transition: "text-decoration 0.3s",
+          borderBottom: "1px solid transparent",
+        }}
+        onMouseEnter={(e) => (e.target.style.borderBottom = "1px solid black")}
+        onMouseLeave={(e) =>
+          (e.target.style.borderBottom = "1px solid transparent")
+        }
+      >
+        {label}
+      </p>
     </button>
   );
 };
