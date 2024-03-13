@@ -394,7 +394,7 @@ function AdditionModal({ date, onClose, onTimesheetUpdate }) {
               <div style={{ marginRight: "10px" }}>
                 <Button
                   bgcolour={COLOURS.GREEN_ENABLED}
-                  colour="#000"
+                  colour={COLOURS.WHITE}
                   label="Save"
                   type="submit"
                 />

@@ -10,10 +10,12 @@ const GoBack = () => {
         backgroundColor: COLOURS.GREY,
         color: COLOURS.BLACK,
         border: "1px solid black",
-        borderRadius: "10px",
+        borderRadius: "5px",
         cursor: "pointer",
         textDecoration: "none",
-        padding: "10px",
+        height: "42px",
+        paddingLeft: "10px",
+        paddingRight: "10px",
       }}
       className="button-go-back"
     >

@@ -254,8 +254,8 @@ const ViewProjectComponent = () => {
           href={{
             pathname: `/manager/project/logs`,
             query: {
-              clientName: currentProject.clientname,
-              projectName: currentProject.projectname,
+              clientName: clientName,
+              projectName: projectName,
             },
           }}
         >
