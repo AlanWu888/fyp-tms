@@ -7,6 +7,7 @@ import Link from "next/link";
 import Button from "../../buttons/Button";
 import { COLOURS } from "@/app/constants";
 import SearchBox from "../../searchBox/SearchBox";
+import LoadingSpinner from "../../loading/Loading";
 
 const Logs = () => {
   const { data: session } = useSession();
@@ -163,83 +164,91 @@ const Logs = () => {
   }, [filteredLogs]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner />;
   }
 
   return (
     <div>
       {validProject ? (
         <div>
-          <div style={{ display: "flex", marginBottom: "20px" }}>
-            <div style={{ marginRight: "10px" }}>
-              <Link
-                href={{
-                  pathname: `/manager/project/view-project`,
-                  query: {
-                    clientName: clientName,
-                    projectName: projectName,
-                  },
-                }}
-              >
-                <GoBack />
-              </Link>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <div style={{ display: "flex", marginBottom: "20px" }}>
+              <div style={{ marginRight: "10px" }}>
+                <Link
+                  href={{
+                    pathname: `/manager/project/view-project`,
+                    query: {
+                      clientName: clientName,
+                      projectName: projectName,
+                    },
+                  }}
+                >
+                  <GoBack />
+                </Link>
+              </div>
+              <div>
+                <Button
+                  bgcolour={COLOURS.GREY}
+                  colour={"black"}
+                  label="Download Logs"
+                  onClick={handleDownloadLogs}
+                />
+              </div>
             </div>
-            <div>
-              <Button
-                bgcolour={COLOURS.GREY}
-                colour={"black"}
-                label="Download Logs"
-                onClick={handleDownloadLogs}
+            <div style={{ width: "500px" }}>
+              <SearchBox
+                placeholder="Search logs..."
+                handleChange={handleSearch}
               />
             </div>
           </div>
-          <div style={{ borderBottom: "1px solid", paddingBottom: "10px" }}>
+
+          <div style={{ borderBottom: "1px solid", paddingBottom: "50px" }}>
             <p
               style={{ fontSize: "24px", fontWeight: "bold" }}
             >{`${clientName} - ${projectName}`}</p>
             <p>Log of changes</p>
-            <SearchBox
-              placeholder="Search logs..."
-              handleChange={handleSearch}
-            />
           </div>
           <div style={{ marginTop: "20px" }}>
             {filteredLogs.length > 0 ? (
               <div>
-                {filteredLogs.map((log, index) => (
-                  <div
-                    key={index}
-                    style={{
-                      borderBottom: "double",
-                      marginTop: "10px",
-                      paddingBottom: "10px",
-                    }}
-                  >
+                {filteredLogs
+                  .slice()
+                  .reverse()
+                  .map((log, index) => (
                     <div
+                      key={index}
                       style={{
-                        display: "flex",
-                        justifyContent: "space-between",
+                        borderBottom: "double",
+                        marginTop: "10px",
+                        paddingBottom: "10px",
                       }}
                     >
-                      <div>{log.addedBy}</div>
-                      <div>
-                        {new Date(log.createdAt).toLocaleDateString("en-GB", {
-                          day: "2-digit",
-                          month: "2-digit",
-                          year: "numeric",
-                        })}{" "}
-                        ||{" "}
-                        {new Date(log.createdAt).toLocaleTimeString("en-US", {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                          second: "2-digit",
-                        })}
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <div>{log.addedBy}</div>
+                        <div>
+                          {new Date(log.createdAt).toLocaleDateString("en-GB", {
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "numeric",
+                          })}{" "}
+                          ||{" "}
+                          {new Date(log.createdAt).toLocaleTimeString("en-US", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            second: "2-digit",
+                          })}
+                        </div>
                       </div>
+                      <div>{log.messageDescription}</div>
+                      <div>{log.messageType}</div>
                     </div>
-                    <div>{log.messageDescription}</div>
-                    <div>{log.messageType}</div>
-                  </div>
-                ))}
+                  ))}
               </div>
             ) : (
               <div>No logs available</div>
@@ -247,21 +256,7 @@ const Logs = () => {
           </div>
         </div>
       ) : null}
-      {!validProject && !loading && (
-        <div
-          style={{
-            textAlign: "center",
-            marginTop: "30px",
-            fontSize: "20px",
-            borderTop: "1px solid black",
-            borderBottom: "1px solid black",
-            paddingTop: "20px",
-            paddingBottom: "20px",
-          }}
-        >
-          You do not have access to this project's logs
-        </div>
-      )}
+      {!validProject && !loading && <LoadingSpinner />}
     </div>
   );
 };

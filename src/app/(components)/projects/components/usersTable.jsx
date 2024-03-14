@@ -3,8 +3,12 @@
 import React, { useEffect, useState } from "react";
 import { COLOURS } from "@/app/constants";
 import Button from "../../buttons/Button";
+import { useSession } from "next-auth/react";
 
 function UsersTable({ header, mode, data, date, currentProject }) {
+  const { data: session } = useSession();
+  const userEmail = session?.user?.email;
+
   const [dateRange, setDateRange] = useState({});
   const [filteredData, setFilteredData] = useState({});
 
@@ -97,6 +101,32 @@ function UsersTable({ header, mode, data, date, currentProject }) {
     return totalTime;
   }
 
+  async function updateLogs(clientName, projectName, emailToRemove) {
+    try {
+      const res = await fetch("/api/LogMessages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          clientName: clientName,
+          projectName: projectName,
+          addedBy: userEmail,
+          messageDescription: `Removed member from project: ${emailToRemove}`,
+          messageType: "Removed User",
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to update log messages");
+      } else {
+        console.log("successfully updated log messages");
+      }
+    } catch (error) {
+      console.error("Error updating log messages:", error);
+    }
+  }
+
   async function patchDB(emailToRemove) {
     try {
       const response = await fetch("/api/Projects", {
@@ -120,6 +150,11 @@ function UsersTable({ header, mode, data, date, currentProject }) {
         throw new Error("Failed to update timesheet");
       } else {
         console.log("successful patch update to timesheet");
+        await updateLogs(
+          currentProject[0].clientname,
+          currentProject[0].projectname,
+          emailToRemove,
+        );
         alert(
           `successfully removed ${emailToRemove} to the project\nThe change will show next time you load this project`,
         );

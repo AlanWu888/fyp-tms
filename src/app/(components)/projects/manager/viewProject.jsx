@@ -9,6 +9,7 @@ import "./viewProject.css";
 import Button from "../../buttons/Button";
 import { COLOURS } from "@/app/constants";
 import TimeBreakdownComponent from "../components/timeBreakdown";
+import LoadingSpinner from "../../loading/Loading";
 
 const ViewProjectComponent = () => {
   const { data: session } = useSession();
@@ -241,7 +242,7 @@ const ViewProjectComponent = () => {
   }, [projects]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner />;
   }
 
   return (
@@ -430,19 +431,20 @@ const ViewProjectComponent = () => {
           {/* {JSON.stringify(timesheets)} */}
         </div>
       ) : (
-        <div
-          style={{
-            textAlign: "center",
-            marginTop: "30px",
-            fontSize: "20px",
-            borderTop: "1px solid black",
-            borderBottom: "1px solid black",
-            paddingTop: "20px",
-            paddingBottom: "20px",
-          }}
-        >
-          You do not have access to this project
-        </div>
+        // <div
+        //   style={{
+        //     textAlign: "center",
+        //     marginTop: "30px",
+        //     fontSize: "20px",
+        //     borderTop: "1px solid black",
+        //     borderBottom: "1px solid black",
+        //     paddingTop: "20px",
+        //     paddingBottom: "20px",
+        //   }}
+        // >
+        //   You do not have access to this project
+        // </div>
+        <LoadingSpinner />
       )}
     </div>
   );

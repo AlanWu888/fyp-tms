@@ -6,6 +6,7 @@ import { COLOURS } from "@/app/constants";
 import SearchBox from "../searchBox/SearchBox";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import LoadingSpinner from "../loading/Loading";
 
 function ProjectsList() {
   const { data: session } = useSession();
@@ -124,7 +125,7 @@ function ProjectsList() {
   }
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner />;
   }
 
   if (error) {
