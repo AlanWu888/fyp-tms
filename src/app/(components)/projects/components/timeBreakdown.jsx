@@ -21,7 +21,7 @@ function TimeBreakdownComponent({ timesheets, currentProject }) {
   const [date, setDate] = useState(new Date());
   const [timeByTask, setTimeByTask] = useState({});
   const [timeByUser, setTimeByUser] = useState({});
-  const [addMember, setAddMember] = useState(false);
+  const [addMemberModalOpen, setaddMemberModalOpenModalOpen] = useState(false);
 
   const handleSelectChange = (mode) => {
     setMode(mode);
@@ -189,7 +189,7 @@ function TimeBreakdownComponent({ timesheets, currentProject }) {
   }
 
   const handleAddUser = () => {
-    setAddMember(true);
+    setaddMemberModalOpenModalOpen(true);
   };
 
   useEffect(() => {
@@ -298,9 +298,9 @@ function TimeBreakdownComponent({ timesheets, currentProject }) {
           </div>
         )}
       </div>
-      {addMember && (
+      {addMemberModalOpen && (
         <AddUserModal
-          onClose={() => setAddMember(false)}
+          onClose={() => setaddMemberModalOpenModalOpen(false)}
           currentProject={currentProject}
         />
       )}

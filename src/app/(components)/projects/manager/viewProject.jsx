@@ -10,6 +10,7 @@ import Button from "../../buttons/Button";
 import { COLOURS } from "@/app/constants";
 import TimeBreakdownComponent from "../components/timeBreakdown";
 import LoadingSpinner from "../../loading/Loading";
+import ManageValuesModal from "./modals/manageValues";
 
 const ViewProjectComponent = () => {
   const { data: session } = useSession();
@@ -27,6 +28,7 @@ const ViewProjectComponent = () => {
   const [totalHoursPerDay, setTotalHoursPerDay] = useState({});
   const [totalHoursPerWeek, setTotalHoursPerWeek] = useState({});
   const [totalHoursPerMonth, setTotalHoursPerMonth] = useState({});
+  const [manageModalOpen, SetManageModalOpen] = useState(false);
 
   async function fetchTimesheetData() {
     try {
@@ -199,6 +201,10 @@ const ViewProjectComponent = () => {
     }
   }
 
+  const openManageModal = () => {
+    SetManageModalOpen(true);
+  };
+
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);
     const clientNameParam = queryParams.get("clientName") || "";
@@ -353,7 +359,16 @@ const ViewProjectComponent = () => {
                   </p>
                 </div>
                 <div style={{ marginTop: "auto", textAlign: "left" }}>
-                  Manage values
+                  <span
+                    style={{
+                      textDecoration: "underline",
+                      color: "blue",
+                      cursor: "pointer",
+                    }}
+                    onClick={openManageModal}
+                  >
+                    Manage values
+                  </span>
                 </div>
               </div>
             </div>
@@ -445,6 +460,12 @@ const ViewProjectComponent = () => {
         //   You do not have access to this project
         // </div>
         <LoadingSpinner />
+      )}
+      {manageModalOpen && (
+        <ManageValuesModal
+          onClose={() => SetManageModalOpen(false)}
+          currentProject={currentProject}
+        />
       )}
     </div>
   );
