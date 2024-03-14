@@ -1,12 +1,42 @@
 import React, { useState, useEffect } from "react";
 import Button from "@/app/(components)/buttons/Button";
 import { COLOURS } from "@/app/constants";
+import { useSession } from "next-auth/react";
 
 function AddUserModal({ onClose, currentProject }) {
+  const { data: session } = useSession();
+  const userEmail = session?.user?.email;
+
   const [errorMessage, setErrorMessage] = useState("");
   const [users, setUsers] = useState({});
   const [userSuggestions, setUserSuggestions] = useState([]);
   const [inputValue, setInputValue] = useState("");
+
+  async function updateLogs(clientName, projectName, inputValue) {
+    try {
+      const res = await fetch("/api/LogMessages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          clientName: clientName,
+          projectName: projectName,
+          addedBy: userEmail,
+          messageDescription: `Added member to project: ${inputValue}`,
+          messageType: "Added User",
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to update log messages");
+      } else {
+        console.log("successfully updated log messages");
+      }
+    } catch (error) {
+      console.error("Error updating log messages:", error);
+    }
+  }
 
   async function patchDB() {
     try {
@@ -30,6 +60,11 @@ function AddUserModal({ onClose, currentProject }) {
         throw new Error("Failed to update timesheet");
       } else {
         console.log("successful patch update to timesheet");
+        await updateLogs(
+          currentProject[0].clientname,
+          currentProject[0].projectname,
+          inputValue,
+        );
         alert(
           `successfully added ${inputValue} to the project\nThe user will appear next time you load this project`,
         );

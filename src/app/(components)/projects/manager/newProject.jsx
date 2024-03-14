@@ -60,6 +60,7 @@ function NewProject() {
         throw new Error("Failed to create the project");
       } else {
         console.log("successfully created a new project");
+        await updateLogs(formData);
       }
     } catch (error) {
       console.error("Error creating the project:", error);
@@ -77,8 +78,8 @@ function NewProject() {
           clientName: formData.clientname,
           projectName: formData.projectname,
           addedBy: userEmail,
-          messageDescription: "Project Created",
-          messageType: "new project",
+          messageDescription: `Client name: ${formData.clientname}, Project name: ${formData.projectname}, Budget: ${formData.budget}, Deadline: ${formData.deadline}, Members: ${formData.memberEmails}`,
+          messageType: "New Project",
         }),
       });
 
@@ -119,10 +120,10 @@ function NewProject() {
         deadline: selectedDeadline.toISOString(),
         budget: parseFloat(budget),
         memberEmails: memberEmails,
+        removedEmails: [],
       };
 
       await addProject(formData);
-      await updateLogs(formData);
 
       router.refresh();
       router.push("/manager/project");
