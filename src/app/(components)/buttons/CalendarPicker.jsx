@@ -40,7 +40,11 @@ const CalendarPicker = ({ onDateChange }) => {
         fontSize: "20px",
       }}
     >
-      <button onClick={handleCalendarToggle} style={{ cursor: "pointer" }}>
+      <button
+        type="button"
+        onClick={handleCalendarToggle}
+        style={{ cursor: "pointer" }}
+      >
         <img
           src="/calendar_icon.png"
           alt="Calendar"
@@ -59,7 +63,7 @@ const CalendarPicker = ({ onDateChange }) => {
           style={{
             padding: "10px",
             position: "absolute",
-            zIndex: "2",
+            zIndex: "3",
             marginTop: "10px",
             border: "1px solid black",
             background: "white",
