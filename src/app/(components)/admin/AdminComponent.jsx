@@ -23,6 +23,7 @@ const AdminComponent = () => {
       const responseData = await response.json();
       const usersData = responseData.users;
       const userDetails = usersData.map((user) => ({
+        _id: user._id,
         email: user.email,
         firstname: user.firstname,
         lastname: user.lastname,

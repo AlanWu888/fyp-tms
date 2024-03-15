@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { COLOURS } from "@/app/constants";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 import Button from "../buttons/Button";
+import Link from "next/link";
 
 const UserTable = ({ userData, role, header }) => {
   const [isOpen, setIsOpen] = useState(true);
@@ -67,14 +68,22 @@ const UserTable = ({ userData, role, header }) => {
               </div>
 
               <div className="user-row-right" style={{ display: "flex" }}>
-                <div style={{ marginRight: "10px" }}>
-                  <Button
-                    bgcolour={COLOURS.WHITE}
-                    colour={COLOURS.BLACK}
-                    label="Edit"
-                    onClick={handleClickButton}
-                  />
-                </div>
+                <Link
+                  href={{
+                    pathname: `/admin/edit-user`,
+                    query: {
+                      user: user._id,
+                    },
+                  }}
+                >
+                  <div style={{ marginRight: "10px" }}>
+                    <Button
+                      bgcolour={COLOURS.WHITE}
+                      colour={COLOURS.BLACK}
+                      label="Edit"
+                    />
+                  </div>
+                </Link>
                 <div>
                   <Button
                     bgcolour={COLOURS.WHITE}
