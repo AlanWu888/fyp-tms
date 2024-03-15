@@ -7,7 +7,12 @@ import { COLOURS } from "@/app/constants";
 import AddUserModal from "../manager/modals/addUser";
 import UsersTable from "./usersTable";
 
-function TimeBreakdownComponent({ timesheets, currentProject }) {
+function TimeBreakdownComponent({
+  timesheets,
+  currentProject,
+  addMemberModalOpen,
+  setAddMemberModalOpen,
+}) {
   const selectOptions = [
     { value: "day", label: "Today" },
     { value: "week", label: "Week" },
@@ -21,7 +26,6 @@ function TimeBreakdownComponent({ timesheets, currentProject }) {
   const [date, setDate] = useState(new Date());
   const [timeByTask, setTimeByTask] = useState({});
   const [timeByUser, setTimeByUser] = useState({});
-  const [addMemberModalOpen, setaddMemberModalOpenModalOpen] = useState(false);
 
   const handleSelectChange = (mode) => {
     setMode(mode);
@@ -189,7 +193,7 @@ function TimeBreakdownComponent({ timesheets, currentProject }) {
   }
 
   const handleAddUser = () => {
-    setaddMemberModalOpenModalOpen(true);
+    setAddMemberModalOpen(true);
   };
 
   useEffect(() => {
@@ -300,7 +304,7 @@ function TimeBreakdownComponent({ timesheets, currentProject }) {
       </div>
       {addMemberModalOpen && (
         <AddUserModal
-          onClose={() => setaddMemberModalOpenModalOpen(false)}
+          onClose={() => setAddMemberModalOpen(false)}
           currentProject={currentProject}
         />
       )}
