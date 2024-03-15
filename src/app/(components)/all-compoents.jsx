@@ -6,6 +6,7 @@ import { COLOURS } from "@/app/constants";
 import Button from "./buttons/Button";
 import MySelect from "./selects/select";
 import Checkbox from "./checkboxes/checkbox";
+import LoadingSpinner from "./loading/Loading";
 
 const MyComponents = () => {
   // #region Button constants
@@ -87,6 +88,10 @@ const MyComponents = () => {
           onChange={handleCheckboxChange}
           label=""
         />
+      </div>
+
+      <div>
+        <LoadingSpinner />
       </div>
     </div>
   );

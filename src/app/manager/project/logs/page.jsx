@@ -1,18 +1,18 @@
 import React from "react";
 import NavManager from "@/app/(components)/navigation/NavManager";
-import ProjectsList from "@/app/(components)/projects/project-list";
+import ProjectLogs from "@/app/(components)/projects/manager/projectLogs";
 
-const ManagerProjects = () => {
+const ManagerLogs = () => {
   return (
     <div>
       <NavManager />
       <div
         style={{ paddingLeft: "10%", paddingRight: "10%", paddingTop: "30px" }}
       >
-        <ProjectsList />
+        <ProjectLogs />
       </div>
     </div>
   );
 };
 
-export default ManagerProjects;
+export default ManagerLogs;

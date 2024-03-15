@@ -27,6 +27,12 @@ const projectSchema = new Schema(
         required: true,
       },
     ],
+    removedEmails: [
+      {
+        type: String,
+        required: true,
+      },
+    ],
   },
   {
     timestamps: true,
