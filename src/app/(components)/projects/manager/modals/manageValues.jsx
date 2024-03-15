@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 import Button from "@/app/(components)/buttons/Button";
 import { COLOURS } from "@/app/constants";
 import { useSession } from "next-auth/react";
@@ -12,69 +13,26 @@ function ManageValuesModal({ onClose, currentProject }) {
   const [newBudget, setNewBudget] = useState("");
   const [newDeadline, setNewDeadline] = useState("");
 
-  async function updateLogs(
-    clientName,
-    projectName,
-    messageDescription,
-    messageType,
-  ) {
-    try {
-      const res = await fetch("/api/LogMessages", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          clientName: clientName,
-          projectName: projectName,
-          addedBy: userEmail,
-          messageDescription: messageDescription,
-          messageType: messageType,
-        }),
-      });
+  const handleChangeBudget = (event) => {
+    setNewBudget(event.target.value);
+  };
 
-      if (!res.ok) {
-        throw new Error("Failed to update log messages");
-      } else {
-        console.log("successfully updated log messages");
-      }
-    } catch (error) {
-      console.error("Error updating log messages:", error);
+  const handleChangeDeadline = (date) => {
+    setNewDeadline(date.toISOString().split("T")[0]);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (newBudget !== "") {
+      patchDBBudget();
     }
-  }
-
-  async function patchDB_deadline() {
-    try {
-      const response = await fetch("/api/Projects", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          clientname: currentProject[0].clientname,
-          projectname: currentProject[0].projectname,
-          newData: {
-            deadline: newDeadline,
-          },
-        }),
-      });
-      if (!response.ok) {
-        throw new Error("Failed to update timesheet");
-      } else {
-        console.log("successful patch update to timesheet");
-        await updateLogs(
-          currentProject[0].clientname,
-          currentProject[0].projectname,
-          `Deadline changed to ${newDeadline} from ${currentProject[0].deadline.split("T")[0]}`,
-          "Deadline modified",
-        );
-      }
-    } catch (error) {
-      console.error("Error updating timesheet:", error);
+    if (newDeadline !== "") {
+      patchDBDeadline();
     }
-  }
+    onClose();
+  };
 
-  async function patchDB_budget() {
+  const patchDBBudget = async () => {
     try {
       const response = await fetch("/api/Projects", {
         method: "PATCH",
@@ -92,7 +50,7 @@ function ManageValuesModal({ onClose, currentProject }) {
       if (!response.ok) {
         throw new Error("Failed to update timesheet");
       } else {
-        console.log("successful patch update to timesheet");
+        console.log("Successful patch update to timesheet");
         await updateLogs(
           currentProject[0].clientname,
           currentProject[0].projectname,
@@ -103,38 +61,68 @@ function ManageValuesModal({ onClose, currentProject }) {
     } catch (error) {
       console.error("Error updating timesheet:", error);
     }
-  }
+  };
 
-  const handleSubmit = async () => {
-    if (newBudget !== "") {
-      const messageDescription = `Budget changed to ${newBudget}`;
-      const messageType = `Budget modified`;
-      console.log(messageDescription);
-      console.log(messageType);
-      patchDB_budget();
-      onClose();
+  const patchDBDeadline = async () => {
+    try {
+      const response = await fetch("/api/Projects", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          clientname: currentProject[0].clientname,
+          projectname: currentProject[0].projectname,
+          newData: {
+            deadline: newDeadline,
+          },
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to update timesheet");
+      } else {
+        console.log("Successful patch update to timesheet");
+        await updateLogs(
+          currentProject[0].clientname,
+          currentProject[0].projectname,
+          `Deadline changed to ${newDeadline} from ${currentProject[0].deadline.split("T")[0]}`,
+          "Deadline modified",
+        );
+      }
+    } catch (error) {
+      console.error("Error updating timesheet:", error);
     }
-    if (newDeadline !== "") {
-      const messageDescription = `Deadline changed to ${newDeadline}`;
-      const messageType = `Deadline modified`;
-      console.log(messageDescription);
-      console.log(messageType);
-      patchDB_deadline();
-      onClose();
+  };
+
+  const updateLogs = async (
+    clientName,
+    projectName,
+    messageDescription,
+    messageType,
+  ) => {
+    try {
+      const res = await fetch("/api/LogMessages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          clientName,
+          projectName,
+          addedBy: userEmail,
+          messageDescription,
+          messageType,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to update log messages");
+      } else {
+        console.log("Successfully updated log messages");
+      }
+    } catch (error) {
+      console.error("Error updating log messages:", error);
     }
-    // onClose();
-  };
-
-  const handleChangeBudget = (event) => {
-    setNewBudget(event.target.value);
-  };
-
-  const handleChangeDeadline = (date) => {
-    setNewDeadline(date.toISOString().split("T")[0]);
-  };
-
-  const handleInputChange = (event) => {
-    setNewDeadline(event.target.value);
   };
 
   return (
@@ -176,7 +164,7 @@ function ManageValuesModal({ onClose, currentProject }) {
                   textAlign: "left",
                 }}
               >
-                <p>Error occured :(</p>
+                <p>Error occurred :(</p>
               </div>
               <button
                 onClick={() => setErrorMessage("")}
@@ -272,7 +260,6 @@ function ManageValuesModal({ onClose, currentProject }) {
                     <CalendarPicker onDateChange={handleChangeDeadline} />
                   </div>
                   <input
-                    onChange={handleInputChange}
                     value={newDeadline}
                     style={{
                       width: "100%",
@@ -284,7 +271,7 @@ function ManageValuesModal({ onClose, currentProject }) {
                       paddingRight: "10px",
                       fontWeight: "normal",
                     }}
-                    disabled={true}
+                    disabled
                   />
                 </div>
               </div>
@@ -312,7 +299,6 @@ function ManageValuesModal({ onClose, currentProject }) {
                   onClick={onClose}
                 />
               </div>
-              {JSON.stringify(newDeadline)}
             </div>
           </form>
         </div>
@@ -320,6 +306,11 @@ function ManageValuesModal({ onClose, currentProject }) {
     </div>
   );
 }
+
+ManageValuesModal.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  currentProject: PropTypes.array.isRequired,
+};
 
 export default ManageValuesModal;
 
@@ -333,7 +324,6 @@ const modalStyle = {
   top: "0",
   width: "100%",
   height: "100%",
-
   backgroundColor: "rgba(0,0,0,0.4)",
 };
 
