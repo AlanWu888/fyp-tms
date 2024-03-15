@@ -18,7 +18,9 @@ const NavManager = () => {
         </Link>
         <Link
           href="/manager/project"
-          className={pathname === "/manager/project" ? styles.active : ""}
+          className={
+            pathname.startsWith("/manager/project") ? styles.active : ""
+          }
         >
           Projects
         </Link>

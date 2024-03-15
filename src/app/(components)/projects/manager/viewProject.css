@@ -1,0 +1,23 @@
+.button-view {
+  width: 60px;
+  height: 24px;
+  border: 1px solid black;
+  background-color: white;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 5px;
+}
+
+.button-left {
+  border-radius: 5px 0 0 5px;
+}
+
+.button-right {
+  border-radius: 0 5px 5px 0;
+}
+
+.active {
+  background-color: #7ccaee;
+}

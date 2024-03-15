@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import LoadingSpinner from "../../loading/Loading";
 
 function ProjectsComponent() {
   const [projects, setProjects] = useState([]);
@@ -34,7 +35,7 @@ function ProjectsComponent() {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner />;
   }
 
   if (error) {
