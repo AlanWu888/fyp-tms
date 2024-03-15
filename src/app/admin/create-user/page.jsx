@@ -1,4 +1,4 @@
-import CreateUserForm from "@/app/(components)/forms/CreateUserForm";
+import CreateUserForm from "@/app/(components)/admin/CreateUserForm";
 import React from "react";
 
 const CreateUser = () => {
