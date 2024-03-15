@@ -1,6 +1,21 @@
+## [0.11] - 15/03/2024
+
+BT-36 Projects Screen
+
+## Added
+
+- Manager user can see the projects screen, can also add and manage projects using UI
+- Users can only see the projects they are a part of
+- Updates to projects will update the repsective project logs
+- Calendar picker component
+
+## Fixes
+
+- Disable state added to custom button component
+
 ## [0.10] - 08/03/2024
 
-BT-37 Timesheet week view
+BT-35 Timesheet week view
 
 ## Added
 
