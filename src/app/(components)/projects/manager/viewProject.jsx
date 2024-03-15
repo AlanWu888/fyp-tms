@@ -28,6 +28,7 @@ const ViewProjectComponent = () => {
   const [totalHoursPerDay, setTotalHoursPerDay] = useState({});
   const [totalHoursPerWeek, setTotalHoursPerWeek] = useState({});
   const [totalHoursPerMonth, setTotalHoursPerMonth] = useState({});
+  const [addMemberModalOpen, setAddMemberModalOpen] = useState(false);
   const [manageModalOpen, SetManageModalOpen] = useState(false);
 
   async function fetchTimesheetData() {
@@ -226,7 +227,7 @@ const ViewProjectComponent = () => {
   useEffect(() => {
     fetchTimesheetData();
     fetchProjectData();
-  }, [clientName, projectName]);
+  }, [clientName, projectName, manageModalOpen, addMemberModalOpen]);
 
   useEffect(() => {
     // check if the user is in this project
@@ -441,6 +442,8 @@ const ViewProjectComponent = () => {
             <TimeBreakdownComponent
               timesheets={timesheets}
               currentProject={currentProject}
+              addMemberModalOpen={addMemberModalOpen}
+              setAddMemberModalOpen={setAddMemberModalOpen}
             />
           </div>
           {/* {JSON.stringify(timesheets)} */}

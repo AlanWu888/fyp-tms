@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Button from "@/app/(components)/buttons/Button";
 import { COLOURS } from "@/app/constants";
 import { useSession } from "next-auth/react";
@@ -9,11 +9,15 @@ function ManageValuesModal({ onClose, currentProject }) {
   const userEmail = session?.user?.email;
 
   const [errorMessage, setErrorMessage] = useState("");
-  const [inputValue, setInputValue] = useState("");
   const [newBudget, setNewBudget] = useState("");
   const [newDeadline, setNewDeadline] = useState("");
 
-  async function updateLogs(clientName, projectName, newValue, messageType) {
+  async function updateLogs(
+    clientName,
+    projectName,
+    messageDescription,
+    messageType,
+  ) {
     try {
       const res = await fetch("/api/LogMessages", {
         method: "POST",
@@ -24,8 +28,8 @@ function ManageValuesModal({ onClose, currentProject }) {
           clientName: clientName,
           projectName: projectName,
           addedBy: userEmail,
-          messageDescription: `${messageType} changed to ${newValue}`,
-          messageType: `${messageType} modified`,
+          messageDescription: messageDescription,
+          messageType: messageType,
         }),
       });
 
@@ -39,7 +43,7 @@ function ManageValuesModal({ onClose, currentProject }) {
     }
   }
 
-  async function patchDB() {
+  async function patchDB_deadline() {
     try {
       const response = await fetch("/api/Projects", {
         method: "PATCH",
@@ -50,10 +54,7 @@ function ManageValuesModal({ onClose, currentProject }) {
           clientname: currentProject[0].clientname,
           projectname: currentProject[0].projectname,
           newData: {
-            memberEmails: currentProject[0].memberEmails.concat(inputValue),
-            removedEmails: currentProject[0].removedEmails.filter(
-              (email) => email !== inputValue,
-            ),
+            deadline: newDeadline,
           },
         }),
       });
@@ -64,10 +65,39 @@ function ManageValuesModal({ onClose, currentProject }) {
         await updateLogs(
           currentProject[0].clientname,
           currentProject[0].projectname,
-          inputValue,
+          `Deadline changed to ${newDeadline} from ${currentProject[0].deadline.split("T")[0]}`,
+          "Deadline modified",
         );
-        alert(
-          `successfully added ${inputValue} to the project\nThe user will appear next time you load this project`,
+      }
+    } catch (error) {
+      console.error("Error updating timesheet:", error);
+    }
+  }
+
+  async function patchDB_budget() {
+    try {
+      const response = await fetch("/api/Projects", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          clientname: currentProject[0].clientname,
+          projectname: currentProject[0].projectname,
+          newData: {
+            budget: newBudget,
+          },
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to update timesheet");
+      } else {
+        console.log("successful patch update to timesheet");
+        await updateLogs(
+          currentProject[0].clientname,
+          currentProject[0].projectname,
+          `Budget changed to £${newBudget} from ${currentProject[0].budget}`,
+          "Budget modified",
         );
       }
     } catch (error) {
@@ -76,8 +106,23 @@ function ManageValuesModal({ onClose, currentProject }) {
   }
 
   const handleSubmit = async () => {
-    patchDB();
-    onClose();
+    if (newBudget !== "") {
+      const messageDescription = `Budget changed to ${newBudget}`;
+      const messageType = `Budget modified`;
+      console.log(messageDescription);
+      console.log(messageType);
+      patchDB_budget();
+      onClose();
+    }
+    if (newDeadline !== "") {
+      const messageDescription = `Deadline changed to ${newDeadline}`;
+      const messageType = `Deadline modified`;
+      console.log(messageDescription);
+      console.log(messageType);
+      patchDB_deadline();
+      onClose();
+    }
+    // onClose();
   };
 
   const handleChangeBudget = (event) => {
@@ -91,8 +136,6 @@ function ManageValuesModal({ onClose, currentProject }) {
   const handleInputChange = (event) => {
     setNewDeadline(event.target.value);
   };
-
-  const xhandleSubmit = () => {};
 
   return (
     <div className="modal" style={modalStyle}>
@@ -176,7 +219,7 @@ function ManageValuesModal({ onClose, currentProject }) {
             paddingBottom: "20px",
           }}
         >
-          <form onSubmit={xhandleSubmit}>
+          <form onSubmit={handleSubmit}>
             <div
               style={{
                 marginBottom: "10px",
