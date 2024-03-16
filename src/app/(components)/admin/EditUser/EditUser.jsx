@@ -6,48 +6,6 @@ import { COLOURS } from "@/app/constants";
 import Link from "next/link";
 import Button from "../../buttons/Button";
 
-const labelStyle = {
-  fontSize: "16px",
-  fontWeight: "bold",
-  width: "150px",
-};
-
-const inputStyle = {
-  width: "650px",
-  fontSize: "16px",
-  border: "1px solid black",
-  borderRadius: "10px",
-  height: "45px",
-  paddingLeft: "10px",
-  paddingRight: "10px",
-  fontWeight: "normal",
-};
-
-const smallInputStyle = {
-  ...inputStyle,
-  width: "100px",
-  textAlign: "center",
-};
-
-const buttonStyle = {
-  border: "1px solid black",
-  borderRadius: "10px",
-  cursor: "pointer",
-  textDecoration: "none",
-  height: "45px",
-  paddingLeft: "10px",
-  paddingRight: "10px",
-  width: "210px",
-};
-
-const userInformationStyle = {
-  width: "650px",
-  marginLeft: "auto",
-  border: "1px solid black",
-  padding: "10px",
-  borderRadius: "10px"
-};
-
 const EditUser = () => {
   const [userID, setUserID] = useState("");
   const [user, setUser] = useState();
@@ -102,8 +60,30 @@ const EditUser = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Add code to send updated user data to server
-      console.log("Updated user data:", user);
+      const response = await fetch("/api/Users", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: userID,
+          newData: {
+            email: user.email,
+            firstname: user.firstname,
+            lastname: user.lastname,
+            capacity: user.capacity,
+            role: user.role,
+          },
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to update the user");
+      } else {
+        console.log("successful patch update to users");
+        alert(
+          `Updated user data:\nemail: ${user.email}\nFirst name: ${user.firstname}\nLast name: ${user.lastname}\nCapacity: ${user.capacity}\nRole: ${user.role}`,
+        );
+      }
     } catch (error) {
       console.error("Error updating user:", error);
     }
@@ -178,7 +158,7 @@ const EditUser = () => {
                 }}
               >
                 <label style={labelStyle}>Role:</label>
-                <div style={{ display: "flex"}}>
+                <div style={{ display: "flex" }}>
                   <button
                     type="button"
                     style={{
@@ -228,35 +208,40 @@ const EditUser = () => {
                   </button>
                 </div>
               </div>
-              <div style={{marginBottom: "60px"}}>
-              {user.role === "admin" && (
-                <div style={userInformationStyle}>
-                  Admin-specific content goes here
-                </div>
-              )}
+              <div style={{ marginBottom: "60px" }}>
+                {user.role === "admin" && (
+                  <div style={userInformationStyle}>
+                    Admin-specific content goes here
+                  </div>
+                )}
 
-              {user.role === "manager" && (
-                <div style={userInformationStyle}>
-                  Manager-specific content goes here
-                </div>
-              )}
+                {user.role === "manager" && (
+                  <div style={userInformationStyle}>
+                    Manager-specific content goes here
+                  </div>
+                )}
 
-              {user.role === "user" && (
-                <div style={userInformationStyle}>
-                  User-specific content goes here
-                </div>
-              )}
+                {user.role === "user" && (
+                  <div style={userInformationStyle}>
+                    User-specific content goes here
+                  </div>
+                )}
               </div>
 
-              <div>
-                <div>
-                  <Bu
+              <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                <div style={{ marginRight: "10px" }}>
+                  <Button
+                    bgcolour={COLOURS.GREEN_ENABLED}
+                    colour={COLOURS.WHITE}
+                    label="Save Changes"
+                    type="submit"
+                  />
                 </div>
                 <div>
                   <Link
-                  href={{
-                    pathname: `/admin`,
-                  }}
+                    href={{
+                      pathname: `/admin`,
+                    }}
                   >
                     <Button
                       bgcolour={COLOURS.WHITE}
@@ -266,7 +251,6 @@ const EditUser = () => {
                   </Link>
                 </div>
               </div>
-              <button type="submit" style={{border: "1px solid black"}}>Save Changes</button>
             </form>
           ) : (
             <p>No user found</p>
@@ -278,3 +262,45 @@ const EditUser = () => {
 };
 
 export default EditUser;
+
+const labelStyle = {
+  fontSize: "16px",
+  fontWeight: "bold",
+  width: "150px",
+};
+
+const inputStyle = {
+  width: "650px",
+  fontSize: "16px",
+  border: "1px solid black",
+  borderRadius: "10px",
+  height: "45px",
+  paddingLeft: "10px",
+  paddingRight: "10px",
+  fontWeight: "normal",
+};
+
+const smallInputStyle = {
+  ...inputStyle,
+  width: "100px",
+  textAlign: "center",
+};
+
+const buttonStyle = {
+  border: "1px solid black",
+  borderRadius: "10px",
+  cursor: "pointer",
+  textDecoration: "none",
+  height: "45px",
+  paddingLeft: "10px",
+  paddingRight: "10px",
+  width: "210px",
+};
+
+const userInformationStyle = {
+  width: "650px",
+  marginLeft: "auto",
+  border: "1px solid black",
+  padding: "10px",
+  borderRadius: "10px",
+};
