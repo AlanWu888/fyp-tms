@@ -20,6 +20,8 @@ const AddUser = () => {
     password: generatePassword(),
   });
 
+  const [error, setError] = useState(null);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({
@@ -30,7 +32,8 @@ const AddUser = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(JSON.stringify({ formData }));
+    setError(null);
+
     try {
       const response = await fetch("/api/Users", {
         method: "POST",
@@ -56,6 +59,7 @@ const AddUser = () => {
       }
     } catch (error) {
       console.error("Error:", error);
+      setError("Failed to create the user. Please try again.");
     }
   };
 
@@ -76,7 +80,10 @@ const AddUser = () => {
   };
 
   return (
-    <div className="edit-user" style={{ margin: "0 auto", width: "800px" }}>
+    <div className="add-user" style={{ margin: "0 auto", width: "800px" }}>
+      {error && (
+        <div style={{ color: "red", marginBottom: "10px" }}>{error}</div>
+      )}
       <div>
         <form onSubmit={handleSubmit}>
           <div style={{ display: "flex", marginBottom: "20px" }}>
