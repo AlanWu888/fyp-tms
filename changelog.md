@@ -1,3 +1,11 @@
+## [0.12] - 16/03/2024
+
+BT-32 Admin UI Screen
+
+## Added
+
+- Admin users can add, remove and edit users on the timesheet management system
+
 ## [0.11] - 15/03/2024
 
 BT-36 Projects Screen
