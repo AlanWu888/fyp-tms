@@ -1,10 +1,10 @@
-import EditUser from "@/app/(components)/admin/userForms/EditUser";
+import AddUser from "@/app/(components)/admin/userForms/AddUser";
 import GoBack from "@/app/(components)/buttons/GoBack";
 import NavAdmin from "@/app/(components)/navigation/NavAdmin";
 import Link from "next/link";
 import React from "react";
 
-const EditUserPage = () => {
+const AddUserPage = () => {
   return (
     <div>
       <NavAdmin />
@@ -33,15 +33,15 @@ const EditUserPage = () => {
             marginBottom: "20px",
           }}
         >
-          <div style={{ fontSize: "22px", fontWeight: "bold" }}>Edit User</div>
-          <p style={{ marginBottom: "20px" }}>Edit user information here</p>
+          <div style={{ fontSize: "22px", fontWeight: "bold" }}>Add a User</div>
+          <p style={{ marginBottom: "20px" }}>Add user information here</p>
         </div>
         <div style={{ borderBottom: "1px solid black", paddingBottom: "20px" }}>
-          <EditUser />
+          <AddUser />
         </div>
       </div>
     </div>
   );
 };
 
-export default EditUserPage;
+export default AddUserPage;

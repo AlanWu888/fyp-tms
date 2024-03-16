@@ -17,7 +17,6 @@ const UserForm = () => {
       ...prevState,
       [name]: value,
     }));
-    // console.log(JSON.stringify(formData));
   };
 
   const handleSubmit = async (e) => {
