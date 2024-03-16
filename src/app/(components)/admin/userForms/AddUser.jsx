@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from "uuid";
 
 const AddUser = () => {
   const generatePassword = () => {
-    return uuidv4().substr(0, 12);
+    return uuidv4().substr(0, 18);
   };
 
   const [formData, setFormData] = useState({
@@ -229,7 +229,7 @@ const AddUser = () => {
           <div
             style={{
               display: "flex",
-              marginBottom: "20px",
+              marginBottom: "60px",
               alignItems: "center",
             }}
           >
@@ -240,8 +240,30 @@ const AddUser = () => {
               value={formData.password}
               onChange={handleChange}
               disabled
-              style={inputStyle}
+              style={{
+                ...inputStyle,
+                backgroundColor: "#f2f2f2",
+                opacity: 0.6,
+                width: "540px",
+              }}
             />
+            <button
+              type="button"
+              style={{
+                ...buttonStyle,
+                backgroundColor: COLOURS.GREY,
+                marginLeft: "10px",
+                width: "100px",
+              }}
+              onClick={() =>
+                setFormData((prevFormData) => ({
+                  ...prevFormData,
+                  password: generatePassword(), // Regenerate password
+                }))
+              }
+            >
+              Regenerate
+            </button>
           </div>
 
           <div style={{ display: "flex", justifyContent: "flex-end" }}>
