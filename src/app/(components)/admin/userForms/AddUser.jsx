@@ -251,7 +251,7 @@ const AddUser = () => {
               type="button"
               style={{
                 ...buttonStyle,
-                backgroundColor: COLOURS.GREY,
+                backgroundColor: COLOURS.LIGHT_BLUE,
                 marginLeft: "10px",
                 width: "100px",
               }}
