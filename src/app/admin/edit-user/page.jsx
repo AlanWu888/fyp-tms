@@ -15,13 +15,16 @@ const CreateUser = () => {
           paddingTop: "30px",
         }}
       >
-        <Link
-          href={{
-            pathname: `/admin`,
-          }}
-        >
-          <GoBack />
-        </Link>
+        <div style={{ marginBottom: "20px" }}>
+          <Link
+            href={{
+              pathname: `/admin`,
+            }}
+          >
+            <GoBack />
+          </Link>
+        </div>
+
         <div
           className="edit-user-header"
           style={{
@@ -30,10 +33,12 @@ const CreateUser = () => {
             marginBottom: "20px",
           }}
         >
-          <div style={{ fontSize: "22px", fontWeight: "bold"}}>Edit User</div>
-          <p style={{marginBottom: "20px"}}>Edit user information here</p>
+          <div style={{ fontSize: "22px", fontWeight: "bold" }}>Edit User</div>
+          <p style={{ marginBottom: "20px" }}>Edit user information here</p>
         </div>
-        <EditUser />
+        <div style={{ borderBottom: "1px solid black", paddingBottom: "20px" }}>
+          <EditUser />
+        </div>
       </div>
     </div>
   );
