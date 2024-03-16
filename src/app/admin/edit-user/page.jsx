@@ -30,8 +30,8 @@ const CreateUser = () => {
             marginBottom: "20px",
           }}
         >
-          <div style={{ fontSize: "22px", fontWeight: "bold" }}>Edit User</div>
-          <p>Edit user information here</p>
+          <div style={{ fontSize: "22px", fontWeight: "bold"}}>Edit User</div>
+          <p style={{marginBottom: "20px"}}>Edit user information here</p>
         </div>
         <EditUser />
       </div>
