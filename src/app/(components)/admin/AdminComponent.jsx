@@ -9,7 +9,7 @@ import Link from "next/link";
 
 const AdminComponent = () => {
   const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true); // Added loading state
+  const [loading, setLoading] = useState(true);
 
   const userTypes = [
     { value: "user", label: "Employees" },
@@ -49,25 +49,39 @@ const AdminComponent = () => {
         <LoadingSpinner />
       ) : (
         <div>
-          <div>
-            <Link
-              href={{
-                pathname: `/admin/add-user`,
-              }}
-            >
-              <Button
-                label="Add user"
-                colour={COLOURS.WHITE}
-                bgcolour={COLOURS.GREEN_ENABLED}
-              />
-            </Link>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              marginBottom: "20px",
+              alignItems: "center",
+            }}
+          >
+            <div style={{ fontSize: "20px", fontWeight: "bold" }}>
+              Viewing all users
+            </div>
+            <div>
+              <Link
+                href={{
+                  pathname: `/admin/add-user`,
+                }}
+              >
+                <Button
+                  label="Add user"
+                  colour={COLOURS.WHITE}
+                  bgcolour={COLOURS.GREEN_ENABLED}
+                />
+              </Link>
+            </div>
           </div>
+
           {userTypes.map((userType) => (
             <div key={userType.value}>
               <UserTable
                 userData={users.filter((user) => user.role === userType.value)}
                 role={userType.value}
                 header={`${userType.label}s (${users.filter((user) => user.role === userType.value).length})`}
+                fetchData={fetchData}
               />
             </div>
           ))}

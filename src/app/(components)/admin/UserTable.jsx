@@ -6,14 +6,41 @@ import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 import Button from "../buttons/Button";
 import Link from "next/link";
 
-const UserTable = ({ userData, role, header }) => {
+const UserTable = ({ userData, role, header, fetchData }) => {
   const [isOpen, setIsOpen] = useState(true);
 
   const toggleTable = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleClickButton = () => {};
+  async function deleteUser(userID) {
+    try {
+      const response = await fetch("/api/Users", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: userID,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to delete entry");
+      }
+      fetchData();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const handleRemove = (user) => {
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete this user?\n${user.firstname} ${user.lastname}\n${user.email}`,
+    );
+    if (confirmDelete) {
+      deleteUser(user._id);
+    }
+  };
 
   return (
     <div className={`user-table--${role}`} style={{ marginBottom: "20px" }}>
@@ -89,7 +116,7 @@ const UserTable = ({ userData, role, header }) => {
                     bgcolour={COLOURS.WHITE}
                     colour={COLOURS.BLACK}
                     label="Remove"
-                    onClick={handleClickButton}
+                    onClick={() => handleRemove(user)}
                   />
                 </div>
               </div>
