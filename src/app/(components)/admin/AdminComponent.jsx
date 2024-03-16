@@ -3,6 +3,9 @@
 import React, { useState, useEffect } from "react";
 import LoadingSpinner from "../loading/Loading";
 import UserTable from "./UserTable";
+import Button from "../buttons/Button";
+import { COLOURS } from "@/app/constants";
+import Link from "next/link";
 
 const AdminComponent = () => {
   const [users, setUsers] = useState([]);
@@ -45,15 +48,30 @@ const AdminComponent = () => {
       {loading ? (
         <LoadingSpinner />
       ) : (
-        userTypes.map((userType) => (
-          <div key={userType.value}>
-            <UserTable
-              userData={users.filter((user) => user.role === userType.value)}
-              role={userType.value}
-              header={`${userType.label}s (${users.filter((user) => user.role === userType.value).length})`}
-            />
+        <div>
+          <div>
+            <Link
+              href={{
+                pathname: `/admin/add-user`,
+              }}
+            >
+              <Button
+                label="Add user"
+                colour={COLOURS.WHITE}
+                bgcolour={COLOURS.GREEN_ENABLED}
+              />
+            </Link>
           </div>
-        ))
+          {userTypes.map((userType) => (
+            <div key={userType.value}>
+              <UserTable
+                userData={users.filter((user) => user.role === userType.value)}
+                role={userType.value}
+                header={`${userType.label}s (${users.filter((user) => user.role === userType.value).length})`}
+              />
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );
