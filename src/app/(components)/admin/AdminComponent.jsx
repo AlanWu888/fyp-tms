@@ -12,7 +12,7 @@ const AdminComponent = () => {
   const [loading, setLoading] = useState(true);
 
   const userTypes = [
-    { value: "user", label: "Employees" },
+    { value: "user", label: "Employee" },
     { value: "manager", label: "Manager" },
     { value: "admin", label: "Admin" },
   ];
