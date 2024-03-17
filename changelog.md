@@ -1,5 +1,14 @@
 ## [0.12] - 16/03/2024
 
+BT-56 Reset Password Screen
+
+## Added
+
+- Added ability for users to reset their passwords based on associated email
+- use of SendGrid for emails
+
+## [0.12] - 16/03/2024
+
 BT-32 Admin UI Screen
 
 ## Added
