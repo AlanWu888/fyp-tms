@@ -106,6 +106,9 @@ function AdditionModal({ date, onClose, onTimesheetUpdate }) {
       setErrorMessage("Please enter a valid time.");
       return;
     }
+
+    const newDate = new Date(date).setHours(0, 0, 0, 0);
+
     try {
       const response = await fetch("/api/Timesheets", {
         method: "POST",
@@ -120,7 +123,7 @@ function AdditionModal({ date, onClose, onTimesheetUpdate }) {
             taskDescription,
             additionalNotes,
             time: convertTimeToDecimal(time),
-            date,
+            newDate,
             taskType: taskType.label,
           },
         }),
