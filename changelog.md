@@ -1,4 +1,12 @@
-## [0.12] - 16/03/2024
+## [0.14] - 17/03/2024
+
+BT-54 Duplicate Entries on Day view (fix)
+
+## Fixes
+
+- Does not allow for multiple day view entries anymore, fixed by setting the time of an entry to 0
+
+## [0.13] - 17/03/2024
 
 BT-56 Reset Password Screen
 
