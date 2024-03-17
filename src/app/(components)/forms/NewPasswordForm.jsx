@@ -1,10 +1,14 @@
-"use client";
+"use client"
 
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function NewPasswordForm() {
   const [verified, setVerified] = useState(false);
   const [user, setUser] = useState(null);
+  const [error, setError] = useState(null);
+  const [passwordError, setPasswordError] = useState(null);
+  const router = useRouter();
 
   const verifyToken = async (tokenParam) => {
     try {
@@ -18,34 +22,18 @@ export default function NewPasswordForm() {
         }),
       });
       if (res.status === 400) {
-        console.error("Invalid token, or token has expired");
-        setVerified(true);
+        setError("Invalid token, or token has expired");
       }
       if (res.status === 200) {
-        console.log("Reset sent");
         setVerified(true);
         const userData = await res.json();
         setUser(userData);
       }
     } catch (error) {
-      console.error("Error, please try again");
-      console.log(error);
+      setError("Error occurred, please try again");
+      console.error("Error occurred while verifying token:", error);
     }
   };
-
-  useEffect(() => {
-    if (user) {
-      console.log(JSON.stringify(user));
-    }
-  }, [user]);
-
-  useEffect(() => {
-    const queryParams = new URLSearchParams(window.location.search);
-    const tokenParam = queryParams.get("token") || "";
-    console.log(tokenParam);
-
-    verifyToken(tokenParam);
-  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -54,12 +42,19 @@ export default function NewPasswordForm() {
     const confirmPassword = e.target[1].value;
 
     if (!user) {
-      console.error("User object is not set");
+      setError("User object is not set");
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      console.error("Passwords do not match");
+      setError("Passwords do not match");
+      return;
+    }
+
+    if (!isStrongPassword(newPassword)) {
+      setPasswordError(
+        "Password must be at least 8 characters long and include uppercase, lowercase, numbers, and special characters."
+      );
       return;
     }
 
@@ -81,40 +76,65 @@ export default function NewPasswordForm() {
         throw new Error("Failed to update the user");
       }
 
-      console.log("Password updated successfully");
+      setError(null);
+      setPasswordError(null);
+      router.push("/");
       alert("Password updated successfully");
     } catch (error) {
+      setError("Error updating password, please try again");
       console.error("Error updating password:", error);
     }
   };
 
+  useEffect(() => {
+    const queryParams = new URLSearchParams(window.location.search);
+    const tokenParam = queryParams.get("token") || "";
+
+    verifyToken(tokenParam);
+  }, []);
+
+  const isStrongPassword = (password) => {
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_])[A-Za-z\d@$!%*?&]{8,}$/;
+    return passwordRegex.test(password);
+  };
+
   return (
     <div className="grid place-items-center h-screen bg-indigo-900">
-      <div className="shadow-lg p-5 rounded-lg bg-white">
+      <div
+        className="shadow-lg p-5 rounded-lg bg-white"
+        style={{ width: "450px" }}
+      >
         <h1 className="text-xl font-bold my-4">Change your password</h1>
         <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700" />
-        <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
-          <p className="text-sm">Enter your new password:</p>
-          <input
-            className="rounded-md border border-gray-200 py-2 px-6 bg-zinc-100/40"
-            type="password"
-            placeholder="New Password"
-          />
+        {error && <div className="text-red-600 mb-4">{error}</div>}
+        {passwordError && (
+          <div className="text-red-600 mb-4">{passwordError}</div>
+        )}
+        {verified && (
+          <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
+            <p className="text-sm">Enter your new password:</p>
+            <input
+              className="rounded-md border border-gray-200 py-2 px-6 bg-zinc-100/40"
+              type="password"
+              placeholder="New Password"
+            />
 
-          <p className="text-sm">Confirm your new password:</p>
-          <input
-            className="rounded-md border border-gray-200 py-2 px-6 bg-zinc-100/40"
-            type="password"
-            placeholder="Confirm Password"
-          />
+            <p className="text-sm">Confirm your new password:</p>
+            <input
+              className="rounded-md border border-gray-200 py-2 px-6 bg-zinc-100/40"
+              type="password"
+              placeholder="Confirm Password"
+            />
 
-          <button
-            className="font-bold cursor-pointer px-6 py-2 bg-blue-400 rounded-lg text-white"
-            type="submit"
-          >
-            Change Password
-          </button>
-        </form>
+            <button
+              className="font-bold cursor-pointer px-6 py-2 bg-blue-400 rounded-lg text-white mt-6"
+              type="submit"
+            >
+              Change Password
+            </button>
+          </form>
+        )}
       </div>
     </div>
   );
