@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -53,7 +53,7 @@ export default function NewPasswordForm() {
 
     if (!isStrongPassword(newPassword)) {
       setPasswordError(
-        "Password must be at least 8 characters long and include uppercase, lowercase, numbers, and special characters."
+        "Password must be at least 8 characters long and include uppercase, lowercase, numbers, and special characters.",
       );
       return;
     }
