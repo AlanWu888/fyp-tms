@@ -10,7 +10,6 @@ export default function ResetPasswordForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const email = e.target[0].value;
-    console.log(email);
 
     try {
       const res = await fetch("/api/reset-password", {
@@ -26,7 +25,6 @@ export default function ResetPasswordForm() {
         console.error("User with this email is not registered");
       }
       if (res.status === 200) {
-        console.log("Reset sent");
         router.push("/");
       }
     } catch (error) {
@@ -37,7 +35,10 @@ export default function ResetPasswordForm() {
 
   return (
     <div className="grid place-items-center h-screen bg-indigo-900">
-      <div className="shadow-lg p-5 rounded-lg bg-white">
+      <div
+        className="shadow-lg p-5 rounded-lg bg-white"
+        style={{ width: "450px" }}
+      >
         <h1 className="text-xl font-bold my-4">Reset your password</h1>
         <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700" />
         <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
@@ -54,7 +55,7 @@ export default function ResetPasswordForm() {
             password
           </p>
           <button
-            className="font-bold cursor-pointer px-6 py-2 bg-blue-400 rounded-lg text-white"
+            className="font-bold cursor-pointer px-6 py-2 bg-blue-400 rounded-lg text-white mt-6"
             type="submit"
           >
             Reset

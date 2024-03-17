@@ -32,9 +32,13 @@ export default function LoginForm() {
       console.log(error);
     }
   };
+
   return (
     <div className="grid place-items-center h-screen bg-indigo-900">
-      <div className="shadow-lg p-5 rounded-lg bg-white">
+      <div
+        className="shadow-lg p-5 rounded-lg bg-white"
+        style={{ width: "450px" }}
+      >
         <h1 className="text-xl font-bold my-4">
           Sign into Timesheet Management System
         </h1>
@@ -52,7 +56,7 @@ export default function LoginForm() {
             type="password"
             placeholder="Password"
           />
-          <button className="font-bold cursor-pointer px-6 py-2 bg-blue-400 rounded-lg text-white">
+          <button className="font-bold cursor-pointer px-6 py-2 bg-blue-400 rounded-lg text-white mt-6">
             Login
           </button>
           {error && (
