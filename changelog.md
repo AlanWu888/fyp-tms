@@ -1,3 +1,11 @@
+## [0.15] - 17/03/2024
+
+BT-55 Duplicate Entries on Day view (fix)
+
+## Fixes
+
+- Fixed duplicate key issue and removed comments
+
 ## [0.14] - 17/03/2024
 
 BT-54 Duplicate Entries on Day view (fix)
