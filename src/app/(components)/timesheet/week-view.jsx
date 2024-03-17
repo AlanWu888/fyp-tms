@@ -49,7 +49,7 @@ function WeekViewTimesheet({ date }) {
   function getStartOfWeek(isoDateString) {
     const date = new Date(isoDateString);
     const dayOfWeek = date.getDay();
-    const diff = date.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1); // Adjust for Sunday
+    const diff = date.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
     const monday = new Date(date.setDate(diff));
     return monday.toISOString();
   }
@@ -59,7 +59,6 @@ function WeekViewTimesheet({ date }) {
       const days = [];
       const monday = getStartOfWeek(isoDateString);
 
-      // Loop from Monday to Sunday and push ISO strings to the array
       for (let i = 0; i < 7; i++) {
         const date = new Date(monday);
         date.setDate(date.getDate() + i);
@@ -81,7 +80,6 @@ function WeekViewTimesheet({ date }) {
   }, [timesheets, userEmail]);
 
   useEffect(() => {
-    // Further filter timesheets based on weekDates range
     const weekFilteredTimesheets = filteredTimesheets.filter((timesheet) =>
       weekDates.includes(timesheet.date.split("T")[0]),
     );
@@ -98,9 +96,7 @@ function WeekViewTimesheet({ date }) {
   function transformJson(originalJson) {
     let transformedJson = [];
 
-    // Iterate over each entry in the original JSON
     originalJson.forEach((entry) => {
-      // Check if there's an existing entry in the transformed JSON for the current combination of client, project, and task
       let existingEntryIndex = transformedJson.findIndex(
         (item) =>
           item.clientName === entry.clientName &&
@@ -108,7 +104,6 @@ function WeekViewTimesheet({ date }) {
           item.taskDescription === entry.taskDescription,
       );
 
-      // If no entry exists, create a new one
       if (existingEntryIndex === -1) {
         transformedJson.push({
           clientName: entry.clientName,
@@ -124,7 +119,6 @@ function WeekViewTimesheet({ date }) {
           ],
         });
       } else {
-        // If an entry exists, add the current entry to its 'entries' array
         transformedJson[existingEntryIndex].entries.push({
           _id: entry._id,
           date: entry.date,
@@ -198,20 +192,16 @@ function WeekViewTimesheet({ date }) {
   }
 
   const handleInputChange = (date, index, newValue) => {
-    // const timePattern = /^(0?[1-9]|1[0-2]):[0-5][0-9]?$/;
     const timePattern = /^(?:2[0-3]|[01]?\d):[0-5]?\d$/;
     const isValidTime = timePattern.test(newValue);
 
     if (newValue === "") {
       setInputError((prevErrors) => {
-        // Remove the error for this input
         return prevErrors.filter(
           (error) => !(error.date === date && error.index === index),
         );
       });
     } else {
-      // Update input error based on time pattern validation
-      // update edittedFields state with `${date}_${column}`
       setInputError((prevErrors) => {
         const newErrors = [...prevErrors];
         const errorIndex = newErrors.findIndex(
@@ -233,26 +223,20 @@ function WeekViewTimesheet({ date }) {
     };
 
     setEdittedFields((prevEdittedFields) => {
-      // Clone the previous state
       const updatedEdittedFields = [...prevEdittedFields];
 
-      // Check if the input value is empty
       if (newValue === "") {
-        // Remove any existing entry with the same date and index
         return updatedEdittedFields.filter(
           (item) => !(item.date === date && item.index === index),
         );
       } else {
-        // Check if the edited input already exists in the state
         const existingIndex = updatedEdittedFields.findIndex(
           (item) => item.date === date && item.index === index,
         );
 
-        // If it exists, update the value
         if (existingIndex !== -1) {
           updatedEdittedFields[existingIndex] = editedInput;
         } else {
-          // If it doesn't exist, add it to the state
           updatedEdittedFields.push(editedInput);
         }
 
@@ -267,7 +251,6 @@ function WeekViewTimesheet({ date }) {
       if (date === entry.date.split("T")[0]) {
         entry.time = convertTimeToDecimal(newValue);
         foundMatch = true;
-        break; // no need to continue looping once a match is found
       }
     }
 
@@ -284,7 +267,6 @@ function WeekViewTimesheet({ date }) {
   const handleSave = async () => {
     for (let valueChange of edittedFields) {
       for (let entry of modifiedTimesheets[valueChange.index].entries) {
-        // Convert both dates to the same format before comparing
         const formattedValueChangeDate = new Date(valueChange.date)
           .toISOString()
           .split("T")[0];
@@ -304,14 +286,10 @@ function WeekViewTimesheet({ date }) {
               date: new Date(entry.date),
               taskType: modifiedTimesheets[valueChange.index].taskType,
             };
-            await postDB(postParams); // Call postDB function here
           } else {
-            // check if entry.time is 0, potential floating-point precision issues
             if (Math.abs(entry.time - 0) < 0.0001) {
-              // DELETE method
               await deleteDB(entry._id);
             } else {
-              // PATCH method
               const patchParams = {
                 entryId: entry._id,
                 time: entry.time,
@@ -323,7 +301,6 @@ function WeekViewTimesheet({ date }) {
       }
     }
 
-    // after saving logic, fetch and filter new data
     fetchData();
     filterTimesheets();
   };
@@ -397,7 +374,6 @@ function WeekViewTimesheet({ date }) {
         throw new Error("Failed to update timesheet");
       } else {
         console.log("successful patch update to timesheet");
-        // Trigger the callback function to update timesheet data
       }
     } catch (error) {
       console.error("Error updating timesheet:", error);
@@ -439,7 +415,7 @@ function WeekViewTimesheet({ date }) {
         >
           {Array.from({ length: 7 }, (_, i) => (
             <div
-              key={weekDates[i]}
+              key={i}
               className={weekDates[i]}
               style={{
                 marginRight: "10px",
@@ -538,7 +514,7 @@ function WeekViewTimesheet({ date }) {
                   }}
                 >
                   <input
-                    key={`${week.clientName}_${week.projectName}_${weekDates[i]}_${index}`} // Add a unique key based on weekDates and index
+                    key={`${week.clientName}_${week.projectName}_${weekDates[i]}_${index}`}
                     className={`${weekDates[i]}_${index}`}
                     style={{
                       width: "100%",
@@ -582,14 +558,6 @@ function WeekViewTimesheet({ date }) {
         }}
       >
         <div style={{ marginTop: "20px", display: "flex" }}>
-          {/* <div style={{ marginRight: "10px" }}>
-            <Button
-              bgcolour={COLOURS.GREY}
-              colour={COLOURS.BLACK}
-              label="+ Track another Task"
-              onClick={handleSave}
-            />
-          </div> */}
           <div>
             <Button
               bgcolour={COLOURS.GREEN_ENABLED}
