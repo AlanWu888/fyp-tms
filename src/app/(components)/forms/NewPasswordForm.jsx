@@ -1,10 +1,8 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 
 export default function NewPasswordForm() {
-  const router = useRouter();
   const [verified, setVerified] = useState(false);
   const [user, setUser] = useState(null);
 
@@ -36,10 +34,11 @@ export default function NewPasswordForm() {
   };
 
   useEffect(() => {
-    console.log(JSON.stringify(user));
+    if (user) {
+      console.log(JSON.stringify(user));
+    }
   }, [user]);
 
-  // check if token is still valid and not expired
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);
     const tokenParam = queryParams.get("token") || "";
@@ -50,7 +49,43 @@ export default function NewPasswordForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const password = e.target[0].value;
+
+    const newPassword = e.target[0].value;
+    const confirmPassword = e.target[1].value;
+
+    if (!user) {
+      console.error("User object is not set");
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      console.error("Passwords do not match");
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/Users", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: user._id,
+          newData: {
+            password: newPassword,
+          },
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update the user");
+      }
+
+      console.log("Password updated successfully");
+      alert("Password updated successfully");
+    } catch (error) {
+      console.error("Error updating password:", error);
+    }
   };
 
   return (
