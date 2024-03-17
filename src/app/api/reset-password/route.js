@@ -24,12 +24,32 @@ export const POST = async (req) => {
 
   console.log(resetUrl);
 
-  const body = "Reset your password by click on the following URL: " + resetUrl;
+  const body = `
+  <html>
+	<div style="font-family: Mulish,Helvetica,Arial,sans-serif">
+		<div style="margin-bottom: 20px; border-bottom: 1px solid black;">
+			<p style="font-weight: bold; color: black">This email is not monitored, so please do not reply to it.</p>
+			<p style="color: black" >If you have any issues please contact an administrator</p>
+		</div>
+		<div style="margin-bottom: 10px;">
+			<p style="color: black" >Dear User,</p>
+			<p style="color: black" >You have requested to reset your password. Please click on the following link to reset your password:</p>
+			<p><a href="${resetUrl}" style="text-decoration: none; color: #007bff;">Reset Password</a></p>
+			<p style="color: black" >If the link does not work, please copy and paste this into your browser: </p>
+			<p style="text-decoration: none; color: #007bff;">${resetUrl}</p>
+		</div>
+		<div style="margin-bottom: 10px;">
+			<p style="color: black" >If you did not request a password reset, please ignore this email.</p>
+		</div>
+	</div>
+</html>
+`;
+
   const msg = {
     to: email,
-    from: "reset.fyiweubbwfbuheiiwqefihb@gmail.com",
-    subject: "Reset Password",
-    text: body,
+    from: "reset.timesheetmanagementsystem@gmail.com",
+    subject: "Password Reset Link - Timesheet management system",
+    html: body,
   };
 
   sgMail.setApiKey(process.env.SENDGRID_API || "");
