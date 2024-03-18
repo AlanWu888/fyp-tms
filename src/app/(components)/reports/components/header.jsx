@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import MySelect from "../../selects/select";
 
 function ReportsHeader({ date, setDate, mode, setMode }) {
@@ -46,7 +46,7 @@ function ReportsHeader({ date, setDate, mode, setMode }) {
         newDate.setMonth(newDate.getMonth() + 1);
         break;
       case "year":
-        newDate.setDate(newDate.getFullYear() + 1);
+        newDate.setFullYear(newDate.getFullYear() + 1);
         break;
       default:
         break;
@@ -67,7 +67,7 @@ function ReportsHeader({ date, setDate, mode, setMode }) {
         newDate.setMonth(newDate.getMonth() - 1);
         break;
       case "year":
-        newDate.setDate(newDate.getFullYear() - 1);
+        newDate.setFullYear(newDate.getFullYear() - 1);
         break;
       default:
         break;

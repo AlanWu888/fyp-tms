@@ -65,7 +65,7 @@ function TimeBreakdownComponent({
         newDate.setMonth(newDate.getMonth() + 1);
         break;
       case "year":
-        newDate.setDate(newDate.getFullYear() + 1);
+        newDate.setFullYear(newDate.getFullYear() + 1);
         break;
       default:
         break;
@@ -86,7 +86,7 @@ function TimeBreakdownComponent({
         newDate.setMonth(newDate.getMonth() - 1);
         break;
       case "year":
-        newDate.setDate(newDate.getFullYear() - 1);
+        newDate.setFullYear(newDate.getFullYear() - 1);
         break;
       default:
         break;
@@ -111,8 +111,8 @@ function TimeBreakdownComponent({
 
       return `${startOfMonth.toDateString()} - ${endOfMonth.toDateString()}`;
     } else if (mode.value === "year") {
-      const startOfYear = new Date(year, 0, 1);
-      const endOfYear = new Date(year, 11, 31);
+      const startOfYear = new Date(date.getFullYear(), 0, 1);
+      const endOfYear = new Date(date.getFullYear(), 11, 31);
       return `${startOfYear.toDateString()} - ${endOfYear.toDateString()}`;
     } else {
       return date.toDateString();
