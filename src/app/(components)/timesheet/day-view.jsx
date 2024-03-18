@@ -6,7 +6,7 @@ import NavTabs from "../navigation/NavTabs";
 import EntryModal from "./modal/day-entry-modal";
 import AdditionModal from "./modal/day-additional-modal";
 
-function DayViewTimesheet2({ date, setDate }) {
+function DayViewTimesheet({ date, setDate }) {
   const { data: session } = useSession();
   const userEmail = session?.user?.email;
 
@@ -308,4 +308,4 @@ function DayViewTimesheet2({ date, setDate }) {
   );
 }
 
-export default DayViewTimesheet2;
+export default DayViewTimesheet;
