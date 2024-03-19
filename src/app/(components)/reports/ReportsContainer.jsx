@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import ReportsHeader from "./components/header";
 import LoadingSpinner from "../loading/Loading";
 import ReportsDashboard from "./components/dashboard";
+import ReportsBreakdown from "./components/breakdownTable";
 
 function ReportsContainer() {
   const { data: session } = useSession();
@@ -14,7 +15,7 @@ function ReportsContainer() {
   const [error, setError] = useState();
   const [projects, setProjects] = useState([]);
   const [timesheets, setTimesheets] = useState([]);
-  const [selectedTab, setSelectedTab] = useState();
+  const [selectedTab, setSelectedTab] = useState("Projects");
   const [mode, setMode] = useState();
   const [date, setDate] = useState(new Date().toDateString());
 
@@ -115,33 +116,13 @@ function ReportsContainer() {
               mode={mode}
             />
           </div>
-          <div
-            style={{
-              border: "1px solid",
-              marginBottom: "20px",
-            }}
-          >
-            <p>{date}</p>
-            <p>{mode}</p>
-            <p>{selectedTab}</p>
-          </div>
-          <div
-            style={{
-              border: "1px solid",
-              display: "flex",
-              marginBottom: "20px",
-            }}
-          >
-            <p>{JSON.stringify(projects)}</p>
-          </div>
-          <div
-            style={{
-              border: "1px solid",
-              display: "flex",
-              marginBottom: "20px",
-            }}
-          >
-            <p>{JSON.stringify(timesheets)}</p>
+          <div>
+            <ReportsBreakdown
+              timesheets={timesheets}
+              selectedTab={selectedTab}
+              date={date}
+              mode={mode}
+            />
           </div>
         </>
       )}
