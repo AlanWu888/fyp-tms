@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import NavTabs from "../../navigation/NavTabs-project";
+import DonutChart from "./donutChart";
 
 function ReportsDashboard({
   timesheets,
@@ -11,6 +12,15 @@ function ReportsDashboard({
   mode,
 }) {
   const [dateRange, setDateRange] = useState({});
+  const [filteredData, setFilteredData] = useState([]);
+  const [timePerTask, setTimePerTask] = useState({});
+  const [totalTime, setTotalTime] = useState("");
+
+  const convertDecimalToTime = (decimalTime) => {
+    const hours = Math.floor(decimalTime);
+    const minutes = Math.round((decimalTime - hours) * 60);
+    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
+  };
 
   const getRanges = () => {
     const newDate = new Date(date);
@@ -67,13 +77,100 @@ function ReportsDashboard({
     setSelectedTab(tab);
   };
 
+  const filterDataByDateRange = () => {
+    const filteredTimesheets = [];
+
+    for (const timesheet of timesheets) {
+      const entryDate = new Date(timesheet.date);
+
+      const adjustedRangeEnd = new Date(dateRange.rangeEnd);
+      adjustedRangeEnd.setHours(23, 59, 59, 999);
+
+      if (
+        entryDate >= new Date(dateRange.rangeStart) &&
+        entryDate <= adjustedRangeEnd
+      ) {
+        filteredTimesheets.push(timesheet);
+      }
+    }
+    setFilteredData(filteredTimesheets);
+  };
+
+  function calculateTimePerTaskType() {
+    const timePerTaskType = { Billable: 0, "Non-Billable": 0, Research: 0 };
+
+    filteredData.forEach((entry) => {
+      const taskType = entry.taskType;
+      const time = entry.time || 0;
+
+      if (timePerTaskType.hasOwnProperty(taskType)) {
+        timePerTaskType[taskType] += time;
+      }
+    });
+
+    for (const key in timePerTaskType) {
+      if (timePerTaskType.hasOwnProperty(key)) {
+        timePerTaskType[key] = parseFloat(timePerTaskType[key].toFixed(3));
+      }
+    }
+
+    return timePerTaskType;
+  }
+
+  function calculateTotalTime() {
+    let sum = 0;
+    for (const key in timePerTask) {
+      if (timePerTask.hasOwnProperty(key)) {
+        sum += timePerTask[key];
+      }
+    }
+
+    setTotalTime(sum);
+  }
+
+  useEffect(() => {
+    filterDataByDateRange();
+  }, [dateRange]);
+
+  useEffect(() => {
+    setTimePerTask(calculateTimePerTaskType());
+  }, [filteredData]);
+
+  useEffect(() => {
+    calculateTotalTime();
+  }, [timePerTask]);
+
   useEffect(() => {
     getRanges();
   }, [date, mode]);
 
   return (
-    <div>
-      <div></div>
+    <div
+      className="reports--dashboard"
+      style={{ width: "100%", borderTop: "1px solid black" }}
+    >
+      <div
+        style={{ display: "flex", alignItems: "center", paddingTop: "20px" }}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            marginRight: "150px",
+          }}
+        >
+          <p>Total Hours</p>
+          <p
+            style={{ fontWeight: "bold", fontSize: "26px", marginTop: "-10px" }}
+          >
+            {convertDecimalToTime(totalTime)}
+          </p>
+        </div>
+        <div>
+          <DonutChart data={timePerTask} />
+        </div>
+      </div>
       <div
         style={{
           borderBottom: "1px solid black",
@@ -87,14 +184,6 @@ function ReportsDashboard({
           activeTab={selectedTab}
           onTabChange={handleTabChange}
         />
-        <div>
-          {dateRange && dateRange.rangeStart && dateRange.rangeEnd && (
-            <div>
-              {dateRange.rangeStart.toDateString()} -{" "}
-              {dateRange.rangeEnd.toDateString()}
-            </div>
-          )}
-        </div>
       </div>
     </div>
   );

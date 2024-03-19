@@ -14,7 +14,6 @@ function ReportsContainer() {
   const [error, setError] = useState();
   const [projects, setProjects] = useState([]);
   const [timesheets, setTimesheets] = useState([]);
-  const [filteredTimesheets, setFilteredTimesheets] = useState([]);
   const [selectedTab, setSelectedTab] = useState();
   const [mode, setMode] = useState();
   const [date, setDate] = useState(new Date().toDateString());
@@ -76,8 +75,6 @@ function ReportsContainer() {
     }
   }
 
-  function totalHoursByCondition(condition, type) {}
-
   useEffect(() => {
     fetchProjects();
   }, []);
@@ -96,7 +93,7 @@ function ReportsContainer() {
         <p>Error: {error}</p>
       ) : (
         <>
-          <div>
+          <div style={{ marginBottom: "20px" }}>
             <ReportsHeader
               date={date}
               setDate={setDate}
@@ -104,7 +101,12 @@ function ReportsContainer() {
               setMode={setMode}
             />
           </div>
-          <div>
+          <div
+            style={{
+              display: "flex",
+              marginBottom: "20px",
+            }}
+          >
             <ReportsDashboard
               timesheets={timesheets}
               selectedTab={selectedTab}
