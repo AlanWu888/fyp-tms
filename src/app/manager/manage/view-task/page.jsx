@@ -1,18 +1,18 @@
 import React from "react";
 import NavManager from "@/app/(components)/navigation/NavManager";
-import ManageContainerUser from "@/app/(components)/manage/ManageContainerUser";
+import ManageContainerTask from "@/app/(components)/manage/ManageContainerTask";
 
-const ManageUser = () => {
+const ManageTask = () => {
   return (
     <div>
       <NavManager />
       <div
         style={{ paddingLeft: "10%", paddingRight: "10%", paddingTop: "30px" }}
       >
-        <ManageContainerUser />
+        <ManageContainerTask />
       </div>
     </div>
   );
 };
 
-export default ManageUser;
+export default ManageTask;

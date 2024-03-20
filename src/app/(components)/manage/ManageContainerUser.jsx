@@ -3,9 +3,11 @@
 import React, { useEffect, useState } from "react";
 import LoadingSpinner from "../loading/Loading";
 import ReportsHeader from "../reports/components/header";
-import UserBreakdown from "./components/userBreakdown";
+import UserBreakdownTotal from "./components/userBreakdownTotal";
+import GoBack from "../buttons/GoBack";
+import Link from "next/link";
 
-function ManageContainer() {
+function ManageContainerUser() {
   const [userEmail, setUserEmail] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState();
@@ -110,6 +112,7 @@ function ManageContainer() {
     const queryParams = new URLSearchParams(window.location.search);
     const userEmail = queryParams.get("userEmail") || "";
     setUserEmail(userEmail);
+    getRanges();
   }, []);
 
   useEffect(() => {
@@ -122,8 +125,7 @@ function ManageContainer() {
 
   useEffect(() => {
     filterDataByDateRange();
-  }, [dateRange]);
-
+  }, [timesheets, dateRange]);
   return (
     <div>
       {loading ? (
@@ -133,6 +135,15 @@ function ManageContainer() {
       ) : (
         <>
           <div style={{ marginBottom: "20px" }}>
+            <div>
+              <Link
+                href={{
+                  pathname: `/manager/report`,
+                }}
+              >
+                <GoBack />
+              </Link>
+            </div>
             <ReportsHeader
               date={date}
               setDate={setDate}
@@ -146,10 +157,10 @@ function ManageContainer() {
         style={{ marginBottom: "30px", fontSize: "20px" }}
       >{`Viewing timesheet entries for: ${userEmail}`}</div>
       <div>
-        <UserBreakdown filteredData={filteredData} userEmail={userEmail} />
+        <UserBreakdownTotal filteredData={filteredData} userEmail={userEmail} />
       </div>
     </div>
   );
 }
 
-export default ManageContainer;
+export default ManageContainerUser;

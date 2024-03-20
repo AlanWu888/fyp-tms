@@ -3,7 +3,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import Button from "../../buttons/Button";
 
-function UserBreakdown({ filteredData, date, mode, userEmail }) {
+function userBreakdownTotal({ filteredData, date, mode, userEmail }) {
   const [totalTime, setTotalTime] = useState({});
   const [totalHours, setTotalHours] = useState(0);
 
@@ -66,7 +66,7 @@ function UserBreakdown({ filteredData, date, mode, userEmail }) {
           borderBottom: "1px solid black",
         }}
       >
-        <div>Project</div>
+        <div>Project USER</div>
         <div
           style={{
             width: "100px",
@@ -164,4 +164,4 @@ function UserBreakdown({ filteredData, date, mode, userEmail }) {
   );
 }
 
-export default UserBreakdown;
+export default userBreakdownTotal;
