@@ -2,6 +2,7 @@
 
 import React, { useEffect } from "react";
 import MySelect from "../../selects/select";
+import "./header.css";
 
 function ReportsHeader({ date, setDate, mode, setMode }) {
   const selectOptions = [

@@ -1,8 +1,11 @@
 import { COLOURS } from "@/app/constants";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import Button from "../../buttons/Button";
 
-function UserBreakdown({ filteredData, date, mode }) {
+function UserBreakdown({ filteredData, date, mode, userEmail }) {
   const [totalTime, setTotalTime] = useState({});
+  const [totalHours, setTotalHours] = useState(0);
 
   const convertDecimalToTime = (decimalTime) => {
     const hours = Math.floor(decimalTime);
@@ -13,12 +16,15 @@ function UserBreakdown({ filteredData, date, mode }) {
   useEffect(() => {
     const calculateTotalTime = () => {
       const totalTimeMap = {};
+      let total = 0;
+
       filteredData.forEach((item) => {
         const key = `${item.clientName}-${item.projectName}-${item.taskDescription}-${item.taskType}`;
         if (!totalTimeMap[key]) {
           totalTimeMap[key] = 0;
         }
         totalTimeMap[key] += item.time;
+        total += item.time;
       });
 
       const orderedTotalTime = Object.keys(totalTimeMap).sort((a, b) => {
@@ -38,6 +44,7 @@ function UserBreakdown({ filteredData, date, mode }) {
       });
 
       setTotalTime(sortedTotalTime);
+      setTotalHours(total);
     };
 
     calculateTotalTime();
@@ -49,6 +56,7 @@ function UserBreakdown({ filteredData, date, mode }) {
         className="hours-time-breakdown__header"
         style={{
           display: "flex",
+          justifyContent: "space-between",
           paddingLeft: "20px",
           paddingRight: "20px",
           paddingTop: "10px",
@@ -58,8 +66,17 @@ function UserBreakdown({ filteredData, date, mode }) {
           borderBottom: "1px solid black",
         }}
       >
-        <div style={{ width: "700px", border: "1px solid green" }}>Project</div>
-        <div>Time</div>
+        <div>Project</div>
+        <div
+          style={{
+            width: "100px",
+            display: "flex",
+            justifyContent: "center",
+            marginRight: "200px",
+          }}
+        >
+          Time Spent
+        </div>
       </div>
       <div className="hours-time-breakdown__rows">
         {Object.keys(totalTime).map((key) => (
@@ -67,6 +84,7 @@ function UserBreakdown({ filteredData, date, mode }) {
             key={key}
             style={{
               display: "flex",
+              justifyContent: "space-between",
               paddingLeft: "20px",
               paddingRight: "20px",
               paddingTop: "10px",
@@ -74,17 +92,73 @@ function UserBreakdown({ filteredData, date, mode }) {
               borderBottom: "1px solid black",
             }}
           >
-            <div style={{ width: "700px", border: "1px solid green" }}>
-              <p>{`${key.split("-")[0]} - ${key.split("-")[1]}`}</p>
+            <div>
+              <p
+                style={{ fontSize: "24px" }}
+              >{`${key.split("-")[0]} - ${key.split("-")[1]}`}</p>
               <p>{`${key.split("-")[2]} (${key.split("-")[3]})`}</p>
             </div>
-            {/* <p>{`Client Name: ${key.split("-")[0]}`}</p>
-          <p>{`Project Name: ${key.split("-")[1]}`}</p>
-          <p>{`Task Description: ${key.split("-")[2]}`}</p>
-          <p>{`Task Type: ${key.split("-")[3]}`}</p> */}
-            <p>{`${convertDecimalToTime(totalTime[key])}`}</p>
+            <div style={{ display: "flex" }}>
+              <div
+                style={{
+                  fontSize: "24px",
+                  fontWeight: "bold",
+                  alignItems: "center",
+                  display: "flex",
+                  width: "100px",
+                  justifyContent: "center",
+                }}
+              >{`${convertDecimalToTime(totalTime[key])}`}</div>
+              <div
+                style={{
+                  width: "200px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-end",
+                }}
+              >
+                <Link
+                  href={{
+                    pathname: `/manager/manage/view-task`,
+                    query: {
+                      userEmail: userEmail,
+                      taskName: key.split("-")[2],
+                    },
+                  }}
+                >
+                  <Button label="View entries" />
+                </Link>
+              </div>
+            </div>
           </div>
         ))}
+        <div
+          className="hours-time-breakdown__header"
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            paddingLeft: "20px",
+            paddingRight: "20px",
+            paddingTop: "10px",
+            paddingBottom: "10px",
+            borderTop: "2px solid black",
+            borderBottom: "3px solid black",
+            fontWeight: "bold",
+            fontSize: "20px",
+          }}
+        >
+          <div>Total</div>
+          <div
+            style={{
+              alignItems: "center",
+              display: "flex",
+              width: "100px",
+              justifyContent: "center",
+            }}
+          >
+            {convertDecimalToTime(totalHours)}
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -142,10 +142,11 @@ function ManageContainer() {
           </div>
         </>
       )}
-      <div>{userEmail}</div>
-      <div>{JSON.stringify(filteredData)}</div>
+      <div
+        style={{ marginBottom: "30px", fontSize: "20px" }}
+      >{`Viewing timesheet entries for: ${userEmail}`}</div>
       <div>
-        <UserBreakdown filteredData={filteredData} />
+        <UserBreakdown filteredData={filteredData} userEmail={userEmail} />
       </div>
     </div>
   );
