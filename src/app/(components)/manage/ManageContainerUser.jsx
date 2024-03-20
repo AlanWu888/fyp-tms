@@ -143,6 +143,11 @@ function ManageContainerUser() {
               >
                 <GoBack />
               </Link>
+              <div style={{ marginTop: "10px", marginBottom: "10px" }}>
+                <p
+                  style={{ fontSize: "28px", fontWeight: "bold" }}
+                >{`Viewing timesheet entries submitted by ${userEmail}`}</p>
+              </div>
             </div>
             <ReportsHeader
               date={date}

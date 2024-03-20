@@ -156,6 +156,12 @@ function ManageContainerTask() {
               >
                 <GoBack />
               </Link>
+              <div style={{ marginTop: "10px", marginBottom: "10px" }}>
+                <p
+                  style={{ fontSize: "28px", fontWeight: "bold" }}
+                >{`Viewing timesheet entries for "${taskName}"`}</p>
+                <p>{`Submitted by the user, ${userEmail}`}</p>
+              </div>
             </div>
             <ReportsHeader
               date={date}
@@ -166,10 +172,6 @@ function ManageContainerTask() {
           </div>
         </>
       )}
-      <div style={{ marginBottom: "30px", fontSize: "20px" }}>
-        <p>{`Viewing timesheet entries for: ${userEmail}`}</p>
-        <p>{`Task: ${taskName}`}</p>
-      </div>
       <div>
         <UserBreakdownTask filteredData={filteredData} userEmail={userEmail} />
       </div>
