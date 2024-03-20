@@ -16,7 +16,7 @@ function AdditionModal({ date, onClose, onTimesheetUpdate }) {
 
   const convertTimeToDecimal = (timeString) => {
     const [hours, minutes] = timeString.split(":").map(parseFloat);
-    return Number(hours + minutes / 60).toPrecision(5);
+    return parseFloat(Number(hours + minutes / 60).toPrecision(5));
   };
 
   const [time, setTime] = useState(convertDecimalToTime(0.0));
@@ -107,7 +107,7 @@ function AdditionModal({ date, onClose, onTimesheetUpdate }) {
       return;
     }
 
-    const newDate = new Date(date).setHours(0, 0, 0, 0);
+    const newDate = new Date(new Date(date).setHours(0, 0, 0, 0)).toISOString();
     console.log(
       JSON.stringify({
         formData: {
@@ -117,7 +117,7 @@ function AdditionModal({ date, onClose, onTimesheetUpdate }) {
           taskDescription,
           additionalNotes,
           time: convertTimeToDecimal(time),
-          newDate,
+          date: newDate,
           taskType: taskType.label,
         },
       }),
@@ -136,7 +136,7 @@ function AdditionModal({ date, onClose, onTimesheetUpdate }) {
             taskDescription,
             additionalNotes,
             time: convertTimeToDecimal(time),
-            newDate,
+            date: newDate,
             taskType: taskType.label,
           },
         }),
