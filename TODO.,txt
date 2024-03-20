@@ -1,0 +1,4 @@
+1. fix timesheet submission - could be because of date is being saved as integer rather than ISO date String
+2. Complete Manage and Invoice pages, and task view pages
+3. Change alerts to divs, to look more professional
+4. Add screens to different user types

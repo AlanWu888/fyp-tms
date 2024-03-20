@@ -163,10 +163,12 @@ function ReportsBreakdown({ timesheets, selectedTab, date, mode }) {
   };
 
   function getPathname() {
-    if (selectedTab === "Team") {
-      return "/manager/manage";
-    } else if (selectedTab === "Projects" || selectedTab === "Tasks") {
+    if (selectedTab === "Projects") {
       return "/manager/project/view-project";
+    } else if (selectedTab === "Team") {
+      return "/manager/manage/view-user";
+    } else if (selectedTab === "Tasks") {
+      return "/manager/report/view-task";
     }
   }
 
@@ -177,9 +179,10 @@ function ReportsBreakdown({ timesheets, selectedTab, date, mode }) {
         clientName: client,
         projectName: project,
       };
-    } else if (selectedTab === "Tasks") {
-    } else if (selectedTab === "Teams") {
+    } else if (selectedTab === "Team") {
       return { userEmail: param };
+    } else if (selectedTab === "Tasks") {
+      return { taskName: param };
     }
   }
 
