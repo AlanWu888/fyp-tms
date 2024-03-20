@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import LoadingSpinner from "../loading/Loading";
 import ReportsHeader from "../reports/components/header";
+import UserBreakdown from "./components/userBreakdown";
 
 function ManageContainer() {
   const [userEmail, setUserEmail] = useState("");
@@ -143,6 +144,9 @@ function ManageContainer() {
       )}
       <div>{userEmail}</div>
       <div>{JSON.stringify(filteredData)}</div>
+      <div>
+        <UserBreakdown filteredData={filteredData} />
+      </div>
     </div>
   );
 }
