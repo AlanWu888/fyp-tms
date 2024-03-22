@@ -88,7 +88,6 @@ function InvoicesContainer() {
                 paddingRight: "20px",
                 fontSize: "20px",
                 borderBottom: "1px solid black",
-
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",

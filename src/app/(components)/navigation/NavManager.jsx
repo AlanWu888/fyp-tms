@@ -35,7 +35,7 @@ const NavManager = () => {
         <Link
           href="/manager/invoice"
           className={
-            pathname.startsWith("/manager/invpice") ? styles.active : ""
+            pathname.startsWith("/manager/invoice") ? styles.active : ""
           }
         >
           Invoice
