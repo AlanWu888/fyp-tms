@@ -1,18 +1,18 @@
 import React from "react";
 import NavManager from "@/app/(components)/navigation/NavManager";
-import ReportsContainer from "@/app/(components)/reports/ReportsContainer";
+import TasksContainer from "@/app/(components)/reports/TasksContainer";
 
-const ManagerReports = () => {
+const ReportsTaskBreakdown = () => {
   return (
     <div>
       <NavManager />
       <div
         style={{ paddingLeft: "10%", paddingRight: "10%", paddingTop: "30px" }}
       >
-        <ReportsContainer />
+        <TasksContainer />
       </div>
     </div>
   );
 };
 
-export default ManagerReports;
+export default ReportsTaskBreakdown;

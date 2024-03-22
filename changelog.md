@@ -1,3 +1,16 @@
+## [0.16] - 22/03/2024
+
+BT-60 Create Reports Screen
+
+## Added
+
+- Reports screen as per designs with clickable links to explore timesheet entries
+- Created Manage page to support Report functionality
+
+## Fixes
+
+- Timesheet entry functionality that was broken is now fixed (previously could not add an entry due to misnaming variables in a refactor)
+
 ## [0.15] - 17/03/2024
 
 BT-55 Duplicate Entries on Day view (fix)

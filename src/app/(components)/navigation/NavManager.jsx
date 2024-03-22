@@ -12,7 +12,7 @@ const NavManager = () => {
       <div className={styles.leftLinks}>
         <Link
           href="/manager/time"
-          className={pathname === "/manager/time" ? styles.active : ""}
+          className={pathname.startsWith("/manager/time") ? styles.active : ""}
         >
           Time
         </Link>
@@ -26,19 +26,25 @@ const NavManager = () => {
         </Link>
         <Link
           href="/manager/report"
-          className={pathname === "/manager/report" ? styles.active : ""}
+          className={
+            pathname.startsWith("/manager/report") ? styles.active : ""
+          }
         >
           Reports
         </Link>
         <Link
           href="/manager/invoice"
-          className={pathname === "/manager/invoice" ? styles.active : ""}
+          className={
+            pathname.startsWith("/manager/invpice") ? styles.active : ""
+          }
         >
           Invoice
         </Link>
         <Link
           href="/manager/manage"
-          className={pathname === "/manager/manage" ? styles.active : ""}
+          className={
+            pathname.startsWith("/manager/manage") ? styles.active : ""
+          }
         >
           Manage
         </Link>

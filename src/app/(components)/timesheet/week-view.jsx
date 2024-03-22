@@ -286,6 +286,7 @@ function WeekViewTimesheet({ date }) {
               date: new Date(entry.date),
               taskType: modifiedTimesheets[valueChange.index].taskType,
             };
+            await postDB(postParams);
           } else {
             if (Math.abs(entry.time - 0) < 0.0001) {
               await deleteDB(entry._id);
@@ -328,6 +329,19 @@ function WeekViewTimesheet({ date }) {
 
   async function postDB(postParams) {
     try {
+      console.log(
+        JSON.stringify({
+          formData: {
+            userEmail: postParams.userEmail,
+            clientName: postParams.clientName,
+            projectName: postParams.projectName,
+            taskDescription: postParams.taskDescription,
+            time: parseFloat(postParams.time),
+            date: postParams.date,
+            taskType: postParams.taskType,
+          },
+        }),
+      );
       const response = await fetch("/api/Timesheets", {
         method: "POST",
         headers: {

@@ -34,10 +34,11 @@ function UsersTable({ header, mode, data, date, currentProject }) {
   };
 
   const getRanges = () => {
+    const newDate = new Date(date);
     if (mode === "week") {
-      const rangeStart = new Date(date);
-      const dayOfWeek = date.getDay();
-      const diff = date.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
+      const rangeStart = new Date(newDate);
+      const dayOfWeek = newDate.getDay();
+      const diff = newDate.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
       rangeStart.setDate(diff);
 
       const rangeEnd = new Date(rangeStart);
@@ -45,8 +46,8 @@ function UsersTable({ header, mode, data, date, currentProject }) {
 
       setDateRange({ rangeStart, rangeEnd });
     } else if (mode === "fortnight") {
-      const rangeStart = new Date(date);
-      const dayOfMonth = date.getDate();
+      const rangeStart = new Date(newDate);
+      const dayOfMonth = newDate.getDate();
       const diff = dayOfMonth <= 15 ? 1 : 16;
       rangeStart.setDate(diff);
 
@@ -55,8 +56,18 @@ function UsersTable({ header, mode, data, date, currentProject }) {
 
       setDateRange({ rangeStart, rangeEnd });
     } else if (mode === "month") {
-      const rangeStart = new Date(date.getFullYear(), date.getMonth(), 1);
-      const rangeEnd = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+      const rangeStart = new Date(newDate.getFullYear(), newDate.getMonth(), 1);
+      const rangeEnd = new Date(
+        newDate.getFullYear(),
+        newDate.getMonth() + 1,
+        0,
+      );
+
+      setDateRange({ rangeStart, rangeEnd });
+    } else if (mode === "year") {
+      const year = newDate.getFullYear();
+      const rangeStart = new Date(year, 0, 1);
+      const rangeEnd = new Date(year, 11, 31);
 
       setDateRange({ rangeStart, rangeEnd });
     } else if (mode === "all") {
@@ -65,9 +76,9 @@ function UsersTable({ header, mode, data, date, currentProject }) {
 
       setDateRange({ rangeStart, rangeEnd });
     } else {
-      const startOfDay = new Date(date);
+      const startOfDay = new Date(newDate);
       startOfDay.setHours(0, 0, 0, 0);
-      const endOfDay = new Date(date);
+      const endOfDay = new Date(newDate);
       endOfDay.setHours(23, 59, 59, 999);
       setDateRange({ rangeStart: startOfDay, rangeEnd: endOfDay });
     }

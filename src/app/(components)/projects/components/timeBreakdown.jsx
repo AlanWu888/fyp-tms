@@ -16,8 +16,8 @@ function TimeBreakdownComponent({
   const selectOptions = [
     { value: "day", label: "Today" },
     { value: "week", label: "Week" },
-    { value: "fortnight", label: "Fortnight" },
     { value: "month", label: "Month" },
+    { value: "year", label: "Year" },
     { value: "all", label: "All Time" },
   ];
 
@@ -41,10 +41,10 @@ function TimeBreakdownComponent({
         return "Today: ";
       case "week":
         return "This Week: ";
-      case "fortnight":
-        return "This Fortnight: ";
       case "month":
         return "This Month: ";
+      case "year":
+        return "This Year: ";
       case "all":
         return "All Time";
       default:
@@ -61,11 +61,11 @@ function TimeBreakdownComponent({
       case "week":
         newDate.setDate(newDate.getDate() + 7);
         break;
-      case "fortnight":
-        newDate.setDate(newDate.getDate() + 14);
-        break;
       case "month":
         newDate.setMonth(newDate.getMonth() + 1);
+        break;
+      case "year":
+        newDate.setFullYear(newDate.getFullYear() + 1);
         break;
       default:
         break;
@@ -82,11 +82,11 @@ function TimeBreakdownComponent({
       case "week":
         newDate.setDate(newDate.getDate() - 7);
         break;
-      case "fortnight":
-        newDate.setDate(newDate.getDate() - 14);
-        break;
       case "month":
         newDate.setMonth(newDate.getMonth() - 1);
+        break;
+      case "year":
+        newDate.setFullYear(newDate.getFullYear() - 1);
         break;
       default:
         break;
@@ -105,21 +105,15 @@ function TimeBreakdownComponent({
       endOfWeek.setDate(startOfWeek.getDate() + 6);
 
       return `${startOfWeek.toDateString()} - ${endOfWeek.toDateString()}`;
-    } else if (mode.value === "fortnight") {
-      const startOfFortnight = new Date(date);
-      const dayOfMonth = date.getDate();
-      const diff = dayOfMonth <= 15 ? 1 : 16;
-      startOfFortnight.setDate(diff);
-
-      const endOfFortnight = new Date(startOfFortnight);
-      endOfFortnight.setDate(startOfFortnight.getDate() + 13);
-
-      return `${startOfFortnight.toDateString()} - ${endOfFortnight.toDateString()}`;
     } else if (mode.value === "month") {
       const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
       const endOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
 
       return `${startOfMonth.toDateString()} - ${endOfMonth.toDateString()}`;
+    } else if (mode.value === "year") {
+      const startOfYear = new Date(date.getFullYear(), 0, 1);
+      const endOfYear = new Date(date.getFullYear(), 11, 31);
+      return `${startOfYear.toDateString()} - ${endOfYear.toDateString()}`;
     } else {
       return date.toDateString();
     }
