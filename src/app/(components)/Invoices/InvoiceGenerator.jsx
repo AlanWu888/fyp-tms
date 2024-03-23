@@ -127,6 +127,7 @@ function InvoiceGenerator() {
 
     return (
       <div>
+        <div>{JSON.stringify(filteredTasks)}</div>
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
             <tr>
@@ -158,19 +159,19 @@ function InvoiceGenerator() {
             </tr>
           </thead>
           <tbody>
-            {Object.entries(filteredTasks).map(([taskName, taskDetails]) => (
-              <React.Fragment key={taskName}>
-                {taskDetails.taskTypes.map((taskType, taskTypeIndex) => (
-                  <React.Fragment key={taskType.type}>
-                    <tr>
-                      <td colSpan="5">
-                        <p style={{ marginTop: "10px" }}>
-                          {taskName} - {taskType.type}
-                        </p>
-                      </td>
-                    </tr>
-                    {taskType.users.map((user, userIndex) => (
-                      <tr key={user.email}>
+            {Object.entries(filteredTasks).map(
+              ([taskName, taskDetails], taskIndex) => (
+                <React.Fragment key={taskName}>
+                  <tr>
+                    <td colSpan="5">
+                      <p style={{ marginTop: "10px", fontWeight: "bold" }}>
+                        {taskName}
+                      </p>
+                    </td>
+                  </tr>
+                  {taskDetails.taskTypes.flatMap((taskType) =>
+                    taskType.users.map((user, userIndex) => (
+                      <tr key={`${taskType.type}-${user.email}`}>
                         <td style={{ paddingLeft: "20px" }}>{user.email}</td>
                         <td>{taskType.type}</td>
                         <td>
@@ -239,25 +240,35 @@ function InvoiceGenerator() {
                             : calculateAmount(user.rate, user.time)}
                         </td>
                       </tr>
-                    ))}
-                    {taskTypeIndex < taskDetails.taskTypes.length - 1 && (
-                      <tr>
-                        <td
-                          colSpan="5"
-                          style={{ borderBottom: "1px solid black" }}
-                        >
-                          <hr style={{ margin: "0" }} />
-                        </td>
-                      </tr>
-                    )}
-                  </React.Fragment>
-                ))}
-              </React.Fragment>
-            ))}
+                    )),
+                  )}
+                  {taskIndex < Object.entries(filteredTasks).length - 1 && (
+                    <tr>
+                      <td
+                        colSpan="5"
+                        style={{
+                          borderBottom: "1px solid black",
+                          paddingTop: "10px",
+                        }}
+                      >
+                        <hr style={{ margin: "0" }} />
+                      </td>
+                    </tr>
+                  )}
+                </React.Fragment>
+              ),
+            )}
           </tbody>
           <tfoot>
             <tr>
-              <td style={{ textAlign: "left", borderTop: "1px solid black" }}>
+              <td
+                style={{
+                  textAlign: "left",
+                  borderTop: "1px solid black",
+                  fontWeight: "bold",
+                  paddingTop: "20px",
+                }}
+              >
                 Total:
               </td>
               <td
@@ -267,6 +278,7 @@ function InvoiceGenerator() {
                   borderTop: "1px solid black",
                   fontWeight: "bold",
                   paddingRight: "75px",
+                  paddingTop: "20px",
                 }}
               >
                 £ {calculateTotalAmount()}
@@ -279,7 +291,7 @@ function InvoiceGenerator() {
   };
 
   return (
-    <div>
+    <div style={{ marginBottom: "120px" }}>
       {loading ? (
         <p>Loading...</p>
       ) : (
@@ -303,7 +315,7 @@ function InvoiceGenerator() {
             </p>
             <p>{`You are generating an invoice for ${client} - ${project}`}</p>
           </div>
-          {renderTaskTable()}
+          <div>{renderTaskTable()}</div>
         </>
       )}
     </div>
