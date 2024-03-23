@@ -127,7 +127,6 @@ function InvoiceGenerator() {
 
     return (
       <div>
-        <div>{JSON.stringify(filteredTasks)}</div>
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
             <tr>
@@ -135,6 +134,11 @@ function InvoiceGenerator() {
                 style={{ textAlign: "left", borderBottom: "1px solid black" }}
               >
                 Description
+              </th>
+              <th
+                style={{ textAlign: "left", borderBottom: "1px solid black" }}
+              >
+                Task Type
               </th>
               <th
                 style={{ textAlign: "left", borderBottom: "1px solid black" }}
@@ -154,83 +158,102 @@ function InvoiceGenerator() {
             </tr>
           </thead>
           <tbody>
-            {Object.entries(filteredTasks).map(
-              ([taskName, taskDetails], index) => (
-                <React.Fragment key={taskName}>
-                  <tr>
-                    <td colSpan="4">
-                      <p style={{ marginTop: "10px" }}>{taskName}</p>
-                    </td>
-                  </tr>
-                  {taskDetails.taskTypes.map((taskType) =>
-                    taskType.users.map((user, userIndex) => (
-                      <React.Fragment key={user.email}>
-                        <tr>
-                          <td style={{ paddingLeft: "20px" }}>{user.email}</td>
-                          <td>
-                            £{" "}
-                            <input
-                              type="number"
-                              style={{
-                                width: "80px",
-                                border: "1px solid black",
-                                borderRadius: "5px",
-                              }}
-                              value={user.rate}
-                              onChange={(event) =>
-                                handleRateChange(event, taskName, user.email)
-                              }
-                              required={true}
-                            />{" "}
-                            /hr
-                          </td>
-                          <td>
-                            <input
-                              type="number"
-                              value={user.time.toFixed(3)}
-                              style={{
-                                width: "60px",
-                                border: "1px solid black",
-                                borderRadius: "5px",
-                              }}
-                              onChange={(event) =>
-                                handleHoursChange(event, taskName, user.email)
-                              }
-                              required={true}
-                            />{" "}
-                            hr
-                          </td>
-                          <td style={{ width: "120px" }}>
-                            £ {calculateAmount(user.rate, user.time)}
-                          </td>
-                        </tr>
-                        {userIndex < taskType.users.length - 1 && (
-                          <tr>
-                            <td
-                              colSpan="4"
-                              style={{ borderBottom: "1px solid black" }}
-                            >
-                              <hr style={{ margin: "0" }} />
-                            </td>
-                          </tr>
-                        )}
-                      </React.Fragment>
-                    )),
-                  )}
-                  {index < Object.entries(filteredTasks).length - 1 && (
+            {Object.entries(filteredTasks).map(([taskName, taskDetails]) => (
+              <React.Fragment key={taskName}>
+                {taskDetails.taskTypes.map((taskType, taskTypeIndex) => (
+                  <React.Fragment key={taskType.type}>
                     <tr>
-                      <td
-                        colSpan="4"
-                        style={{
-                          borderBottom: "1px solid black",
-                          paddingBottom: "10px",
-                        }}
-                      />
+                      <td colSpan="5">
+                        <p style={{ marginTop: "10px" }}>
+                          {taskName} - {taskType.type}
+                        </p>
+                      </td>
                     </tr>
-                  )}
-                </React.Fragment>
-              ),
-            )}
+                    {taskType.users.map((user, userIndex) => (
+                      <tr key={user.email}>
+                        <td style={{ paddingLeft: "20px" }}>{user.email}</td>
+                        <td>{taskType.type}</td>
+                        <td>
+                          {taskType.type === "Non-Billable" ? (
+                            <>
+                              £{" "}
+                              <input
+                                type="number"
+                                style={{
+                                  width: "80px",
+                                  border: "1px solid black",
+                                  borderRadius: "5px",
+                                  textAlign: "center",
+                                }}
+                                value={0}
+                                onChange={(event) =>
+                                  handleRateChange(event, taskName, user.email)
+                                }
+                                required={true}
+                                disabled={taskType.type === "Non-Billable"}
+                              />{" "}
+                              /hr
+                            </>
+                          ) : (
+                            <>
+                              £{" "}
+                              <input
+                                type="number"
+                                style={{
+                                  width: "80px",
+                                  border: "1px solid black",
+                                  borderRadius: "5px",
+                                  textAlign: "center",
+                                }}
+                                value={user.rate || ""}
+                                onChange={(event) =>
+                                  handleRateChange(event, taskName, user.email)
+                                }
+                                required={true}
+                                disabled={taskType.type === "Non-Billable"}
+                              />{" "}
+                              /hr
+                            </>
+                          )}
+                        </td>
+                        <td>
+                          <input
+                            type="number"
+                            value={user.time.toFixed(3)}
+                            style={{
+                              width: "60px",
+                              border: "1px solid black",
+                              borderRadius: "5px",
+                            }}
+                            onChange={(event) =>
+                              handleHoursChange(event, taskName, user.email)
+                            }
+                            required={true}
+                          />{" "}
+                          hr
+                        </td>
+                        <td style={{ width: "120px" }}>
+                          £{" "}
+                          {taskType.type === "Non-Billable"
+                            ? "0.00"
+                            : calculateAmount(user.rate, user.time)}
+                        </td>
+                      </tr>
+                    ))}
+                    {taskTypeIndex < taskDetails.taskTypes.length - 1 && (
+                      <tr>
+                        <td
+                          colSpan="5"
+                          style={{ borderBottom: "1px solid black" }}
+                        >
+                          <hr style={{ margin: "0" }} />
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
+                ))}
+              </React.Fragment>
+            ))}
           </tbody>
           <tfoot>
             <tr>
@@ -238,7 +261,7 @@ function InvoiceGenerator() {
                 Total:
               </td>
               <td
-                colSpan="3"
+                colSpan="4"
                 style={{
                   textAlign: "right",
                   borderTop: "1px solid black",

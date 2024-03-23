@@ -145,12 +145,6 @@ function TaskPicker() {
               </div>
             </div>
           ))}
-          <div style={{ border: "1px solid blue", marginTop: "30px" }}>
-            {JSON.stringify(selectedTasks)}
-          </div>
-          <div style={{ border: "1px solid blue", marginTop: "30px" }}>
-            {JSON.stringify(tasks)}
-          </div>
           <Link
             href={{
               pathname: "/manager/invoice/generate",
