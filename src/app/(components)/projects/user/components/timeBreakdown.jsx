@@ -1,18 +1,13 @@
 import React, { useEffect, useState } from "react";
-import NavTabs from "../../navigation/NavTabs-project";
-import MySelect from "../../selects/select";
-import BreakDownTable from "./breakdownTable";
-import Button from "../../buttons/Button";
-import { COLOURS } from "@/app/constants";
-import AddUserModal from "../manager/modals/addUser";
-import UsersTable from "./usersTable";
 
-function ManagerTimeBreakdownComponent({
-  timesheets,
-  currentProject,
-  addMemberModalOpen,
-  setAddMemberModalOpen,
-}) {
+import MySelect from "@/app/(components)/selects/select";
+import BreakDownTable from "@/app/(components)/projects/components/breakdownTable";
+import Button from "@/app/(components)/buttons/Button";
+import { COLOURS } from "@/app/constants";
+import UsersTable from "@/app/(components)/projects/components/usersTable";
+import NavTabs from "@/app/(components)/navigation/NavTabs-project";
+
+function UserTimeBreakdownComponent({ timesheets, currentProject }) {
   const selectOptions = [
     { value: "day", label: "Today" },
     { value: "week", label: "Week" },
@@ -20,6 +15,8 @@ function ManagerTimeBreakdownComponent({
     { value: "year", label: "Year" },
     { value: "all", label: "All Time" },
   ];
+
+  // use custom user table, current one has remove button
 
   const [activeTab, setActiveTab] = useState();
   const [mode, setMode] = useState(selectOptions[0]);
@@ -186,10 +183,6 @@ function ManagerTimeBreakdownComponent({
     return groupedTasks;
   }
 
-  const handleAddUser = () => {
-    setAddMemberModalOpen(true);
-  };
-
   useEffect(() => {
     setTimeByTask(transformDataByTasks);
     setTimeByUser(transformDataByUser);
@@ -210,16 +203,6 @@ function ManagerTimeBreakdownComponent({
           activeTab={activeTab}
           onTabChange={handleTabChange}
         />
-        <div>
-          {activeTab === "Team" && (
-            <Button
-              bgcolour={COLOURS.GREEN_ENABLED}
-              colour={COLOURS.WHITE}
-              label="+ Add user"
-              onClick={handleAddUser}
-            />
-          )}
-        </div>
       </div>
       <div>
         <div
@@ -296,14 +279,8 @@ function ManagerTimeBreakdownComponent({
           </div>
         )}
       </div>
-      {addMemberModalOpen && (
-        <AddUserModal
-          onClose={() => setAddMemberModalOpen(false)}
-          currentProject={currentProject}
-        />
-      )}
     </div>
   );
 }
 
-export default ManagerTimeBreakdownComponent;
+export default UserTimeBreakdownComponent;

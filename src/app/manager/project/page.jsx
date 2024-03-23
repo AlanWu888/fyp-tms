@@ -1,6 +1,6 @@
 import React from "react";
 import NavManager from "@/app/(components)/navigation/NavManager";
-import ProjectsList from "@/app/(components)/projects/project-list";
+import ManagersProjectsList from "@/app/(components)/projects/manager/project-list";
 
 const ManagerProjects = () => {
   return (
@@ -9,7 +9,7 @@ const ManagerProjects = () => {
       <div
         style={{ paddingLeft: "10%", paddingRight: "10%", paddingTop: "30px" }}
       >
-        <ProjectsList />
+        <ManagersProjectsList />
       </div>
     </div>
   );

@@ -11,22 +11,22 @@ const NavUser = () => {
       <div className={styles.leftLinks}>
         <Link
           href="/user/time"
-          className={pathname === "/user/time" ? styles.active : ""}
+          className={pathname.startsWith("/user/time") ? styles.active : ""}
         >
           Time
         </Link>
         <Link
           href="/user/project"
-          className={pathname === "/user/project" ? styles.active : ""}
+          className={pathname.startsWith("/user/project") ? styles.active : ""}
         >
           Projects
         </Link>
-        <Link
+        {/* <Link
           href="/user/report"
           className={pathname === "/user/report" ? styles.active : ""}
         >
           Reports
-        </Link>
+        </Link> */}
       </div>
 
       <div className={styles.rightLinks}>

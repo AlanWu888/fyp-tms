@@ -1,14 +1,14 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Button from "../buttons/Button";
+import Button from "../../buttons/Button";
 import { COLOURS } from "@/app/constants";
-import SearchBox from "../searchBox/SearchBox";
+import SearchBox from "../../searchBox/SearchBox";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import LoadingSpinner from "../loading/Loading";
+import LoadingSpinner from "../../loading/Loading";
 
-function ProjectsList() {
+function ManagersProjectsList() {
   const { data: session } = useSession();
   const userEmail = session?.user?.email;
 
@@ -331,4 +331,4 @@ function ProjectsList() {
   );
 }
 
-export default ProjectsList;
+export default ManagersProjectsList;
