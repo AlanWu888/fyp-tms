@@ -1,3 +1,23 @@
+## [0.17] - 23/03/2024
+
+BT-61 Invoicing
+
+## Added
+
+- Invoicing feature added, can select tasks to include into an invoice
+- Update Task rates on invoicing page
+
+## Fixes
+
+- Build Errors:
+  - build error fix: 215:56 Error: can be escaped with , , , . react/no-nescaped-entities
+  - renamed UserBreakdownTotal to solve build error
+
+## Removed
+
+- JSON display for manager projects
+- old admin page
+
 ## [0.16] - 22/03/2024
 
 BT-60 Create Reports Screen

@@ -212,7 +212,7 @@ function DayViewTimesheet({ date, setDate }) {
           }}
         >
           <p>No tasks currently kept...</p>
-          <p>Track a new task by pressing "Add new Task"</p>
+          <p>Track a new task by pressing &quot;Add new Task&quot;</p>
         </div>
       )}
       <ul>

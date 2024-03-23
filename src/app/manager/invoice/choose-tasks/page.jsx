@@ -1,6 +1,6 @@
 import React from "react";
-import InvoicesContainer from "@/app/(components)/Invoices/InvoicesContainer";
 import NavManager from "@/app/(components)/navigation/NavManager";
+import TaskPicker from "@/app/(components)/Invoices/TaskPicker";
 
 const ManagerInvoice = () => {
   return (
@@ -9,7 +9,7 @@ const ManagerInvoice = () => {
       <div
         style={{ paddingLeft: "10%", paddingRight: "10%", paddingTop: "30px" }}
       >
-        <InvoicesContainer />
+        <TaskPicker />
       </div>
     </div>
   );
