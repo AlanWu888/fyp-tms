@@ -127,7 +127,6 @@ function InvoiceGenerator() {
 
     return (
       <div>
-        <div>{JSON.stringify(filteredTasks)}</div>
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
             <tr>
