@@ -16,8 +16,7 @@ export const createUniqueTasksFromTimesheets = (filteredTimesheets) => {
         taskTypes: [
           {
             type: timesheet.taskType,
-            users: [timesheet.userEmail],
-            time: timesheet.time,
+            users: [{ email: timesheet.userEmail, time: timesheet.time }],
           },
         ],
       };
@@ -29,21 +28,23 @@ export const createUniqueTasksFromTimesheets = (filteredTimesheets) => {
       if (taskTypeIndex === -1) {
         result.taskDescriptions[timesheet.taskDescription].taskTypes.push({
           type: timesheet.taskType,
-          users: [timesheet.userEmail],
-          time: timesheet.time,
+          users: [{ email: timesheet.userEmail, time: timesheet.time }],
         });
       } else {
-        if (
-          !result.taskDescriptions[timesheet.taskDescription].taskTypes[
-            taskTypeIndex
-          ].users.includes(timesheet.userEmail)
-        ) {
+        const userIndex = result.taskDescriptions[
+          timesheet.taskDescription
+        ].taskTypes[taskTypeIndex].users.findIndex(
+          (user) => user.email === timesheet.userEmail,
+        );
+
+        if (userIndex === -1) {
           result.taskDescriptions[timesheet.taskDescription].taskTypes[
             taskTypeIndex
-          ].users.push(timesheet.userEmail);
+          ].users.push({ email: timesheet.userEmail, time: timesheet.time });
+        } else {
           result.taskDescriptions[timesheet.taskDescription].taskTypes[
             taskTypeIndex
-          ].time += timesheet.time;
+          ].users[userIndex].time += timesheet.time;
         }
       }
     }
