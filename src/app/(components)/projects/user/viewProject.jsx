@@ -6,13 +6,10 @@ import GoBack from "../../buttons/GoBack";
 import { useSession } from "next-auth/react";
 import LineChart from "../components/lineChart";
 import "./viewProject.css";
-import Button from "../../buttons/Button";
-import { COLOURS } from "@/app/constants";
-import TimeBreakdownComponent from "../components/timeBreakdown";
 import LoadingSpinner from "../../loading/Loading";
-import ManageValuesModal from "./modals/manageValues";
+import UserTimeBreakdownComponent from "./components/timeBreakdown";
 
-const ManagerViewProjectComponent = () => {
+const UserViewProjectComponent = () => {
   const { data: session } = useSession();
   const userEmail = session?.user?.email;
 
@@ -28,8 +25,6 @@ const ManagerViewProjectComponent = () => {
   const [totalHoursPerDay, setTotalHoursPerDay] = useState({});
   const [totalHoursPerWeek, setTotalHoursPerWeek] = useState({});
   const [totalHoursPerMonth, setTotalHoursPerMonth] = useState({});
-  const [addMemberModalOpen, setAddMemberModalOpen] = useState(false);
-  const [manageModalOpen, SetManageModalOpen] = useState(false);
 
   async function fetchTimesheetData() {
     try {
@@ -202,10 +197,6 @@ const ManagerViewProjectComponent = () => {
     }
   }
 
-  const openManageModal = () => {
-    SetManageModalOpen(true);
-  };
-
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);
     const clientNameParam = queryParams.get("clientName") || "";
@@ -227,7 +218,7 @@ const ManagerViewProjectComponent = () => {
   useEffect(() => {
     fetchTimesheetData();
     fetchProjectData();
-  }, [clientName, projectName, manageModalOpen, addMemberModalOpen]);
+  }, [clientName, projectName]);
 
   useEffect(() => {
     // check if the user is in this project
@@ -255,19 +246,8 @@ const ManagerViewProjectComponent = () => {
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <Link href="/manager/project">
+        <Link href="/user/project">
           <GoBack />
-        </Link>
-        <Link
-          href={{
-            pathname: `/manager/project/logs`,
-            query: {
-              clientName: clientName,
-              projectName: projectName,
-            },
-          }}
-        >
-          <Button bgcolour={COLOURS.GREY} colour={"black"} label="View Logs" />
         </Link>
       </div>
       {validProject ? (
@@ -348,9 +328,16 @@ const ManagerViewProjectComponent = () => {
                 }}
               >
                 <div style={{ marginBottom: "10px" }}>
-                  <p>Project Budget</p>
+                  <p>Deadline</p>
                   <p style={{ fontSize: "24px", fontWeight: "bold" }}>
-                    {`£${currentProject[0].budget.toLocaleString("en-GB", { maximumFractionDigits: 2 })}`}
+                    {new Date(currentProject[0].deadline).toLocaleDateString(
+                      "en-GB",
+                      {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      },
+                    )}
                   </p>
                 </div>
                 <div>
@@ -358,18 +345,6 @@ const ManagerViewProjectComponent = () => {
                   <p style={{ fontSize: "24px", fontWeight: "bold" }}>
                     {calculateTimeDifference(currentProject[0].deadline)}
                   </p>
-                </div>
-                <div style={{ marginTop: "auto", textAlign: "left" }}>
-                  <span
-                    style={{
-                      textDecoration: "underline",
-                      color: "blue",
-                      cursor: "pointer",
-                    }}
-                    onClick={openManageModal}
-                  >
-                    Manage values
-                  </span>
                 </div>
               </div>
             </div>
@@ -439,11 +414,9 @@ const ManagerViewProjectComponent = () => {
             className="time-breakdown-component"
             style={{ marginTop: "30px" }}
           >
-            <TimeBreakdownComponent
+            <UserTimeBreakdownComponent
               timesheets={timesheets}
               currentProject={currentProject}
-              addMemberModalOpen={addMemberModalOpen}
-              setAddMemberModalOpen={setAddMemberModalOpen}
             />
           </div>
           {/* {JSON.stringify(timesheets)} */}
@@ -464,14 +437,8 @@ const ManagerViewProjectComponent = () => {
         // </div>
         <LoadingSpinner />
       )}
-      {manageModalOpen && (
-        <ManageValuesModal
-          onClose={() => SetManageModalOpen(false)}
-          currentProject={currentProject}
-        />
-      )}
     </div>
   );
 };
 
-export default ManagerViewProjectComponent;
+export default UserViewProjectComponent;

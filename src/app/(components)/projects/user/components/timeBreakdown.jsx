@@ -1,19 +1,11 @@
 import React, { useEffect, useState } from "react";
-import NavTabs from "../../navigation/NavTabs-project";
-import MySelect from "../../selects/select";
-import BreakDownTable from "./breakdownTable";
-import Button from "../../buttons/Button";
-import { COLOURS } from "@/app/constants";
-import AddUserModal from "../manager/modals/addUser";
-import UsersTable from "./usersTable";
+import MySelect from "@/app/(components)/selects/select";
+import NavTabs from "@/app/(components)/navigation/NavTabs-project";
+import UserBreakdownTable from "./breakdownTable";
+import MembersTable from "./usersTable";
 import "@/app/(components)/reports/components/header.css";
 
-function ManagerTimeBreakdownComponent({
-  timesheets,
-  currentProject,
-  addMemberModalOpen,
-  setAddMemberModalOpen,
-}) {
+function UserTimeBreakdownComponent({ timesheets, currentProject }) {
   const selectOptions = [
     { value: "day", label: "Today" },
     { value: "week", label: "Week" },
@@ -21,6 +13,8 @@ function ManagerTimeBreakdownComponent({
     { value: "year", label: "Year" },
     { value: "all", label: "All Time" },
   ];
+
+  // use custom user table, current one has remove button
 
   const [activeTab, setActiveTab] = useState();
   const [mode, setMode] = useState(selectOptions[0]);
@@ -187,10 +181,6 @@ function ManagerTimeBreakdownComponent({
     return groupedTasks;
   }
 
-  const handleAddUser = () => {
-    setAddMemberModalOpen(true);
-  };
-
   useEffect(() => {
     setTimeByTask(transformDataByTasks);
     setTimeByUser(transformDataByUser);
@@ -211,16 +201,6 @@ function ManagerTimeBreakdownComponent({
           activeTab={activeTab}
           onTabChange={handleTabChange}
         />
-        <div>
-          {activeTab === "Team" && (
-            <Button
-              bgcolour={COLOURS.GREEN_ENABLED}
-              colour={COLOURS.WHITE}
-              label="+ Add user"
-              onClick={handleAddUser}
-            />
-          )}
-        </div>
       </div>
       <div>
         <div
@@ -272,7 +252,7 @@ function ManagerTimeBreakdownComponent({
           <div>
             {Object.keys(timeByTask).map((category) => (
               <div key={category}>
-                <BreakDownTable
+                <UserBreakdownTable
                   header={`${category} Tasks`}
                   mode={mode.value}
                   data={groupTasksByDescription(timeByTask[category])}
@@ -286,7 +266,7 @@ function ManagerTimeBreakdownComponent({
         {activeTab === "Team" && (
           <div>
             <div>
-              <UsersTable
+              <MembersTable
                 header={"Team Member"}
                 mode={mode.value}
                 data={timeByUser}
@@ -297,14 +277,8 @@ function ManagerTimeBreakdownComponent({
           </div>
         )}
       </div>
-      {addMemberModalOpen && (
-        <AddUserModal
-          onClose={() => setAddMemberModalOpen(false)}
-          currentProject={currentProject}
-        />
-      )}
     </div>
   );
 }
 
-export default ManagerTimeBreakdownComponent;
+export default UserTimeBreakdownComponent;

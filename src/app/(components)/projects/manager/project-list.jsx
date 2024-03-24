@@ -1,14 +1,14 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Button from "../buttons/Button";
+import Button from "../../buttons/Button";
 import { COLOURS } from "@/app/constants";
-import SearchBox from "../searchBox/SearchBox";
+import SearchBox from "../../searchBox/SearchBox";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import LoadingSpinner from "../loading/Loading";
+import LoadingSpinner from "../../loading/Loading";
 
-function ProjectsList() {
+function ManagersProjectsList() {
   const { data: session } = useSession();
   const userEmail = session?.user?.email;
 
@@ -121,7 +121,12 @@ function ProjectsList() {
         filteredTotalTime[key] = totalTime[key];
       }
     });
-    return Object.values(filteredTotalTime)[0];
+
+    const value = Object.values(filteredTotalTime)[0];
+    if (value === undefined) {
+      return 0;
+    }
+    return value;
   }
 
   if (loading) {
@@ -211,13 +216,13 @@ function ProjectsList() {
           <div
             style={{
               marginRight: "80px",
-              width: "130px",
+              width: "170px",
               alignItems: "center",
               display: "flex",
               justifyContent: "center",
             }}
           >
-            Time Contributed
+            Total Time Contributed
           </div>
           <div
             style={{
@@ -285,7 +290,7 @@ function ProjectsList() {
                     className="project-contributions"
                     style={{
                       marginRight: "80px",
-                      width: "130px",
+                      width: "170px",
                       alignItems: "center",
                       display: "flex",
                       justifyContent: "center",
@@ -331,4 +336,4 @@ function ProjectsList() {
   );
 }
 
-export default ProjectsList;
+export default ManagersProjectsList;
