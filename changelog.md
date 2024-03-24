@@ -1,3 +1,17 @@
+## [0.18] - 24/0342024
+
+BT-33 User Screens
+
+## Added
+
+- Time entry screens added for users
+- Projects screen added for users, with some changes made
+  - Users cannot add users to the project, or see project budget
+
+## Fixes
+
+- Navbar links for users
+
 ## [0.17] - 23/03/2024
 
 BT-61 Invoicing
