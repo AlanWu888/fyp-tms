@@ -1,4 +1,13 @@
-## [0.18] - 24/0342024
+## [0.19] - 24/03/2024
+
+-- no ticket
+
+## Fixes
+
+- Renamed application name
+- Fixed user generation txt file, email provided name field
+
+## [0.18] - 24/03/2024
 
 BT-33 User Screens
 

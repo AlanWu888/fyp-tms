@@ -66,7 +66,7 @@ const AddUser = () => {
   const downloadUserDetails = (userData) => {
     const { email, firstname, lastname, capacity, role } = userData;
     const filename = `${email}.txt`;
-    const userDetails = `User:     ${firstname} ${lastname}\nRole:     ${role}\nemail:    ${firstname}\nPassword: ${formData.password}\n\nPlease change your password before you log in!`;
+    const userDetails = `User:     ${firstname} ${lastname}\nRole:     ${role}\nemail:    ${email}\nPassword: ${formData.password}\n\nPlease change your password before you log in!`;
 
     const blob = new Blob([userDetails], { type: "text/plain" });
 
