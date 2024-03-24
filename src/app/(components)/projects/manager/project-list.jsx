@@ -121,7 +121,12 @@ function ManagersProjectsList() {
         filteredTotalTime[key] = totalTime[key];
       }
     });
-    return Object.values(filteredTotalTime)[0];
+
+    const value = Object.values(filteredTotalTime)[0];
+    if (value === undefined) {
+      return 0;
+    }
+    return value;
   }
 
   if (loading) {
@@ -211,13 +216,13 @@ function ManagersProjectsList() {
           <div
             style={{
               marginRight: "80px",
-              width: "130px",
+              width: "170px",
               alignItems: "center",
               display: "flex",
               justifyContent: "center",
             }}
           >
-            Time Contributed
+            Total Time Contributed
           </div>
           <div
             style={{
@@ -285,7 +290,7 @@ function ManagersProjectsList() {
                     className="project-contributions"
                     style={{
                       marginRight: "80px",
-                      width: "130px",
+                      width: "170px",
                       alignItems: "center",
                       display: "flex",
                       justifyContent: "center",

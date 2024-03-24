@@ -27,7 +27,12 @@ function UsersProjectsList() {
         throw new Error("Failed to fetch timesheets");
       }
       const data = await response.json();
-      setTimesheets(data.timesheets);
+
+      const userTimesheets = data.timesheets.filter(
+        (timesheet) => timesheet.userEmail === userEmail,
+      );
+
+      setTimesheets(userTimesheets);
     } catch (error) {
       console.error("Error fetching timesheets:", error);
     }
@@ -61,9 +66,12 @@ function UsersProjectsList() {
   }
 
   useEffect(() => {
-    fetchTimesheets();
     fetchProjects();
   }, []);
+
+  useEffect(() => {
+    fetchTimesheets();
+  }, [projects]);
 
   useEffect(() => {
     const newTotalTimePerClientProject = {};
@@ -121,7 +129,12 @@ function UsersProjectsList() {
         filteredTotalTime[key] = totalTime[key];
       }
     });
-    return Object.values(filteredTotalTime)[0];
+
+    const value = Object.values(filteredTotalTime)[0];
+    if (value === undefined) {
+      return 0;
+    }
+    return value;
   }
 
   if (loading) {
