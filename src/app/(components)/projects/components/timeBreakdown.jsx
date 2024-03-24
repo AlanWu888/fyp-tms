@@ -6,6 +6,7 @@ import Button from "../../buttons/Button";
 import { COLOURS } from "@/app/constants";
 import AddUserModal from "../manager/modals/addUser";
 import UsersTable from "./usersTable";
+import "@/app/(components)/reports/components/header.css";
 
 function ManagerTimeBreakdownComponent({
   timesheets,

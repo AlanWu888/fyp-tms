@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
-
 import MySelect from "@/app/(components)/selects/select";
-import Button from "@/app/(components)/buttons/Button";
-import { COLOURS } from "@/app/constants";
 import NavTabs from "@/app/(components)/navigation/NavTabs-project";
 import UserBreakdownTable from "./breakdownTable";
 import MembersTable from "./usersTable";
+import "@/app/(components)/reports/components/header.css";
 
 function UserTimeBreakdownComponent({ timesheets, currentProject }) {
   const selectOptions = [
