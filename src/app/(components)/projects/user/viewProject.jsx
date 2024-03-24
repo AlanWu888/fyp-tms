@@ -330,7 +330,14 @@ const UserViewProjectComponent = () => {
                 <div style={{ marginBottom: "10px" }}>
                   <p>Deadline</p>
                   <p style={{ fontSize: "24px", fontWeight: "bold" }}>
-                    {currentProject[0].deadline}
+                    {new Date(currentProject[0].deadline).toLocaleDateString(
+                      "en-GB",
+                      {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      },
+                    )}
                   </p>
                 </div>
                 <div>

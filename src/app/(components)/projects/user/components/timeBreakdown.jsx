@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 
 import MySelect from "@/app/(components)/selects/select";
-import BreakDownTable from "@/app/(components)/projects/components/breakdownTable";
 import Button from "@/app/(components)/buttons/Button";
 import { COLOURS } from "@/app/constants";
-import UsersTable from "@/app/(components)/projects/components/usersTable";
 import NavTabs from "@/app/(components)/navigation/NavTabs-project";
+import UserBreakdownTable from "./breakdownTable";
+import MembersTable from "./usersTable";
 
 function UserTimeBreakdownComponent({ timesheets, currentProject }) {
   const selectOptions = [
@@ -254,7 +254,7 @@ function UserTimeBreakdownComponent({ timesheets, currentProject }) {
           <div>
             {Object.keys(timeByTask).map((category) => (
               <div key={category}>
-                <BreakDownTable
+                <UserBreakdownTable
                   header={`${category} Tasks`}
                   mode={mode.value}
                   data={groupTasksByDescription(timeByTask[category])}
@@ -268,7 +268,7 @@ function UserTimeBreakdownComponent({ timesheets, currentProject }) {
         {activeTab === "Team" && (
           <div>
             <div>
-              <UsersTable
+              <MembersTable
                 header={"Team Member"}
                 mode={mode.value}
                 data={timeByUser}
