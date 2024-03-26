@@ -5,9 +5,12 @@ import { COLOURS } from "@/app/constants";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 import Button from "../buttons/Button";
 import Link from "next/link";
+import ConfirmDeleteUserModal from "./userForms/ConfirmDeleteUserModal";
 
 const UserTable = ({ userData, role, header, fetchData }) => {
   const [isOpen, setIsOpen] = useState(true);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
 
   const toggleTable = () => {
     setIsOpen(!isOpen);
@@ -34,12 +37,13 @@ const UserTable = ({ userData, role, header, fetchData }) => {
   }
 
   const handleRemove = (user) => {
-    const confirmDelete = window.confirm(
-      `Are you sure you want to delete this user?\n${user.firstname} ${user.lastname}\n${user.email}`,
-    );
-    if (confirmDelete) {
-      deleteUser(user._id);
-    }
+    setSelectedUser(user);
+    setDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    deleteUser(selectedUser._id);
+    setDeleteModalOpen(false);
   };
 
   return (
@@ -123,6 +127,13 @@ const UserTable = ({ userData, role, header, fetchData }) => {
             </div>
           ))}
         </div>
+      )}
+      {deleteModalOpen && (
+        <ConfirmDeleteUserModal
+          user={selectedUser}
+          onConfirm={handleConfirmDelete}
+          onCancel={() => setDeleteModalOpen(false)}
+        />
       )}
     </div>
   );
