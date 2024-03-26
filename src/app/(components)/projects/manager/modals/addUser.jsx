@@ -168,18 +168,12 @@ function AddUserModal({ onClose, currentProject }) {
               >
                 <p>Error occured :(</p>
               </div>
-              <button
+              <Button
+                bgcolour={COLOURS.GREY}
+                colour="#000"
+                label="Close"
                 onClick={() => setErrorMessage("")}
-                style={{
-                  padding: "5px 10px",
-                  backgroundColor: "#ffffff",
-                  border: "1px solid #ff6666",
-                  borderRadius: "3px",
-                  cursor: "pointer",
-                }}
-              >
-                Close
-              </button>
+              />
             </div>
             <div>{errorMessage}</div>
           </div>

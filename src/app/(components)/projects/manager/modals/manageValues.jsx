@@ -166,18 +166,12 @@ function ManageValuesModal({ onClose, currentProject }) {
               >
                 <p>Error occurred :(</p>
               </div>
-              <button
-                onClick={() => setErrorMessage("")}
-                style={{
-                  padding: "5px 10px",
-                  backgroundColor: "#ffffff",
-                  border: "1px solid #ff6666",
-                  borderRadius: "3px",
-                  cursor: "pointer",
-                }}
-              >
-                Close
-              </button>
+              <Button
+                bgcolour={COLOURS.GREY}
+                colour="#000"
+                label="Close"
+                onClick={onClose}
+              />
             </div>
             <div>{errorMessage}</div>
           </div>

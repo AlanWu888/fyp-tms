@@ -2,12 +2,14 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import PasswordUpdatedModal from "./modals/PasswordUpdatedModal";
 
 export default function NewPasswordForm() {
   const [verified, setVerified] = useState(false);
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
   const [passwordError, setPasswordError] = useState(null);
+  const [showModal, setShowModal] = useState(false);
   const router = useRouter();
 
   const verifyToken = async (tokenParam) => {
@@ -78,8 +80,7 @@ export default function NewPasswordForm() {
 
       setError(null);
       setPasswordError(null);
-      router.push("/");
-      alert("Password updated successfully");
+      setShowModal(true);
     } catch (error) {
       setError("Error updating password, please try again");
       console.error("Error updating password:", error);
@@ -136,6 +137,14 @@ export default function NewPasswordForm() {
           </form>
         )}
       </div>
+      {showModal && (
+        <PasswordUpdatedModal
+          onClose={() => {
+            setShowModal(false);
+            router.push("/");
+          }}
+        />
+      )}
     </div>
   );
 }

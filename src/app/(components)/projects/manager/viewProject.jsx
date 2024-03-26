@@ -8,9 +8,9 @@ import LineChart from "../components/lineChart";
 import "./viewProject.css";
 import Button from "../../buttons/Button";
 import { COLOURS } from "@/app/constants";
-import TimeBreakdownComponent from "../components/timeBreakdown";
 import LoadingSpinner from "../../loading/Loading";
 import ManageValuesModal from "./modals/manageValues";
+import ManagerTimeBreakdownComponent from "../components/timeBreakdown";
 
 const ManagerViewProjectComponent = () => {
   const { data: session } = useSession();
@@ -439,7 +439,7 @@ const ManagerViewProjectComponent = () => {
             className="time-breakdown-component"
             style={{ marginTop: "30px" }}
           >
-            <TimeBreakdownComponent
+            <ManagerTimeBreakdownComponent
               timesheets={timesheets}
               currentProject={currentProject}
               addMemberModalOpen={addMemberModalOpen}

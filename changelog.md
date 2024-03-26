@@ -1,3 +1,20 @@
+## [0.20] - 26/03/2024
+
+BT-62 Change alerts to modals
+
+## Added
+
+- Changed nearly all alerts and window.confirms into modals:
+  - Manager
+    - Removing users from projects
+    - Adding a new project
+  - Admin
+    - Edit user
+    - Remove user
+  - User
+    - Removing timesheet entries
+    - Updating password modals
+
 ## [0.19] - 24/03/2024
 
 -- no ticket

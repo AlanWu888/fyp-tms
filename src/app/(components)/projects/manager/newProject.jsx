@@ -9,6 +9,7 @@ import GoBack from "../../buttons/GoBack";
 import CalendarPicker from "../../buttons/CalendarPicker";
 import MemberTable from "../components/memberTable";
 import { useSession } from "next-auth/react";
+import AlertModal from "./modals/AlertModal";
 
 function NewProject() {
   const { data: session } = useSession();
@@ -20,6 +21,10 @@ function NewProject() {
   const [projectName, setProjectName] = useState("");
   const [budget, setBudget] = useState("");
   const [deadline, setDeadline] = useState("");
+
+  const [showModal, setShowModal] = useState(false);
+  const [modalTitle, setModalTitle] = useState("");
+  const [modalMessage, setModalMessage] = useState("");
 
   const handleClientNameChange = (event) => {
     setClientName(event.target.value);
@@ -94,23 +99,39 @@ function NewProject() {
   }
 
   const handleAddProject = async (e) => {
-    if (clickedSuggestions.length > 0) {
-      e.preventDefault();
+    e.preventDefault();
 
+    if (!clientName || !projectName || !deadline || !budget) {
+      setModalTitle("Missing Required Fields");
+      setModalMessage("Please fill out all required fields.");
+      setShowModal(true);
+      return;
+    }
+
+    if (clickedSuggestions.length > 0) {
       const memberEmails = clickedSuggestions.map((user) => user.email);
 
       const currentDate = new Date();
       const selectedDeadline = new Date(deadline);
 
-      // Check if the deadline is in the past
-      if (selectedDeadline < currentDate) {
-        alert("The deadline cannot be in the past.");
+      if (isNaN(selectedDeadline.getTime())) {
+        setModalTitle("Invalid Deadline");
+        setModalMessage("Please enter a valid deadline.");
+        setShowModal(true);
         return;
       }
 
-      // Check if budget is a valid number
+      if (selectedDeadline < currentDate) {
+        setModalTitle("Invalid Deadline");
+        setModalMessage("The deadline cannot be in the past.");
+        setShowModal(true);
+        return;
+      }
+
       if (isNaN(budget) || parseFloat(budget) <= 0) {
-        alert("Please enter a valid budget.");
+        setModalTitle("Invalid Budget");
+        setModalMessage("Please enter a valid budget.");
+        setShowModal(true);
         return;
       }
 
@@ -128,7 +149,9 @@ function NewProject() {
       router.refresh();
       router.push("/manager/project");
     } else {
-      alert("Please select at least one member.");
+      setModalTitle("Member Selection Required");
+      setModalMessage("Please select at least one member.");
+      setShowModal(true);
     }
   };
 
@@ -326,6 +349,13 @@ function NewProject() {
           </div>
         </div>
       </form>
+      {showModal && (
+        <AlertModal
+          title={modalTitle}
+          message={modalMessage}
+          onClose={() => setShowModal(false)}
+        />
+      )}
     </div>
   );
 }

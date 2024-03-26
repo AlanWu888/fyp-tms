@@ -5,11 +5,13 @@ import LoadingSpinner from "../../loading/Loading";
 import { COLOURS } from "@/app/constants";
 import Link from "next/link";
 import Button from "../../buttons/Button";
+import SaveChangesModal from "./modals/SaveChangesModal";
 
 const EditUser = () => {
   const [userID, setUserID] = useState("");
   const [user, setUser] = useState();
   const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
 
   const fetchData = async () => {
     try {
@@ -80,9 +82,7 @@ const EditUser = () => {
         throw new Error("Failed to update the user");
       } else {
         console.log("successful patch update to users");
-        alert(
-          `Updated user data:\nemail: ${user.email}\nFirst name: ${user.firstname}\nLast name: ${user.lastname}\nCapacity: ${user.capacity}\nRole: ${user.role}`,
-        );
+        setShowModal(true);
       }
     } catch (error) {
       console.error("Error updating user:", error);
@@ -256,6 +256,9 @@ const EditUser = () => {
             <p>No user found</p>
           )}
         </div>
+      )}
+      {showModal && (
+        <SaveChangesModal onClose={() => setShowModal(false)} user={user} />
       )}
     </div>
   );

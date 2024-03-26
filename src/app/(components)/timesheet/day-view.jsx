@@ -5,6 +5,7 @@ import { COLOURS } from "@/app/constants";
 import NavTabs from "../navigation/NavTabs";
 import EntryModal from "./modal/day-entry-modal";
 import AdditionModal from "./modal/day-additional-modal";
+import ConfirmDeleteModal from "./modal/ConfirmDeleteModal";
 
 function DayViewTimesheet({ date, setDate }) {
   const { data: session } = useSession();
@@ -20,6 +21,10 @@ function DayViewTimesheet({ date, setDate }) {
 
   const [dayOfWeek, setDayOfWeek] = useState("");
   const [weekDates, setWeekDates] = useState([]);
+
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [selectedTimesheetForDelete, setSelectedTimesheetForDelete] =
+    useState(null);
 
   const days = [
     "Monday",
@@ -117,17 +122,12 @@ function DayViewTimesheet({ date, setDate }) {
     setEditModalOpen(true);
   };
 
-  const handleClickDelete = async (timesheet) => {
-    const isConfirmed =
-      window.confirm(`Are you sure you want to delete this entry?
+  const handleClickDelete = (timesheet) => {
+    setSelectedTimesheetForDelete(timesheet);
+    setDeleteModalOpen(true);
+  };
 
-    Client Name: ${timesheet.clientName}
-    Project Name: ${timesheet.projectName}
-    Task Description: ${timesheet.taskDescription}`);
-    if (!isConfirmed) {
-      return;
-    }
-
+  const handleConfirmDelete = async () => {
     try {
       const response = await fetch("/api/Timesheets", {
         method: "DELETE",
@@ -135,7 +135,7 @@ function DayViewTimesheet({ date, setDate }) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          id: timesheet._id,
+          id: selectedTimesheetForDelete._id,
         }),
       });
       if (!response.ok) {
@@ -143,6 +143,7 @@ function DayViewTimesheet({ date, setDate }) {
       }
       fetchData();
       filterTimesheets();
+      setDeleteModalOpen(false);
     } catch (error) {
       console.log(error);
     }
@@ -304,6 +305,13 @@ function DayViewTimesheet({ date, setDate }) {
           onClick={handleClickNewTask}
         />
       </div>
+      {deleteModalOpen && (
+        <ConfirmDeleteModal
+          timesheet={selectedTimesheetForDelete}
+          onConfirm={handleConfirmDelete}
+          onCancel={() => setDeleteModalOpen(false)}
+        />
+      )}
     </div>
   );
 }
