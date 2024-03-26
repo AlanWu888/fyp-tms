@@ -2,7 +2,7 @@
 
 BT-62 Change alerts to modals
 
-## Fixes
+## Added
 
 - Changed nearly all alerts and window.confirms into modals:
   - Manager
