@@ -19,7 +19,7 @@ function UserBreakdownTotal({ filteredData, date, mode, userEmail }) {
       let total = 0;
 
       filteredData.forEach((item) => {
-        const key = `${item.clientName}-${item.projectName}-${item.taskDescription}-${item.taskType}`;
+        const key = `${item.clientName}@;!-\_#~${item.projectName}@;!-\_#~${item.taskDescription}@;!-\_#~${item.taskType}`;
         if (!totalTimeMap[key]) {
           totalTimeMap[key] = 0;
         }
@@ -66,7 +66,7 @@ function UserBreakdownTotal({ filteredData, date, mode, userEmail }) {
           borderBottom: "1px solid black",
         }}
       >
-        <div>Project USER</div>
+        <div>Project</div>
         <div
           style={{
             width: "100px",
@@ -95,8 +95,8 @@ function UserBreakdownTotal({ filteredData, date, mode, userEmail }) {
             <div>
               <p
                 style={{ fontSize: "24px" }}
-              >{`${key.split("-")[0]} - ${key.split("-")[1]}`}</p>
-              <p>{`${key.split("-")[2]} (${key.split("-")[3]})`}</p>
+              >{`${key.split("@;!-_#~")[0]} - ${key.split("@;!-_#~")[1]}`}</p>
+              <p>{`${key.split("@;!-_#~")[2]} (${key.split("@;!-_#~")[3]})`}</p>
             </div>
             <div style={{ display: "flex" }}>
               <div
@@ -122,7 +122,7 @@ function UserBreakdownTotal({ filteredData, date, mode, userEmail }) {
                     pathname: `/manager/manage/view-task`,
                     query: {
                       userEmail: userEmail,
-                      taskName: key.split("-")[2],
+                      taskName: key.split("@;!-_#~")[2],
                     },
                   }}
                 >

@@ -1,3 +1,11 @@
+## [0.21] - 26/03/2024
+
+-- no ticket
+
+## Fixes
+
+- filteredData key splitter in Manager's user breakdown changed from "-" to a unique string
+
 ## [0.20] - 26/03/2024
 
 BT-62 Change alerts to modals
