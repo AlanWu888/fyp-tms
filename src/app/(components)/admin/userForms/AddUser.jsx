@@ -45,7 +45,6 @@ const AddUser = () => {
       if (!response.ok) {
         throw new Error("Failed to create the user");
       } else {
-        console.log("successfully created a user");
         downloadUserDetails(formData);
 
         setFormData({

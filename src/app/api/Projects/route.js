@@ -24,7 +24,7 @@ export async function POST(req) {
     await Project.create(projectData);
     return NextResponse.json({ message: "Project Created." }, { status: 201 });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     if (error.code === 11000) {
       // Duplicate key error
       return NextResponse.json(
@@ -46,7 +46,7 @@ export async function GET() {
     const projects = await Project.find({});
     return NextResponse.json({ projects }, { status: 201 });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json({ message: "Error", error }, { status: 500 });
   }
 }
@@ -98,7 +98,7 @@ export async function PATCH(req) {
       { status: 200 },
     );
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json(
       { message: "An error occurred while updating the project." },
       { status: 500 },
@@ -138,7 +138,7 @@ export async function DELETE(req) {
       { status: 200 },
     );
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json(
       { message: "An error occurred while deleting the project." },
       { status: 500 },

@@ -50,7 +50,6 @@ function ManageValuesModal({ onClose, currentProject }) {
       if (!response.ok) {
         throw new Error("Failed to update timesheet");
       } else {
-        console.log("Successful patch update to timesheet");
         await updateLogs(
           currentProject[0].clientname,
           currentProject[0].projectname,
@@ -81,7 +80,6 @@ function ManageValuesModal({ onClose, currentProject }) {
       if (!response.ok) {
         throw new Error("Failed to update timesheet");
       } else {
-        console.log("Successful patch update to timesheet");
         await updateLogs(
           currentProject[0].clientname,
           currentProject[0].projectname,
@@ -118,7 +116,6 @@ function ManageValuesModal({ onClose, currentProject }) {
       if (!res.ok) {
         throw new Error("Failed to update log messages");
       } else {
-        console.log("Successfully updated log messages");
       }
     } catch (error) {
       console.error("Error updating log messages:", error);

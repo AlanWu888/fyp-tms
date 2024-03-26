@@ -99,7 +99,6 @@ const Logs = () => {
   };
 
   const handleSearch = (event) => {
-    console.log(`Searched, ${event.target.value}`);
     setSearchTerm(event.target.value);
   };
 
@@ -128,7 +127,6 @@ const Logs = () => {
   }, [project, logs]);
 
   useEffect(() => {
-    console.log("search");
     const filtered = logs.filter((log) => {
       const formattedDate = new Date(log.createdAt)
         .toLocaleDateString("en-GB", {
@@ -154,14 +152,8 @@ const Logs = () => {
         formattedTime.includes(searchTerm)
       );
     });
-    console.log("filtered: ");
-    console.log(filtered);
     setFilteredLogs(filtered);
   }, [searchTerm]);
-
-  useEffect(() => {
-    console.log(filteredLogs);
-  }, [filteredLogs]);
 
   if (loading) {
     return <LoadingSpinner />;

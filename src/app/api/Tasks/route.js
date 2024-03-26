@@ -9,7 +9,7 @@ export async function POST(req) {
     await Task.create(taskData);
     return NextResponse.json({ message: "Task Created." }, { status: 201 });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json({ message: "Error", error }, { status: 500 });
   }
 }
@@ -42,7 +42,7 @@ export async function PATCH(req) {
       { status: 200 },
     );
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json({ message: "Error", error }, { status: 500 });
   }
 }
@@ -52,7 +52,7 @@ export async function GET() {
     const tasks = await Task.find({});
     return NextResponse.json({ tasks }, { status: 201 });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json({ message: "Error", error }, { status: 500 });
   }
 }
@@ -76,7 +76,7 @@ export async function DELETE(req) {
       { status: 200 },
     );
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json({ message: "Error", error }, { status: 500 });
   }
 }

@@ -18,7 +18,7 @@ export async function POST(req) {
     await Client.create(clientData);
     return NextResponse.json({ message: "Client Created." }, { status: 201 });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json({ message: "Error", error }, { status: 500 });
   }
 }
@@ -28,7 +28,7 @@ export async function GET() {
     const clients = await Client.find({});
     return NextResponse.json({ clients }, { status: 200 });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json({ message: "Error", error }, { status: 500 });
   }
 }
@@ -72,7 +72,7 @@ export async function PATCH(req) {
       { status: 200 },
     );
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json({ message: "Error", error }, { status: 500 });
   }
 }
@@ -93,7 +93,7 @@ export async function DELETE(req) {
     await Client.findByIdAndDelete(id);
     return NextResponse.json({ message: "Client Deleted." }, { status: 200 });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json({ message: "Error", error }, { status: 500 });
   }
 }

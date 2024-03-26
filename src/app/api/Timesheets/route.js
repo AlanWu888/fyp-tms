@@ -36,7 +36,7 @@ export async function POST(req) {
       throw error; // Throw error if it's not due to duplicate key violation
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json(
       {
         message:
@@ -52,7 +52,7 @@ export async function GET() {
     const timesheets = await Timesheet.find();
     return NextResponse.json({ timesheets }, { status: 201 });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json({ message: "Error", error }, { status: 500 });
   }
 }
@@ -97,7 +97,7 @@ export async function PATCH(req) {
       { status: 200 },
     );
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json(
       { message: "An error occurred while updating the timesheet" },
       { status: 500 },
@@ -130,7 +130,7 @@ export async function DELETE(req) {
       { status: 200 },
     );
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json(
       { message: "An error occurred while deleting the timesheet" },
       { status: 500 },

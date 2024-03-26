@@ -145,7 +145,7 @@ function DayViewTimesheet({ date, setDate }) {
       filterTimesheets();
       setDeleteModalOpen(false);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 

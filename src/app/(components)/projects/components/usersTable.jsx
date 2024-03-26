@@ -135,8 +135,6 @@ function UsersTable({ header, mode, data, date, currentProject }) {
 
       if (!res.ok) {
         throw new Error("Failed to update log messages");
-      } else {
-        console.log("successfully updated log messages");
       }
     } catch (error) {
       console.error("Error updating log messages:", error);
@@ -165,7 +163,6 @@ function UsersTable({ header, mode, data, date, currentProject }) {
       if (!response.ok) {
         throw new Error("Failed to update timesheet");
       } else {
-        console.log("successful patch update to timesheet");
         await updateLogs(
           currentProject[0].clientname,
           currentProject[0].projectname,

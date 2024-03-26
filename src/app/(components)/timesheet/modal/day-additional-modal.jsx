@@ -108,20 +108,6 @@ function AdditionModal({ date, onClose, onTimesheetUpdate }) {
     }
 
     const newDate = new Date(new Date(date).setHours(0, 0, 0, 0)).toISOString();
-    console.log(
-      JSON.stringify({
-        formData: {
-          userEmail,
-          clientName,
-          projectName,
-          taskDescription,
-          additionalNotes,
-          time: convertTimeToDecimal(time),
-          date: newDate,
-          taskType: taskType.label,
-        },
-      }),
-    );
     try {
       const response = await fetch("/api/Timesheets", {
         method: "POST",

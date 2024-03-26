@@ -12,7 +12,7 @@ export async function POST(req) {
       { status: 201 },
     );
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json({ message: "Error", error }, { status: 500 });
   }
 }
@@ -22,7 +22,7 @@ export async function GET() {
     const logMsgs = await LogMessage.find({});
     return NextResponse.json({ logMsgs }, { status: 201 });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json({ message: "Error", error }, { status: 500 });
   }
 }

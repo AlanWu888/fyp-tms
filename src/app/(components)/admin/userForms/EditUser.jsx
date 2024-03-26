@@ -81,7 +81,6 @@ const EditUser = () => {
       if (!response.ok) {
         throw new Error("Failed to update the user");
       } else {
-        console.log("successful patch update to users");
         setShowModal(true);
       }
     } catch (error) {

@@ -329,19 +329,6 @@ function WeekViewTimesheet({ date }) {
 
   async function postDB(postParams) {
     try {
-      console.log(
-        JSON.stringify({
-          formData: {
-            userEmail: postParams.userEmail,
-            clientName: postParams.clientName,
-            projectName: postParams.projectName,
-            taskDescription: postParams.taskDescription,
-            time: parseFloat(postParams.time),
-            date: postParams.date,
-            taskType: postParams.taskType,
-          },
-        }),
-      );
       const response = await fetch("/api/Timesheets", {
         method: "POST",
         headers: {
@@ -361,8 +348,6 @@ function WeekViewTimesheet({ date }) {
       });
       if (!response.ok) {
         throw new Error("Failed to update timesheet");
-      } else {
-        console.log("successful post update to timesheet");
       }
     } catch (error) {
       console.error("Error updating timesheet:", error);
@@ -386,8 +371,6 @@ function WeekViewTimesheet({ date }) {
       });
       if (!response.ok) {
         throw new Error("Failed to update timesheet");
-      } else {
-        console.log("successful patch update to timesheet");
       }
     } catch (error) {
       console.error("Error updating timesheet:", error);

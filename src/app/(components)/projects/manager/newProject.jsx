@@ -64,7 +64,6 @@ function NewProject() {
       if (!res.ok) {
         throw new Error("Failed to create the project");
       } else {
-        console.log("successfully created a new project");
         await updateLogs(formData);
       }
     } catch (error) {
@@ -90,8 +89,6 @@ function NewProject() {
 
       if (!res.ok) {
         throw new Error("Failed to update log messages");
-      } else {
-        console.log("successfully updated log messages");
       }
     } catch (error) {
       console.error("Error updating log messages:", error);
