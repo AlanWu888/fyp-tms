@@ -1,5 +1,6 @@
 import React from "react";
 import { COLOURS } from "@/app/constants";
+import Button from "@/app/(components)/buttons/Button";
 
 function AlertModal({ title, message, onClose }) {
   return (
@@ -39,18 +40,12 @@ function AlertModal({ title, message, onClose }) {
               justifyContent: "flex-end",
             }}
           >
-            <button
+            <Button
+              bgcolour={COLOURS.GREY}
+              colour="#000"
+              label="Close"
               onClick={onClose}
-              style={{
-                padding: "5px 10px",
-                backgroundColor: COLOURS.GREY,
-                border: "1px solid black",
-                borderRadius: "5px",
-                cursor: "pointer",
-              }}
-            >
-              Close
-            </button>
+            />
           </div>
         </div>
       </div>

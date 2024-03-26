@@ -1,5 +1,6 @@
 import React from "react";
 import { COLOURS } from "@/app/constants";
+import Button from "@/app/(components)/buttons/Button";
 
 function ConfirmDeleteUserModal({ user, onConfirm, onCancel }) {
   return (
@@ -43,32 +44,20 @@ function ConfirmDeleteUserModal({ user, onConfirm, onCancel }) {
               justifyContent: "flex-end",
             }}
           >
-            <button
-              onClick={onConfirm}
-              style={{
-                padding: "5px 10px",
-                backgroundColor: COLOURS.GREEN_ENABLED,
-                color: COLOURS.WHITE,
-                border: "none",
-                borderRadius: "5px",
-                cursor: "pointer",
-                marginRight: "10px",
-              }}
-            >
-              Delete
-            </button>
-            <button
+            <div style={{ marginRight: "10px" }}>
+              <Button
+                bgcolour={COLOURS.GREEN_ENABLED}
+                colour={COLOURS.WHITE}
+                label="Delete"
+                onClick={onConfirm}
+              />
+            </div>
+            <Button
+              bgcolour={COLOURS.GREY}
+              colour={COLOURS.BLACK}
+              label="Cancel"
               onClick={onCancel}
-              style={{
-                padding: "5px 10px",
-                backgroundColor: COLOURS.GREY,
-                border: "1px solid black",
-                borderRadius: "5px",
-                cursor: "pointer",
-              }}
-            >
-              Cancel
-            </button>
+            />
           </div>
         </div>
       </div>

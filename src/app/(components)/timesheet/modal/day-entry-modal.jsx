@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Button from "../../buttons/Button";
+import Button from "@/app/(components)/buttons/Button";
 import { COLOURS } from "@/app/constants";
 import { useSession } from "next-auth/react";
 import MySelect from "../../selects/select";
@@ -190,18 +190,12 @@ function EntryModal({ timesheetId, entry, onClose, onTimesheetUpdate }) {
               >
                 <p>Error occured :(</p>
               </div>
-              <button
+              <Button
+                bgcolour={COLOURS.GREY}
+                colour="#000"
+                label="Close"
                 onClick={() => setErrorMessage("")}
-                style={{
-                  padding: "5px 10px",
-                  backgroundColor: "#ffffff",
-                  border: "1px solid #ff6666",
-                  borderRadius: "3px",
-                  cursor: "pointer",
-                }}
-              >
-                Close
-              </button>
+              />
             </div>
             <div>{errorMessage}</div>
           </div>
