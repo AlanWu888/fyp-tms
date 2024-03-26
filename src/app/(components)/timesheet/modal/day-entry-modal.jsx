@@ -37,7 +37,6 @@ function EntryModal({ timesheetId, entry, onClose, onTimesheetUpdate }) {
   }
 
   useEffect(() => {
-    // get projects and only show the projects user is part of
     const fetchData = async () => {
       try {
         const response = await fetch("/api/Projects");
@@ -103,7 +102,6 @@ function EntryModal({ timesheetId, entry, onClose, onTimesheetUpdate }) {
   const handleClientChange = (e) => {
     const selectedClient = e.target.value;
     setClientName(selectedClient);
-    // Reset project name when client changes
     setProjectName("");
   };
 
@@ -142,7 +140,7 @@ function EntryModal({ timesheetId, entry, onClose, onTimesheetUpdate }) {
       if (!response.ok) {
         throw new Error("Failed to update timesheet");
       }
-      onTimesheetUpdate(); // Trigger the callback function to update timesheet data
+      onTimesheetUpdate();
       onClose();
     } catch (error) {
       console.error("Error updating timesheet:", error);

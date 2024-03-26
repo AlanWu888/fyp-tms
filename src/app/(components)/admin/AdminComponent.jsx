@@ -10,6 +10,7 @@ import Link from "next/link";
 const AdminComponent = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const userTypes = [
     { value: "user", label: "Employee" },
@@ -36,6 +37,10 @@ const AdminComponent = () => {
       setLoading(false);
     } catch (error) {
       console.error("Error fetching users:", error);
+      setLoading(false);
+      setError(
+        "An error occurred while fetching users. Please try again later.",
+      );
     }
   };
 
@@ -47,6 +52,8 @@ const AdminComponent = () => {
     <div>
       {loading ? (
         <LoadingSpinner />
+      ) : error ? (
+        <div className="error-message">{error}</div>
       ) : (
         <div>
           <div

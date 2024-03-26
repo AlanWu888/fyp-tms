@@ -15,7 +15,6 @@ const RoleRedirect = () => {
     },
   });
 
-  // redirect user based on user role
   useEffect(() => {
     let role = session?.user?.role;
     if (role == "admin") {

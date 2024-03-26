@@ -1,7 +1,5 @@
 "use client";
 
-// client renders form; allows for client-side validation
-
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 

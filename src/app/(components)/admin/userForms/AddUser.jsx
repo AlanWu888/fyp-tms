@@ -257,7 +257,7 @@ const AddUser = () => {
               onClick={() =>
                 setFormData((prevFormData) => ({
                   ...prevFormData,
-                  password: generatePassword(), // Regenerate password
+                  password: generatePassword(),
                 }))
               }
             >

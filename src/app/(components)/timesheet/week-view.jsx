@@ -379,7 +379,6 @@ function WeekViewTimesheet({ date }) {
 
   return (
     <div>
-      {/* Header */}
       <div
         className="timesheet-rows-header"
         style={{

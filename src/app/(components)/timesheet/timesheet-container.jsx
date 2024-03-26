@@ -7,7 +7,7 @@ import WeekViewTimesheet from "./week-view";
 import DayViewTimesheet from "@/app/(components)/timesheet/day-view";
 
 const TimesheetContainer = () => {
-  const [date, setDate] = useState(new Date().toISOString()); // Initialize as ISO string
+  const [date, setDate] = useState(new Date().toISOString());
   const [mode, setMode] = useState("day");
 
   const handleDateChange = (newDate) => {

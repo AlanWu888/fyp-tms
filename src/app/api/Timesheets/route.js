@@ -6,7 +6,6 @@ export async function POST(req) {
     const body = await req.json();
     const timesheetData = body.formData;
 
-    // Confirm all fields have been filled
     if (
       !timesheetData?.userEmail ||
       !timesheetData?.clientName ||
@@ -18,7 +17,6 @@ export async function POST(req) {
       return NextResponse.json({ message: "Missing fields" }, { status: 400 });
     }
 
-    // Check for duplicate entries
     try {
       await Timesheet.create(timesheetData);
       return NextResponse.json(
@@ -26,14 +24,13 @@ export async function POST(req) {
         { status: 201 },
       );
     } catch (error) {
-      // Check if the error is due to duplicate key violation
       if (error.code === 11000) {
         return NextResponse.json(
           { message: "Duplicate entry found." },
           { status: 400 },
         );
       }
-      throw error; // Throw error if it's not due to duplicate key violation
+      throw error;
     }
   } catch (error) {
     console.error(error);

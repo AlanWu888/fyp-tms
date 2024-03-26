@@ -63,7 +63,6 @@ function ManageContainerMain() {
 
   function grabData(parameter) {
     if (parameter === "userEmail") {
-      // Grab unique userEmails
       const uniqueUserEmails = Array.from(
         new Set(timesheets.map((timesheet) => timesheet.userEmail)),
       );

@@ -93,7 +93,7 @@ const ManagerViewProjectComponent = () => {
   function calculateTotalHours() {
     const totalHoursPerDay = {};
     timesheets.forEach((task) => {
-      const date = new Date(task.date).toISOString().split("T")[0]; // Extracting the date without time
+      const date = new Date(task.date).toISOString().split("T")[0];
       const hours = task.time;
       if (!totalHoursPerDay[date]) {
         totalHoursPerDay[date] = 0;
@@ -104,9 +104,9 @@ const ManagerViewProjectComponent = () => {
     const totalHoursPerWeek = {};
     for (const date in totalHoursPerDay) {
       const weekStartDate = new Date(date);
-      weekStartDate.setDate(weekStartDate.getDate() - weekStartDate.getDay()); // Find the start of the week
+      weekStartDate.setDate(weekStartDate.getDate() - weekStartDate.getDay());
       const weekEndDate = new Date(weekStartDate);
-      weekEndDate.setDate(weekEndDate.getDate() + 6); // Find the end of the week
+      weekEndDate.setDate(weekEndDate.getDate() + 6);
 
       const weekKey = `${weekStartDate.toISOString().split("T")[0]} - ${weekEndDate.toISOString().split("T")[0]}`;
 
@@ -230,7 +230,6 @@ const ManagerViewProjectComponent = () => {
   }, [clientName, projectName, manageModalOpen, addMemberModalOpen]);
 
   useEffect(() => {
-    // check if the user is in this project
     const currentProject = projects.filter((project) => {
       return (
         project.clientname === clientName &&
@@ -272,7 +271,6 @@ const ManagerViewProjectComponent = () => {
       </div>
       {validProject ? (
         <div>
-          {/* when validProject is true */}
           <div className="view-project--header">
             <p
               style={{
@@ -446,22 +444,8 @@ const ManagerViewProjectComponent = () => {
               setAddMemberModalOpen={setAddMemberModalOpen}
             />
           </div>
-          {/* {JSON.stringify(timesheets)} */}
         </div>
       ) : (
-        // <div
-        //   style={{
-        //     textAlign: "center",
-        //     marginTop: "30px",
-        //     fontSize: "20px",
-        //     borderTop: "1px solid black",
-        //     borderBottom: "1px solid black",
-        //     paddingTop: "20px",
-        //     paddingBottom: "20px",
-        //   }}
-        // >
-        //   You do not have access to this project
-        // </div>
         <LoadingSpinner />
       )}
       {manageModalOpen && (

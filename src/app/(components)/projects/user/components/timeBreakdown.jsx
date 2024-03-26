@@ -14,8 +14,6 @@ function UserTimeBreakdownComponent({ timesheets, currentProject }) {
     { value: "all", label: "All Time" },
   ];
 
-  // use custom user table, current one has remove button
-
   const [activeTab, setActiveTab] = useState();
   const [mode, setMode] = useState(selectOptions[0]);
   const [date, setDate] = useState(new Date());

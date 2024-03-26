@@ -161,7 +161,6 @@ function BreakDownTable({ header, mode, data, date }) {
               >
                 {`${convertDecimalToTime(totalTime)}`}
               </div>
-              {/* <p>{task}: {totalTime.toFixed(2)} hours</p> */}
             </div>
           ))}
           <div

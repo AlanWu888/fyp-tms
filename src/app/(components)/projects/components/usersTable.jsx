@@ -276,7 +276,6 @@ function UsersTable({ header, mode, data, date, currentProject }) {
                   }}
                 >
                   {currentProject[0].removedEmails.includes(user) ? (
-                    // Render something if user is in removedEmails
                     <p
                       style={{
                         fontSize: "16px",
@@ -289,7 +288,6 @@ function UsersTable({ header, mode, data, date, currentProject }) {
                       User was removed
                     </p>
                   ) : (
-                    // Render the "Remove" button if user is not in removedEmails
                     <Button
                       label={"Remove"}
                       onClick={() => handleRemoveUser(user)}

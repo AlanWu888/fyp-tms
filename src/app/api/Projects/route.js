@@ -6,7 +6,6 @@ export async function POST(req) {
     const body = await req.json();
     const projectData = body.formData;
 
-    //Confirm all fields have been filled
     if (
       !projectData?.clientname ||
       !projectData?.projectname ||
@@ -26,13 +25,11 @@ export async function POST(req) {
   } catch (error) {
     console.error(error);
     if (error.code === 11000) {
-      // Duplicate key error
       return NextResponse.json(
         { message: "Duplicate Client and Project combination" },
         { status: 409 },
       );
     } else {
-      // Other errors
       return NextResponse.json(
         { message: "An error occurred while saving the project" },
         { status: 500 },
@@ -51,13 +48,11 @@ export async function GET() {
   }
 }
 
-// need to find a way to delete users from the memberEmails too
 export async function PATCH(req) {
   try {
     const body = await req.json();
     const { clientname, projectname, newData } = body;
 
-    // Check if clientname and projectname are provided
     if (!clientname || !projectname) {
       return NextResponse.json(
         { message: "Client name and project name are required." },
@@ -85,7 +80,6 @@ export async function PATCH(req) {
       { new: true },
     );
 
-    // Check if project exists and return the updated project
     if (!updatedProject) {
       return NextResponse.json(
         { message: "Project not found." },
@@ -111,7 +105,6 @@ export async function DELETE(req) {
     const body = await req.json();
     const { clientname, projectname } = body;
 
-    // Check if clientname and projectname are provided
     if (!clientname || !projectname) {
       return NextResponse.json(
         { message: "Client name and project name are required." },
@@ -119,13 +112,11 @@ export async function DELETE(req) {
       );
     }
 
-    // Find the project to delete
     const deletedProject = await Project.findOneAndDelete({
       clientname,
       projectname,
     });
 
-    // Check if project exists and return the deleted project
     if (!deletedProject) {
       return NextResponse.json(
         { message: "Project not found." },

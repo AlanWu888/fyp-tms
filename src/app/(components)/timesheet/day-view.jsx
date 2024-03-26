@@ -15,7 +15,7 @@ function DayViewTimesheet({ date, setDate }) {
   const [filteredTimesheets, setFilteredTimesheets] = useState([]);
   const [dailyTotal, setDailyTotal] = useState(0);
   const [selectedEntry, setSelectedEntry] = useState(null);
-  const [selectedTimesheetId, setSelectedTimesheetId] = useState(null); // State to hold the selected timesheet ID
+  const [selectedTimesheetId, setSelectedTimesheetId] = useState(null);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [newModalOpen, setNewModalOpen] = useState(false);
 
@@ -39,7 +39,7 @@ function DayViewTimesheet({ date, setDate }) {
   function getStartOfWeek(isoDateString) {
     const date = new Date(isoDateString);
     const dayOfWeek = date.getDay();
-    const diff = date.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1); // Adjust for Sunday
+    const diff = date.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
     const monday = new Date(date.setDate(diff));
     return monday.toISOString();
   }
@@ -47,9 +47,8 @@ function DayViewTimesheet({ date, setDate }) {
   useEffect(() => {
     function getWeekDates(isoDateString) {
       const days = [];
-      const monday = getStartOfWeek(isoDateString); // Assuming getStartOfWeek is defined
+      const monday = getStartOfWeek(isoDateString);
 
-      // Loop from Monday to Sunday and push ISO strings to the array
       for (let i = 0; i < 7; i++) {
         const date = new Date(monday);
         date.setDate(date.getDate() + i);
@@ -118,7 +117,7 @@ function DayViewTimesheet({ date, setDate }) {
 
   const handleClickEdit = (timesheet) => {
     setSelectedEntry(timesheet);
-    setSelectedTimesheetId(timesheet._id); // Set the selected timesheet ID
+    setSelectedTimesheetId(timesheet._id);
     setEditModalOpen(true);
   };
 
@@ -287,14 +286,14 @@ function DayViewTimesheet({ date, setDate }) {
           timesheetId={selectedTimesheetId}
           entry={selectedEntry}
           onClose={() => setEditModalOpen(false)}
-          onTimesheetUpdate={fetchData} // Pass the callback function to update timesheet data
+          onTimesheetUpdate={fetchData}
         />
       )}
       {newModalOpen && (
         <AdditionModal
           date={date}
           onClose={() => setNewModalOpen(false)}
-          onTimesheetUpdate={fetchData} // Pass the callback function to update timesheet data
+          onTimesheetUpdate={fetchData}
         />
       )}
       <div style={{ marginTop: "20px" }}>

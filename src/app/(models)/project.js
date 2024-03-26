@@ -39,7 +39,6 @@ const projectSchema = new Schema(
   },
 );
 
-// Define a compound index on clientname and projectname for uniqueness
 projectSchema.index({ clientname: 1, projectname: 1 }, { unique: true });
 
 const Project =
