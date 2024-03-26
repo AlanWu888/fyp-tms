@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 import { COLOURS } from "@/app/constants";
 import Button from "../../buttons/Button";
 import { useSession } from "next-auth/react";
+import UserRemovedModal from "./modals/UserRemovedModal";
+import ConfirmationModal from "./modals/ConfirmationModal";
 
 function UsersTable({ header, mode, data, date, currentProject }) {
   const { data: session } = useSession();
@@ -11,6 +13,9 @@ function UsersTable({ header, mode, data, date, currentProject }) {
 
   const [dateRange, setDateRange] = useState({});
   const [filteredData, setFilteredData] = useState({});
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [showUserRemovedModal, setShowUserRemovedModal] = useState(false);
+  const [userToRemove, setUserToRemove] = useState("");
 
   useEffect(() => {
     getRanges();
@@ -166,9 +171,6 @@ function UsersTable({ header, mode, data, date, currentProject }) {
           currentProject[0].projectname,
           emailToRemove,
         );
-        alert(
-          `successfully removed ${emailToRemove} to the project\nThe change will show next time you load this project`,
-        );
       }
     } catch (error) {
       console.error("Error updating timesheet:", error);
@@ -176,12 +178,19 @@ function UsersTable({ header, mode, data, date, currentProject }) {
   }
 
   const handleRemoveUser = (userEmail) => {
-    const confirmed = window.confirm(
-      `Are you sure you want to remove ${userEmail}?`,
-    );
-    if (confirmed) {
-      patchDB(userEmail);
-    }
+    setUserToRemove(userEmail);
+    setShowConfirmationModal(true);
+  };
+
+  const handleConfirmRemove = async () => {
+    setShowConfirmationModal(false);
+    await patchDB(userToRemove);
+    setShowUserRemovedModal(true);
+  };
+
+  const handleCancelRemove = () => {
+    setShowConfirmationModal(false);
+    setUserToRemove("");
   };
 
   return (
@@ -338,6 +347,20 @@ function UsersTable({ header, mode, data, date, currentProject }) {
         </>
       ) : (
         <p>No data available</p>
+      )}
+      {showConfirmationModal && (
+        <ConfirmationModal
+          userEmail={userToRemove}
+          onConfirm={handleConfirmRemove}
+          onCancel={handleCancelRemove}
+        />
+      )}
+
+      {showUserRemovedModal && (
+        <UserRemovedModal
+          userEmail={userToRemove}
+          onClose={() => setShowUserRemovedModal(false)}
+        />
       )}
     </div>
   );
