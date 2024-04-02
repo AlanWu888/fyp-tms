@@ -11,6 +11,7 @@ import { COLOURS } from "@/app/constants";
 import LoadingSpinner from "../../loading/Loading";
 import ManageValuesModal from "./modals/manageValues";
 import ManagerTimeBreakdownComponent from "../components/timeBreakdown";
+import DeleteModal from "./modals/deleteProject";
 
 const ManagerViewProjectComponent = () => {
   const { data: session } = useSession();
@@ -30,6 +31,7 @@ const ManagerViewProjectComponent = () => {
   const [totalHoursPerMonth, setTotalHoursPerMonth] = useState({});
   const [addMemberModalOpen, setAddMemberModalOpen] = useState(false);
   const [manageModalOpen, SetManageModalOpen] = useState(false);
+  const [deleteWarningModalOpen, setDeleteWarningModalOpen] = useState(false);
 
   async function fetchTimesheetData() {
     try {
@@ -206,6 +208,36 @@ const ManagerViewProjectComponent = () => {
     SetManageModalOpen(true);
   };
 
+  const handleDelete = () => {
+    setDeleteWarningModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    try {
+      const response = await fetch("/api/Projects", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          clientname: clientName,
+          projectname: projectName,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to delete entry");
+      }
+      setDeleteWarningModalOpen(false);
+      window.location.href = "/role-redirect";
+    } catch (error) {
+      console.error("Error deleting project:", error);
+    }
+  };
+
+  const cancelDelete = () => {
+    setDeleteWarningModalOpen(false);
+  };
+
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);
     const clientNameParam = queryParams.get("clientName") || "";
@@ -254,9 +286,19 @@ const ManagerViewProjectComponent = () => {
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <Link href="/manager/project">
-          <GoBack />
-        </Link>
+        <div style={{ display: "flex" }}>
+          <Link href="/manager/project">
+            <GoBack />
+          </Link>
+          <div style={{ marginLeft: "10px" }}>
+            <Button
+              bgcolour={COLOURS.RED}
+              colour={"white"}
+              label="Delete Project"
+              onClick={handleDelete}
+            />
+          </div>
+        </div>
         <Link
           href={{
             pathname: `/manager/project/logs`,
@@ -452,6 +494,13 @@ const ManagerViewProjectComponent = () => {
         <ManageValuesModal
           onClose={() => SetManageModalOpen(false)}
           currentProject={currentProject}
+        />
+      )}
+      {deleteWarningModalOpen && (
+        <DeleteModal
+          title={`${clientName} - ${projectName}`}
+          onConfirm={confirmDelete}
+          onCancel={cancelDelete}
         />
       )}
     </div>

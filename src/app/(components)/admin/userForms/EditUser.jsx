@@ -6,6 +6,7 @@ import { COLOURS } from "@/app/constants";
 import Link from "next/link";
 import Button from "../../buttons/Button";
 import SaveChangesModal from "./modals/SaveChangesModal";
+import userRoleInfo from "./userRoleInfo.json";
 
 const EditUser = () => {
   const [userID, setUserID] = useState("");
@@ -210,19 +211,31 @@ const EditUser = () => {
               <div style={{ marginBottom: "60px" }}>
                 {user.role === "admin" && (
                   <div style={userInformationStyle}>
-                    Admin-specific content goes here
+                    <ul>
+                      {userRoleInfo.admin.map((item, index) => (
+                        <li key={index}>{item}</li>
+                      ))}
+                    </ul>
                   </div>
                 )}
 
                 {user.role === "manager" && (
                   <div style={userInformationStyle}>
-                    Manager-specific content goes here
+                    <ul>
+                      {userRoleInfo.manager.map((item, index) => (
+                        <li key={index}>{item}</li>
+                      ))}
+                    </ul>
                   </div>
                 )}
 
                 {user.role === "user" && (
                   <div style={userInformationStyle}>
-                    User-specific content goes here
+                    <ul>
+                      {userRoleInfo.user.map((item, index) => (
+                        <li key={index}>{item}</li>
+                      ))}
+                    </ul>
                   </div>
                 )}
               </div>

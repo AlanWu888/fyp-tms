@@ -234,7 +234,10 @@ function UsersProjectsList() {
         </div>
       </div>
 
-      <div className="project-list-table-rows">
+      <div
+        className="project-list-table-rows"
+        style={{ marginBottom: "120px" }}
+      >
         <ul>
           {filteredProjects.map((project) => (
             <li

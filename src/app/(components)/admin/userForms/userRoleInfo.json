@@ -1,0 +1,22 @@
+{
+  "admin": [
+    "Good for people who are managing members of the timesheet.",
+    "Admins can: ",
+    "- Add users to the system",
+    "- Edit user details on the system",
+    "- Remove users from the system"
+  ],
+  "manager": [
+    "Good for people who need more access to employees and projects.",
+    "Managers can: ",
+    "- Create projects and edit projects which they are a part of",
+    "- View Reports across the system to see where time is being spent",
+    "- Generate invoices for projects"
+  ],
+  "user": [
+    "Good for people who just need to track their time across allocated projects.",
+    "Users can: ",
+    "- Add their time spent on different projects allocated to them",
+    "- View projects on the system that they have been allocated to"
+  ]
+}

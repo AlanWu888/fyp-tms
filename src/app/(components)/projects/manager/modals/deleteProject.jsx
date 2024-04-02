@@ -2,7 +2,7 @@ import React from "react";
 import { COLOURS } from "@/app/constants";
 import Button from "@/app/(components)/buttons/Button";
 
-function AlertModal({ title, message, onClose }) {
+function DeleteModal({ title, onConfirm, onCancel }) {
   return (
     <div className="modal" style={modalStyle}>
       <div className="modal-content" style={modalContentStyle}>
@@ -31,7 +31,29 @@ function AlertModal({ title, message, onClose }) {
             paddingBottom: "20px",
           }}
         >
-          <p>{message}</p>
+          <p
+            style={{
+              marginBottom: "10px",
+            }}
+          >
+            Are you sure you want to delete this project?
+          </p>
+          <p
+            style={{
+              marginBottom: "10px",
+            }}
+          >
+            This action is irreversible and you will not be able to get this
+            project back! You may want to download the project logs before
+            deleting.
+          </p>
+          <p
+            style={{
+              marginBottom: "10px",
+            }}
+          >
+            Do you want to proceed?
+          </p>
 
           <div
             className="modal-button-group"
@@ -42,10 +64,17 @@ function AlertModal({ title, message, onClose }) {
             }}
           >
             <Button
+              bgcolour={COLOURS.RED}
+              colour="white"
+              label="Yes"
+              onClick={onConfirm}
+            />
+            <div style={{ marginLeft: "10px" }}></div>
+            <Button
               bgcolour={COLOURS.GREY}
               colour="#000"
-              label="Close"
-              onClick={onClose}
+              label="No"
+              onClick={onCancel}
             />
           </div>
         </div>
@@ -54,7 +83,7 @@ function AlertModal({ title, message, onClose }) {
   );
 }
 
-export default AlertModal;
+export default DeleteModal;
 
 const modalStyle = {
   display: "flex",
