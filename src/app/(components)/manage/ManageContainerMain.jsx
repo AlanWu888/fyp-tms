@@ -45,7 +45,9 @@ function ManageContainerMain() {
   async function fetchTimesheets() {
     try {
       setLoading(true);
-      const response = await fetch("/api/Timesheets");
+      const response = await fetch(
+        `/api/Timesheets?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+      );
       if (!response.ok) {
         throw new Error("Failed to fetch timesheets");
       }
@@ -63,7 +65,6 @@ function ManageContainerMain() {
 
   function grabData(parameter) {
     if (parameter === "userEmail") {
-      // Grab unique userEmails
       const uniqueUserEmails = Array.from(
         new Set(timesheets.map((timesheet) => timesheet.userEmail)),
       );

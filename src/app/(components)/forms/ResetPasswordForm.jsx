@@ -28,8 +28,7 @@ export default function ResetPasswordForm() {
         router.push("/");
       }
     } catch (error) {
-      console.error("Error, please try again");
-      console.log(error);
+      console.error(error);
     }
   };
 

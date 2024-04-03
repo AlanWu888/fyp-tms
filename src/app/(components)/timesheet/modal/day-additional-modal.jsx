@@ -42,10 +42,11 @@ function AdditionModal({ date, onClose, onTimesheetUpdate }) {
   };
 
   useEffect(() => {
-    // get projects and only show the projects user is part of
     const fetchData = async () => {
       try {
-        const response = await fetch("/api/Projects");
+        const response = await fetch(
+          `/api/Projects?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch projects");
         }
@@ -85,7 +86,6 @@ function AdditionModal({ date, onClose, onTimesheetUpdate }) {
   const handleClientChange = (e) => {
     const selectedClient = e.target.value;
     setClientName(selectedClient);
-    // Reset project name when client changes
     setProjectName("");
   };
 
@@ -108,48 +108,36 @@ function AdditionModal({ date, onClose, onTimesheetUpdate }) {
     }
 
     const newDate = new Date(new Date(date).setHours(0, 0, 0, 0)).toISOString();
-    console.log(
-      JSON.stringify({
-        formData: {
-          userEmail,
-          clientName,
-          projectName,
-          taskDescription,
-          additionalNotes,
-          time: convertTimeToDecimal(time),
-          date: newDate,
-          taskType: taskType.label,
-        },
-      }),
-    );
     try {
-      const response = await fetch("/api/Timesheets", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          formData: {
-            userEmail,
-            clientName,
-            projectName,
-            taskDescription,
-            additionalNotes,
-            time: convertTimeToDecimal(time),
-            date: newDate,
-            taskType: taskType.label,
+      const response = await fetch(
+        `/api/Timesheets?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
           },
-        }),
-      });
+          body: JSON.stringify({
+            formData: {
+              userEmail,
+              clientName,
+              projectName,
+              taskDescription,
+              additionalNotes,
+              time: convertTimeToDecimal(time),
+              date: newDate,
+              taskType: taskType.label,
+            },
+          }),
+        },
+      );
       if (!response.ok) {
         throw new Error("Failed to update timesheet");
       } else {
-        onTimesheetUpdate(); // Trigger the callback function to update timesheet data
+        onTimesheetUpdate();
         onClose();
       }
     } catch (error) {
       console.error("Error updating timesheet:", error);
-      // Set error message state
       setErrorMessage(
         "Failed to update timesheet. Please try again later or check for duplicated entries.",
       );

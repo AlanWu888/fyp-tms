@@ -1,12 +1,19 @@
 import Timesheet from "@/app/(models)/timesheet";
 import { NextResponse } from "next/server";
 
-export async function POST(req) {
+export async function POST(request) {
+  const { searchParams } = new URL(request.url);
+  const password = searchParams.get("password");
+  if (password !== process.env.NEXT_PUBLIC_API_TOKEN) {
+    return NextResponse.json(
+      { message: "Unauthorized access" },
+      { status: 401 },
+    );
+  }
   try {
-    const body = await req.json();
+    const body = await request.json();
     const timesheetData = body.formData;
 
-    // Confirm all fields have been filled
     if (
       !timesheetData?.userEmail ||
       !timesheetData?.clientName ||
@@ -18,7 +25,6 @@ export async function POST(req) {
       return NextResponse.json({ message: "Missing fields" }, { status: 400 });
     }
 
-    // Check for duplicate entries
     try {
       await Timesheet.create(timesheetData);
       return NextResponse.json(
@@ -26,17 +32,16 @@ export async function POST(req) {
         { status: 201 },
       );
     } catch (error) {
-      // Check if the error is due to duplicate key violation
       if (error.code === 11000) {
         return NextResponse.json(
           { message: "Duplicate entry found." },
           { status: 400 },
         );
       }
-      throw error; // Throw error if it's not due to duplicate key violation
+      throw error;
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json(
       {
         message:
@@ -47,19 +52,35 @@ export async function POST(req) {
   }
 }
 
-export async function GET() {
+export async function GET(request) {
+  const { searchParams } = new URL(request.url);
+  const password = searchParams.get("password");
+  if (password !== process.env.NEXT_PUBLIC_API_TOKEN) {
+    return NextResponse.json(
+      { message: "Unauthorized access" },
+      { status: 401 },
+    );
+  }
   try {
     const timesheets = await Timesheet.find();
     return NextResponse.json({ timesheets }, { status: 201 });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json({ message: "Error", error }, { status: 500 });
   }
 }
 
-export async function PATCH(req) {
+export async function PATCH(request) {
+  const { searchParams } = new URL(request.url);
+  const password = searchParams.get("password");
+  if (password !== process.env.NEXT_PUBLIC_API_TOKEN) {
+    return NextResponse.json(
+      { message: "Unauthorized access" },
+      { status: 401 },
+    );
+  }
   try {
-    const { id, updatedFields } = await req.json();
+    const { id, updatedFields } = await request.json();
 
     if (!id || !updatedFields) {
       return NextResponse.json({ message: "Missing fields" }, { status: 400 });
@@ -97,7 +118,7 @@ export async function PATCH(req) {
       { status: 200 },
     );
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json(
       { message: "An error occurred while updating the timesheet" },
       { status: 500 },
@@ -105,9 +126,17 @@ export async function PATCH(req) {
   }
 }
 
-export async function DELETE(req) {
+export async function DELETE(request) {
+  const { searchParams } = new URL(request.url);
+  const password = searchParams.get("password");
+  if (password !== process.env.NEXT_PUBLIC_API_TOKEN) {
+    return NextResponse.json(
+      { message: "Unauthorized access" },
+      { status: 401 },
+    );
+  }
   try {
-    const { id } = await req.json();
+    const { id } = await request.json();
 
     if (!id) {
       return NextResponse.json(
@@ -130,7 +159,7 @@ export async function DELETE(req) {
       { status: 200 },
     );
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json(
       { message: "An error occurred while deleting the timesheet" },
       { status: 500 },

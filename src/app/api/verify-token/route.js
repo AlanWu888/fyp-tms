@@ -4,10 +4,8 @@ import crypto from "crypto";
 
 export const POST = async (req) => {
   const { token } = await req.json();
-  console.log("token: ", token);
 
   const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
-  console.log("hashed:", hashedToken);
   const user = await User.findOne({
     resetToken: hashedToken,
     resetTokenExpiry: { $gt: Date.now() },

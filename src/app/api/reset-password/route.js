@@ -22,7 +22,7 @@ export const POST = async (req) => {
   existingUser.resetTokenExpiry = passwordResetExpires;
   const resetUrl = `${process.env.BASE_URL}/change-password?token=${resetToken}`;
 
-  console.log(resetUrl);
+  console.error(resetUrl);
 
   const body = `
   <html>

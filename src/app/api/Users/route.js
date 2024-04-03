@@ -2,24 +2,37 @@ import User from "@/app/(models)/user";
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 
-// get all users
-export async function GET() {
+export async function GET(request) {
+  const { searchParams } = new URL(request.url);
+  const password = searchParams.get("password");
+  if (password !== process.env.NEXT_PUBLIC_API_TOKEN) {
+    return NextResponse.json(
+      { message: "Unauthorized access" },
+      { status: 401 },
+    );
+  }
   try {
     const users = await User.find({});
     return NextResponse.json({ users }, { status: 201 });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json({ message: "Error", error }, { status: 500 });
   }
 }
 
-// add a new user
-export async function POST(req) {
+export async function POST(request) {
+  const { searchParams } = new URL(request.url);
+  const password = searchParams.get("password");
+  if (password !== process.env.NEXT_PUBLIC_API_TOKEN) {
+    return NextResponse.json(
+      { message: "Unauthorized access" },
+      { status: 401 },
+    );
+  }
   try {
-    const body = await req.json();
+    const body = await request.json();
     const userData = body.formData;
 
-    //Confirm data exists
     if (!userData?.email || !userData.password) {
       return NextResponse.json(
         { message: "All fields are required." },
@@ -27,7 +40,6 @@ export async function POST(req) {
       );
     }
 
-    // check for duplicate emails
     const duplicate = await User.findOne({ email: userData.email })
       .lean()
       .exec();
@@ -42,18 +54,24 @@ export async function POST(req) {
     await User.create(userData);
     return NextResponse.json({ message: "User Created." }, { status: 201 });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json({ message: "Error", error }, { status: 500 });
   }
 }
 
-// edit user details
-export async function PATCH(req) {
+export async function PATCH(request) {
+  const { searchParams } = new URL(request.url);
+  const password = searchParams.get("password");
+  if (password !== process.env.NEXT_PUBLIC_API_TOKEN) {
+    return NextResponse.json(
+      { message: "Unauthorized access" },
+      { status: 401 },
+    );
+  }
   try {
-    const body = await req.json();
-    const { userId, newData } = body; // userId and newData sent in the request body
+    const body = await request.json();
+    const { userId, newData } = body;
 
-    // Check if userId is provided
     if (!userId) {
       return NextResponse.json(
         { message: "User ID is required." },
@@ -61,12 +79,10 @@ export async function PATCH(req) {
       );
     }
 
-    // If there's a new password provided, hash it
     if (newData.password) {
       newData.password = await bcrypt.hash(newData.password, 10);
     }
 
-    // Update the user
     const updatedUser = await User.findByIdAndUpdate(userId, newData, {
       new: true,
     });
@@ -80,18 +96,24 @@ export async function PATCH(req) {
       { status: 200 },
     );
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json({ message: "Error", error }, { status: 500 });
   }
 }
 
-// delete a user
-export async function DELETE(req) {
+export async function DELETE(request) {
+  const { searchParams } = new URL(request.url);
+  const password = searchParams.get("password");
+  if (password !== process.env.NEXT_PUBLIC_API_TOKEN) {
+    return NextResponse.json(
+      { message: "Unauthorized access" },
+      { status: 401 },
+    );
+  }
   try {
-    const body = await req.json();
-    const { userId } = body; // Assuming you'll send userId in the request body
+    const body = await request.json();
+    const { userId } = body;
 
-    // Check if userId is provided
     if (!userId) {
       return NextResponse.json(
         { message: "User ID is required." },
@@ -99,7 +121,6 @@ export async function DELETE(req) {
       );
     }
 
-    // Find and delete the user
     const deletedUser = await User.findByIdAndDelete(userId);
 
     if (!deletedUser) {
@@ -111,7 +132,7 @@ export async function DELETE(req) {
       { status: 200 },
     );
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json({ message: "Error", error }, { status: 500 });
   }
 }

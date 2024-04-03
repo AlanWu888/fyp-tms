@@ -6,7 +6,6 @@ import "./header.css";
 const TimesheetHeader = ({ date: dateString, setNewDate, mode, setMode }) => {
   const [date, setDate] = useState(new Date(dateString));
 
-  // Update date when dateString changes
   useEffect(() => {
     setDate(new Date(dateString));
   }, [dateString]);
@@ -27,7 +26,7 @@ const TimesheetHeader = ({ date: dateString, setNewDate, mode, setMode }) => {
       newDate.setDate(newDate.getDate() + 7);
     }
     setDate(newDate);
-    setNewDate(newDate); // Update parent state
+    setNewDate(newDate);
   };
 
   const decrementDate = () => {
@@ -38,18 +37,18 @@ const TimesheetHeader = ({ date: dateString, setNewDate, mode, setMode }) => {
       newDate.setDate(newDate.getDate() - 7);
     }
     setDate(newDate);
-    setNewDate(newDate); // Update parent state
+    setNewDate(newDate);
   };
 
   const renderDateText = () => {
     if (mode === "week") {
       const startOfWeek = new Date(date);
       const dayOfWeek = date.getDay();
-      const diff = date.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1); // Adjusting for Monday to be the start of the week
+      const diff = date.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
       startOfWeek.setDate(diff);
 
       const endOfWeek = new Date(startOfWeek);
-      endOfWeek.setDate(startOfWeek.getDate() + 6); // Add 6 days to get to Sunday
+      endOfWeek.setDate(startOfWeek.getDate() + 6);
 
       return `${startOfWeek.toDateString()} - ${endOfWeek.toDateString()}`;
     } else {

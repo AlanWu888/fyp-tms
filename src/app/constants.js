@@ -6,4 +6,5 @@ export const COLOURS = {
   DARK_BLUE: "#282258",
   WHITE: "#FFFFFF",
   BLACK: "#000",
+  RED: "#d60000",
 };

@@ -1,12 +1,19 @@
 import Project from "@/app/(models)/project";
 import { NextResponse } from "next/server";
 
-export async function POST(req) {
+export async function POST(request) {
+  const { searchParams } = new URL(request.url);
+  const password = searchParams.get("password");
+  if (password !== process.env.NEXT_PUBLIC_API_TOKEN) {
+    return NextResponse.json(
+      { message: "Unauthorized access" },
+      { status: 401 },
+    );
+  }
   try {
-    const body = await req.json();
+    const body = await request.json();
     const projectData = body.formData;
 
-    //Confirm all fields have been filled
     if (
       !projectData?.clientname ||
       !projectData?.projectname ||
@@ -24,15 +31,13 @@ export async function POST(req) {
     await Project.create(projectData);
     return NextResponse.json({ message: "Project Created." }, { status: 201 });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     if (error.code === 11000) {
-      // Duplicate key error
       return NextResponse.json(
         { message: "Duplicate Client and Project combination" },
         { status: 409 },
       );
     } else {
-      // Other errors
       return NextResponse.json(
         { message: "An error occurred while saving the project" },
         { status: 500 },
@@ -41,23 +46,37 @@ export async function POST(req) {
   }
 }
 
-export async function GET() {
+export async function GET(request) {
+  const { searchParams } = new URL(request.url);
+  const password = searchParams.get("password");
+  if (password !== process.env.NEXT_PUBLIC_API_TOKEN) {
+    return NextResponse.json(
+      { message: "Unauthorized access" },
+      { status: 401 },
+    );
+  }
   try {
     const projects = await Project.find({});
     return NextResponse.json({ projects }, { status: 201 });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json({ message: "Error", error }, { status: 500 });
   }
 }
 
-// need to find a way to delete users from the memberEmails too
-export async function PATCH(req) {
+export async function PATCH(request) {
+  const { searchParams } = new URL(request.url);
+  const password = searchParams.get("password");
+  if (password !== process.env.NEXT_PUBLIC_API_TOKEN) {
+    return NextResponse.json(
+      { message: "Unauthorized access" },
+      { status: 401 },
+    );
+  }
   try {
-    const body = await req.json();
+    const body = await request.json();
     const { clientname, projectname, newData } = body;
 
-    // Check if clientname and projectname are provided
     if (!clientname || !projectname) {
       return NextResponse.json(
         { message: "Client name and project name are required." },
@@ -85,7 +104,6 @@ export async function PATCH(req) {
       { new: true },
     );
 
-    // Check if project exists and return the updated project
     if (!updatedProject) {
       return NextResponse.json(
         { message: "Project not found." },
@@ -98,7 +116,7 @@ export async function PATCH(req) {
       { status: 200 },
     );
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json(
       { message: "An error occurred while updating the project." },
       { status: 500 },
@@ -106,12 +124,19 @@ export async function PATCH(req) {
   }
 }
 
-export async function DELETE(req) {
+export async function DELETE(request) {
+  const { searchParams } = new URL(request.url);
+  const password = searchParams.get("password");
+  if (password !== process.env.NEXT_PUBLIC_API_TOKEN) {
+    return NextResponse.json(
+      { message: "Unauthorized access" },
+      { status: 401 },
+    );
+  }
   try {
-    const body = await req.json();
+    const body = await request.json();
     const { clientname, projectname } = body;
 
-    // Check if clientname and projectname are provided
     if (!clientname || !projectname) {
       return NextResponse.json(
         { message: "Client name and project name are required." },
@@ -119,13 +144,11 @@ export async function DELETE(req) {
       );
     }
 
-    // Find the project to delete
     const deletedProject = await Project.findOneAndDelete({
       clientname,
       projectname,
     });
 
-    // Check if project exists and return the deleted project
     if (!deletedProject) {
       return NextResponse.json(
         { message: "Project not found." },
@@ -138,7 +161,7 @@ export async function DELETE(req) {
       { status: 200 },
     );
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json(
       { message: "An error occurred while deleting the project." },
       { status: 500 },

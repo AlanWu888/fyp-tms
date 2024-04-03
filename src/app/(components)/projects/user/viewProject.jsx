@@ -28,7 +28,9 @@ const UserViewProjectComponent = () => {
 
   async function fetchTimesheetData() {
     try {
-      const response = await fetch("/api/Timesheets");
+      const response = await fetch(
+        `/api/Timesheets?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+      );
       if (!response.ok) {
         throw new Error("Failed to fetch timesheets");
       }
@@ -49,12 +51,15 @@ const UserViewProjectComponent = () => {
 
   async function fetchProjectData() {
     try {
-      const response = await fetch("/api/Projects", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `/api/Projects?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
-      });
+      );
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -88,7 +93,7 @@ const UserViewProjectComponent = () => {
   function calculateTotalHours() {
     const totalHoursPerDay = {};
     timesheets.forEach((task) => {
-      const date = new Date(task.date).toISOString().split("T")[0]; // Extracting the date without time
+      const date = new Date(task.date).toISOString().split("T")[0];
       const hours = task.time;
       if (!totalHoursPerDay[date]) {
         totalHoursPerDay[date] = 0;
@@ -99,9 +104,9 @@ const UserViewProjectComponent = () => {
     const totalHoursPerWeek = {};
     for (const date in totalHoursPerDay) {
       const weekStartDate = new Date(date);
-      weekStartDate.setDate(weekStartDate.getDate() - weekStartDate.getDay()); // Find the start of the week
+      weekStartDate.setDate(weekStartDate.getDate() - weekStartDate.getDay());
       const weekEndDate = new Date(weekStartDate);
-      weekEndDate.setDate(weekEndDate.getDate() + 6); // Find the end of the week
+      weekEndDate.setDate(weekEndDate.getDate() + 6);
 
       const weekKey = `${weekStartDate.toISOString().split("T")[0]} - ${weekEndDate.toISOString().split("T")[0]}`;
 
@@ -221,7 +226,6 @@ const UserViewProjectComponent = () => {
   }, [clientName, projectName]);
 
   useEffect(() => {
-    // check if the user is in this project
     const currentProject = projects.filter((project) => {
       return (
         project.clientname === clientName &&
@@ -252,7 +256,6 @@ const UserViewProjectComponent = () => {
       </div>
       {validProject ? (
         <div>
-          {/* when validProject is true */}
           <div className="view-project--header">
             <p
               style={{
@@ -419,22 +422,8 @@ const UserViewProjectComponent = () => {
               currentProject={currentProject}
             />
           </div>
-          {/* {JSON.stringify(timesheets)} */}
         </div>
       ) : (
-        // <div
-        //   style={{
-        //     textAlign: "center",
-        //     marginTop: "30px",
-        //     fontSize: "20px",
-        //     borderTop: "1px solid black",
-        //     borderBottom: "1px solid black",
-        //     paddingTop: "20px",
-        //     paddingBottom: "20px",
-        //   }}
-        // >
-        //   You do not have access to this project
-        // </div>
         <LoadingSpinner />
       )}
     </div>

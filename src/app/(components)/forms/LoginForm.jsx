@@ -29,7 +29,7 @@ export default function LoginForm() {
 
       router.replace("role-redirect");
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 

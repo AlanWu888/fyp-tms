@@ -61,7 +61,9 @@ function TasksContainer() {
     const fetchTimesheets = async () => {
       try {
         setLoading(true);
-        const response = await fetch("/api/Timesheets");
+        const response = await fetch(
+          `/api/Timesheets?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch timesheets");
         }

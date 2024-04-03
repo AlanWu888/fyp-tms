@@ -14,24 +14,25 @@ function AddUserModal({ onClose, currentProject }) {
 
   async function updateLogs(clientName, projectName, inputValue) {
     try {
-      const res = await fetch("/api/LogMessages", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const res = await fetch(
+        `/api/LogMessages?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            clientName: clientName,
+            projectName: projectName,
+            addedBy: userEmail,
+            messageDescription: `Added member to project: ${inputValue}`,
+            messageType: "Added User",
+          }),
         },
-        body: JSON.stringify({
-          clientName: clientName,
-          projectName: projectName,
-          addedBy: userEmail,
-          messageDescription: `Added member to project: ${inputValue}`,
-          messageType: "Added User",
-        }),
-      });
+      );
 
       if (!res.ok) {
         throw new Error("Failed to update log messages");
-      } else {
-        console.log("successfully updated log messages");
       }
     } catch (error) {
       console.error("Error updating log messages:", error);
@@ -40,26 +41,28 @@ function AddUserModal({ onClose, currentProject }) {
 
   async function patchDB() {
     try {
-      const response = await fetch("/api/Projects", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          clientname: currentProject[0].clientname,
-          projectname: currentProject[0].projectname,
-          newData: {
-            memberEmails: currentProject[0].memberEmails.concat(inputValue),
-            removedEmails: currentProject[0].removedEmails.filter(
-              (email) => email !== inputValue,
-            ),
+      const response = await fetch(
+        `/api/Projects?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
           },
-        }),
-      });
+          body: JSON.stringify({
+            clientname: currentProject[0].clientname,
+            projectname: currentProject[0].projectname,
+            newData: {
+              memberEmails: currentProject[0].memberEmails.concat(inputValue),
+              removedEmails: currentProject[0].removedEmails.filter(
+                (email) => email !== inputValue,
+              ),
+            },
+          }),
+        },
+      );
       if (!response.ok) {
         throw new Error("Failed to update timesheet");
       } else {
-        console.log("successful patch update to timesheet");
         await updateLogs(
           currentProject[0].clientname,
           currentProject[0].projectname,
@@ -100,7 +103,9 @@ function AddUserModal({ onClose, currentProject }) {
 
   const fetchData = async () => {
     try {
-      const response = await fetch("/api/Users");
+      const response = await fetch(
+        `/api/Users?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+      );
       if (!response.ok) {
         throw new Error("Failed to fetch users");
       }

@@ -24,6 +24,7 @@ function ConfirmationModal({ userEmail, onConfirm, onCancel }) {
 
         <div
           style={{
+            paddingTop: "20px",
             paddingLeft: "20px",
             paddingRight: "20px",
             paddingBottom: "20px",

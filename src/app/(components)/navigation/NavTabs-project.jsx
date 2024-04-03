@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./styles/NavTabs.module.css"; // Import CSS module styles
+import styles from "./styles/NavTabs.module.css";
 
 const NavTabs = ({ items, activeTab, onTabChange }) => {
   const handleItemClick = (item) => {

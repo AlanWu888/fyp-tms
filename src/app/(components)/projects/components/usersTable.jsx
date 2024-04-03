@@ -119,24 +119,25 @@ function UsersTable({ header, mode, data, date, currentProject }) {
 
   async function updateLogs(clientName, projectName, emailToRemove) {
     try {
-      const res = await fetch("/api/LogMessages", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const res = await fetch(
+        `/api/LogMessages?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            clientName: clientName,
+            projectName: projectName,
+            addedBy: userEmail,
+            messageDescription: `Removed member from project: ${emailToRemove}`,
+            messageType: "Removed User",
+          }),
         },
-        body: JSON.stringify({
-          clientName: clientName,
-          projectName: projectName,
-          addedBy: userEmail,
-          messageDescription: `Removed member from project: ${emailToRemove}`,
-          messageType: "Removed User",
-        }),
-      });
+      );
 
       if (!res.ok) {
         throw new Error("Failed to update log messages");
-      } else {
-        console.log("successfully updated log messages");
       }
     } catch (error) {
       console.error("Error updating log messages:", error);
@@ -145,27 +146,29 @@ function UsersTable({ header, mode, data, date, currentProject }) {
 
   async function patchDB(emailToRemove) {
     try {
-      const response = await fetch("/api/Projects", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          clientname: currentProject[0].clientname,
-          projectname: currentProject[0].projectname,
-          newData: {
-            memberEmails: currentProject[0].memberEmails.filter(
-              (email) => email !== emailToRemove,
-            ),
-            removedEmails:
-              currentProject[0].removedEmails.concat(emailToRemove),
+      const response = await fetch(
+        `/api/Projects?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
           },
-        }),
-      });
+          body: JSON.stringify({
+            clientname: currentProject[0].clientname,
+            projectname: currentProject[0].projectname,
+            newData: {
+              memberEmails: currentProject[0].memberEmails.filter(
+                (email) => email !== emailToRemove,
+              ),
+              removedEmails:
+                currentProject[0].removedEmails.concat(emailToRemove),
+            },
+          }),
+        },
+      );
       if (!response.ok) {
         throw new Error("Failed to update timesheet");
       } else {
-        console.log("successful patch update to timesheet");
         await updateLogs(
           currentProject[0].clientname,
           currentProject[0].projectname,
@@ -279,7 +282,6 @@ function UsersTable({ header, mode, data, date, currentProject }) {
                   }}
                 >
                   {currentProject[0].removedEmails.includes(user) ? (
-                    // Render something if user is in removedEmails
                     <p
                       style={{
                         fontSize: "16px",
@@ -292,7 +294,6 @@ function UsersTable({ header, mode, data, date, currentProject }) {
                       User was removed
                     </p>
                   ) : (
-                    // Render the "Remove" button if user is not in removedEmails
                     <Button
                       label={"Remove"}
                       onClick={() => handleRemoveUser(user)}

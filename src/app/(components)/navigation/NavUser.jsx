@@ -2,7 +2,7 @@
 
 import styles from "./styles/Navbar.module.css";
 import Link from "next/link";
-import { usePathname } from "next/navigation"; // usePathname is a hook now imported from navigation
+import { usePathname } from "next/navigation";
 
 const NavUser = () => {
   const pathname = usePathname();
@@ -21,12 +21,6 @@ const NavUser = () => {
         >
           Projects
         </Link>
-        {/* <Link
-          href="/user/report"
-          className={pathname === "/user/report" ? styles.active : ""}
-        >
-          Reports
-        </Link> */}
       </div>
 
       <div className={styles.rightLinks}>

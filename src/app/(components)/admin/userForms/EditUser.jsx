@@ -6,6 +6,7 @@ import { COLOURS } from "@/app/constants";
 import Link from "next/link";
 import Button from "../../buttons/Button";
 import SaveChangesModal from "./modals/SaveChangesModal";
+import userRoleInfo from "./userRoleInfo.json";
 
 const EditUser = () => {
   const [userID, setUserID] = useState("");
@@ -15,7 +16,9 @@ const EditUser = () => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch("/api/Users");
+      const response = await fetch(
+        `/api/Users?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+      );
       if (!response.ok) {
         throw new Error("Failed to fetch users");
       }
@@ -62,26 +65,28 @@ const EditUser = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("/api/Users", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId: userID,
-          newData: {
-            email: user.email,
-            firstname: user.firstname,
-            lastname: user.lastname,
-            capacity: user.capacity,
-            role: user.role,
+      const response = await fetch(
+        `/api/Users?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
           },
-        }),
-      });
+          body: JSON.stringify({
+            userId: userID,
+            newData: {
+              email: user.email,
+              firstname: user.firstname,
+              lastname: user.lastname,
+              capacity: user.capacity,
+              role: user.role,
+            },
+          }),
+        },
+      );
       if (!response.ok) {
         throw new Error("Failed to update the user");
       } else {
-        console.log("successful patch update to users");
         setShowModal(true);
       }
     } catch (error) {
@@ -211,19 +216,31 @@ const EditUser = () => {
               <div style={{ marginBottom: "60px" }}>
                 {user.role === "admin" && (
                   <div style={userInformationStyle}>
-                    Admin-specific content goes here
+                    <ul>
+                      {userRoleInfo.admin.map((item, index) => (
+                        <li key={index}>{item}</li>
+                      ))}
+                    </ul>
                   </div>
                 )}
 
                 {user.role === "manager" && (
                   <div style={userInformationStyle}>
-                    Manager-specific content goes here
+                    <ul>
+                      {userRoleInfo.manager.map((item, index) => (
+                        <li key={index}>{item}</li>
+                      ))}
+                    </ul>
                   </div>
                 )}
 
                 {user.role === "user" && (
                   <div style={userInformationStyle}>
-                    User-specific content goes here
+                    <ul>
+                      {userRoleInfo.user.map((item, index) => (
+                        <li key={index}>{item}</li>
+                      ))}
+                    </ul>
                   </div>
                 )}
               </div>

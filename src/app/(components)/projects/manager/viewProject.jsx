@@ -11,6 +11,7 @@ import { COLOURS } from "@/app/constants";
 import LoadingSpinner from "../../loading/Loading";
 import ManageValuesModal from "./modals/manageValues";
 import ManagerTimeBreakdownComponent from "../components/timeBreakdown";
+import DeleteModal from "./modals/deleteProject";
 
 const ManagerViewProjectComponent = () => {
   const { data: session } = useSession();
@@ -30,10 +31,13 @@ const ManagerViewProjectComponent = () => {
   const [totalHoursPerMonth, setTotalHoursPerMonth] = useState({});
   const [addMemberModalOpen, setAddMemberModalOpen] = useState(false);
   const [manageModalOpen, SetManageModalOpen] = useState(false);
+  const [deleteWarningModalOpen, setDeleteWarningModalOpen] = useState(false);
 
   async function fetchTimesheetData() {
     try {
-      const response = await fetch("/api/Timesheets");
+      const response = await fetch(
+        `/api/Timesheets?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+      );
       if (!response.ok) {
         throw new Error("Failed to fetch timesheets");
       }
@@ -54,12 +58,15 @@ const ManagerViewProjectComponent = () => {
 
   async function fetchProjectData() {
     try {
-      const response = await fetch("/api/Projects", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `/api/Projects?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
-      });
+      );
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -93,7 +100,7 @@ const ManagerViewProjectComponent = () => {
   function calculateTotalHours() {
     const totalHoursPerDay = {};
     timesheets.forEach((task) => {
-      const date = new Date(task.date).toISOString().split("T")[0]; // Extracting the date without time
+      const date = new Date(task.date).toISOString().split("T")[0];
       const hours = task.time;
       if (!totalHoursPerDay[date]) {
         totalHoursPerDay[date] = 0;
@@ -104,9 +111,9 @@ const ManagerViewProjectComponent = () => {
     const totalHoursPerWeek = {};
     for (const date in totalHoursPerDay) {
       const weekStartDate = new Date(date);
-      weekStartDate.setDate(weekStartDate.getDate() - weekStartDate.getDay()); // Find the start of the week
+      weekStartDate.setDate(weekStartDate.getDate() - weekStartDate.getDay());
       const weekEndDate = new Date(weekStartDate);
-      weekEndDate.setDate(weekEndDate.getDate() + 6); // Find the end of the week
+      weekEndDate.setDate(weekEndDate.getDate() + 6);
 
       const weekKey = `${weekStartDate.toISOString().split("T")[0]} - ${weekEndDate.toISOString().split("T")[0]}`;
 
@@ -206,6 +213,39 @@ const ManagerViewProjectComponent = () => {
     SetManageModalOpen(true);
   };
 
+  const handleDelete = () => {
+    setDeleteWarningModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    try {
+      const response = await fetch(
+        `/api/Projects?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            clientname: clientName,
+            projectname: projectName,
+          }),
+        },
+      );
+      if (!response.ok) {
+        throw new Error("Failed to delete entry");
+      }
+      setDeleteWarningModalOpen(false);
+      window.location.href = "/role-redirect";
+    } catch (error) {
+      console.error("Error deleting project:", error);
+    }
+  };
+
+  const cancelDelete = () => {
+    setDeleteWarningModalOpen(false);
+  };
+
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);
     const clientNameParam = queryParams.get("clientName") || "";
@@ -230,7 +270,6 @@ const ManagerViewProjectComponent = () => {
   }, [clientName, projectName, manageModalOpen, addMemberModalOpen]);
 
   useEffect(() => {
-    // check if the user is in this project
     const currentProject = projects.filter((project) => {
       return (
         project.clientname === clientName &&
@@ -255,9 +294,19 @@ const ManagerViewProjectComponent = () => {
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <Link href="/manager/project">
-          <GoBack />
-        </Link>
+        <div style={{ display: "flex" }}>
+          <Link href="/manager/project">
+            <GoBack />
+          </Link>
+          <div style={{ marginLeft: "10px" }}>
+            <Button
+              bgcolour={COLOURS.RED}
+              colour={"white"}
+              label="Delete Project"
+              onClick={handleDelete}
+            />
+          </div>
+        </div>
         <Link
           href={{
             pathname: `/manager/project/logs`,
@@ -272,7 +321,6 @@ const ManagerViewProjectComponent = () => {
       </div>
       {validProject ? (
         <div>
-          {/* when validProject is true */}
           <div className="view-project--header">
             <p
               style={{
@@ -446,28 +494,21 @@ const ManagerViewProjectComponent = () => {
               setAddMemberModalOpen={setAddMemberModalOpen}
             />
           </div>
-          {/* {JSON.stringify(timesheets)} */}
         </div>
       ) : (
-        // <div
-        //   style={{
-        //     textAlign: "center",
-        //     marginTop: "30px",
-        //     fontSize: "20px",
-        //     borderTop: "1px solid black",
-        //     borderBottom: "1px solid black",
-        //     paddingTop: "20px",
-        //     paddingBottom: "20px",
-        //   }}
-        // >
-        //   You do not have access to this project
-        // </div>
         <LoadingSpinner />
       )}
       {manageModalOpen && (
         <ManageValuesModal
           onClose={() => SetManageModalOpen(false)}
           currentProject={currentProject}
+        />
+      )}
+      {deleteWarningModalOpen && (
+        <DeleteModal
+          title={`${clientName} - ${projectName}`}
+          onConfirm={confirmDelete}
+          onCancel={cancelDelete}
         />
       )}
     </div>

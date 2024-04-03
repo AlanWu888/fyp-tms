@@ -1,3 +1,18 @@
+## [0.22] - 03/04/2024
+
+BT-57 Clean up functions
+
+## Added
+
+- Ability to delete projects from the system
+- Updated Access Denied page
+
+## Fixes
+
+- Modal padding in BT-62
+- User permissions shown in AddUser and EditUser
+- API route protection
+
 ## [0.21] - 26/03/2024
 
 -- no ticket

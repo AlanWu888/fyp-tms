@@ -51,20 +51,22 @@ function NewProject() {
 
   async function addProject(formData) {
     try {
-      const res = await fetch("/api/Projects", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const res = await fetch(
+        `/api/Projects?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            formData: formData,
+          }),
         },
-        body: JSON.stringify({
-          formData: formData,
-        }),
-      });
+      );
 
       if (!res.ok) {
         throw new Error("Failed to create the project");
       } else {
-        console.log("successfully created a new project");
         await updateLogs(formData);
       }
     } catch (error) {
@@ -74,24 +76,25 @@ function NewProject() {
 
   async function updateLogs(formData) {
     try {
-      const res = await fetch("/api/LogMessages", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const res = await fetch(
+        `/api/LogMessages?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            clientName: formData.clientname,
+            projectName: formData.projectname,
+            addedBy: userEmail,
+            messageDescription: `Client name: ${formData.clientname}, Project name: ${formData.projectname}, Budget: ${formData.budget}, Deadline: ${formData.deadline}, Members: ${formData.memberEmails}`,
+            messageType: "New Project",
+          }),
         },
-        body: JSON.stringify({
-          clientName: formData.clientname,
-          projectName: formData.projectname,
-          addedBy: userEmail,
-          messageDescription: `Client name: ${formData.clientname}, Project name: ${formData.projectname}, Budget: ${formData.budget}, Deadline: ${formData.deadline}, Members: ${formData.memberEmails}`,
-          messageType: "New Project",
-        }),
-      });
+      );
 
       if (!res.ok) {
         throw new Error("Failed to update log messages");
-      } else {
-        console.log("successfully updated log messages");
       }
     } catch (error) {
       console.error("Error updating log messages:", error);

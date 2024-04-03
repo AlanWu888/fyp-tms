@@ -28,7 +28,9 @@ function TaskPicker() {
 
   const fetchData = async () => {
     try {
-      const response = await fetch("/api/Timesheets");
+      const response = await fetch(
+        `/api/Timesheets?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+      );
       if (!response.ok) {
         throw new Error("Failed to fetch timesheets");
       }
@@ -145,21 +147,27 @@ function TaskPicker() {
               </div>
             </div>
           ))}
-          <Link
-            href={{
-              pathname: "/manager/invoice/generate",
-              query: {
-                clientname: client,
-                projectname: project,
-                selectedTasks: JSON.stringify(selectedTasks),
-              },
+          <div
+            style={{
+              borderTop: "1px solid black",
+              paddingTop: "20px",
+              display: "flex",
+              justifyContent: "flex-end",
             }}
           >
-            <Button
-              label="next"
-              onClick={console.log(JSON.stringify(selectedTasks))}
-            />
-          </Link>
+            <Link
+              href={{
+                pathname: "/manager/invoice/generate",
+                query: {
+                  clientname: client,
+                  projectname: project,
+                  selectedTasks: JSON.stringify(selectedTasks),
+                },
+              }}
+            >
+              <Button bgcolour={COLOURS.GREY} label="Next" />
+            </Link>
+          </div>
         </div>
       )}
     </div>

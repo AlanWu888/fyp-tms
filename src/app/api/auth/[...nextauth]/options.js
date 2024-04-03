@@ -25,10 +25,9 @@ export const options = {
           if (!passwordsMatch) {
             return null;
           }
-          // console.log("USER: ", user)
           return user;
         } catch (error) {
-          // console.log("Error: ", error);
+          console.error(error);
         }
       },
     }),

@@ -61,18 +61,21 @@ export default function NewPasswordForm() {
     }
 
     try {
-      const response = await fetch("/api/Users", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId: user._id,
-          newData: {
-            password: newPassword,
+      const response = await fetch(
+        `/api/Users?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
           },
-        }),
-      });
+          body: JSON.stringify({
+            userId: user._id,
+            newData: {
+              password: newPassword,
+            },
+          }),
+        },
+      );
 
       if (!response.ok) {
         throw new Error("Failed to update the user");

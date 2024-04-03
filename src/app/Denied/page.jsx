@@ -1,11 +1,8 @@
 import React from "react";
+import Denied from "../(components)/Denied";
 
-const Denied = () => {
-  return (
-    <div>
-      <h1 className="text-red-400">Denied</h1>
-    </div>
-  );
+const AccessDenied = () => {
+  return <Denied />;
 };
 
-export default Denied;
+export default AccessDenied;

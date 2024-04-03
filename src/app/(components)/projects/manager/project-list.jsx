@@ -22,7 +22,9 @@ function ManagersProjectsList() {
 
   async function fetchTimesheets() {
     try {
-      const response = await fetch("/api/Timesheets");
+      const response = await fetch(
+        `/api/Timesheets?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+      );
       if (!response.ok) {
         throw new Error("Failed to fetch timesheets");
       }
@@ -35,12 +37,15 @@ function ManagersProjectsList() {
 
   async function fetchProjects() {
     try {
-      const response = await fetch("/api/Projects", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `/api/Projects?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
-      });
+      );
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -235,7 +240,10 @@ function ManagersProjectsList() {
         </div>
       </div>
 
-      <div className="project-list-table-rows">
+      <div
+        className="project-list-table-rows"
+        style={{ marginBottom: "120px" }}
+      >
         <ul>
           {filteredProjects.map((project) => (
             <li

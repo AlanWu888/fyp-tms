@@ -37,10 +37,11 @@ function EntryModal({ timesheetId, entry, onClose, onTimesheetUpdate }) {
   }
 
   useEffect(() => {
-    // get projects and only show the projects user is part of
     const fetchData = async () => {
       try {
-        const response = await fetch("/api/Projects");
+        const response = await fetch(
+          `/api/Projects?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch projects");
         }
@@ -103,7 +104,6 @@ function EntryModal({ timesheetId, entry, onClose, onTimesheetUpdate }) {
   const handleClientChange = (e) => {
     const selectedClient = e.target.value;
     setClientName(selectedClient);
-    // Reset project name when client changes
     setProjectName("");
   };
 
@@ -121,28 +121,31 @@ function EntryModal({ timesheetId, entry, onClose, onTimesheetUpdate }) {
     }
 
     try {
-      const response = await fetch("/api/Timesheets", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: timesheetId,
-          updatedFields: {
-            entryId: entry._id,
-            clientName,
-            projectName,
-            taskDescription,
-            time: convertTimeToDecimal(time),
-            additionalNotes,
-            taskType: taskType.label,
+      const response = await fetch(
+        `/api/Timesheets?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
           },
-        }),
-      });
+          body: JSON.stringify({
+            id: timesheetId,
+            updatedFields: {
+              entryId: entry._id,
+              clientName,
+              projectName,
+              taskDescription,
+              time: convertTimeToDecimal(time),
+              additionalNotes,
+              taskType: taskType.label,
+            },
+          }),
+        },
+      );
       if (!response.ok) {
         throw new Error("Failed to update timesheet");
       }
-      onTimesheetUpdate(); // Trigger the callback function to update timesheet data
+      onTimesheetUpdate();
       onClose();
     } catch (error) {
       console.error("Error updating timesheet:", error);

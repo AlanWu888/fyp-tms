@@ -2,7 +2,7 @@
 
 import styles from "./styles/Navbar.module.css";
 import Link from "next/link";
-import { usePathname } from "next/navigation"; // usePathname is a hook now imported from navigation
+import { usePathname } from "next/navigation";
 
 const NavManager = () => {
   const pathname = usePathname();

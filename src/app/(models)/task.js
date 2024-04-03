@@ -27,7 +27,6 @@ const TaskSchema = new Schema(
   },
 );
 
-// Define a compound index for clientName, projectName, and taskDescription
 TaskSchema.index(
   { clientName: 1, projectName: 1, taskDescription: 1 },
   { unique: true },

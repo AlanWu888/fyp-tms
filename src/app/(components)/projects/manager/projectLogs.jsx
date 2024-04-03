@@ -24,12 +24,15 @@ const Logs = () => {
 
   async function fetchProjectData() {
     try {
-      const response = await fetch("/api/Projects", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `/api/Projects?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
-      });
+      );
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -53,12 +56,16 @@ const Logs = () => {
 
   async function fetchProjectLogs() {
     try {
-      const response = await fetch("/api/LogMessages", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `/api/LogMessages?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          passwrod: process.env.API_TOKEN,
         },
-      });
+      );
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -99,7 +106,6 @@ const Logs = () => {
   };
 
   const handleSearch = (event) => {
-    console.log(`Searched, ${event.target.value}`);
     setSearchTerm(event.target.value);
   };
 
@@ -128,7 +134,6 @@ const Logs = () => {
   }, [project, logs]);
 
   useEffect(() => {
-    console.log("search");
     const filtered = logs.filter((log) => {
       const formattedDate = new Date(log.createdAt)
         .toLocaleDateString("en-GB", {
@@ -154,14 +159,8 @@ const Logs = () => {
         formattedTime.includes(searchTerm)
       );
     });
-    console.log("filtered: ");
-    console.log(filtered);
     setFilteredLogs(filtered);
   }, [searchTerm]);
-
-  useEffect(() => {
-    console.log(filteredLogs);
-  }, [filteredLogs]);
 
   if (loading) {
     return <LoadingSpinner />;
