@@ -26,11 +26,14 @@ const UserForm = () => {
       return;
     }
 
-    const res = await fetch("/api/Users", {
-      method: "POST",
-      body: JSON.stringify({ formData }),
-      "content-type": "application/json",
-    });
+    const res = await fetch(
+      `/api/Users?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+      {
+        method: "POST",
+        body: JSON.stringify({ formData }),
+        "content-type": "application/json",
+      },
+    );
 
     if (!res.ok) {
       const response = await res.json();

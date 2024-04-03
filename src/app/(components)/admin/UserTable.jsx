@@ -18,15 +18,18 @@ const UserTable = ({ userData, role, header, fetchData }) => {
 
   async function deleteUser(userID) {
     try {
-      const response = await fetch("/api/Users", {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `/api/Users?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: userID,
+          }),
         },
-        body: JSON.stringify({
-          userId: userID,
-        }),
-      });
+      );
       if (!response.ok) {
         throw new Error("Failed to delete entry");
       }

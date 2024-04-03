@@ -16,7 +16,9 @@ const EditUser = () => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch("/api/Users");
+      const response = await fetch(
+        `/api/Users?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+      );
       if (!response.ok) {
         throw new Error("Failed to fetch users");
       }
@@ -63,22 +65,25 @@ const EditUser = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("/api/Users", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId: userID,
-          newData: {
-            email: user.email,
-            firstname: user.firstname,
-            lastname: user.lastname,
-            capacity: user.capacity,
-            role: user.role,
+      const response = await fetch(
+        `/api/Users?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
           },
-        }),
-      });
+          body: JSON.stringify({
+            userId: userID,
+            newData: {
+              email: user.email,
+              firstname: user.firstname,
+              lastname: user.lastname,
+              capacity: user.capacity,
+              role: user.role,
+            },
+          }),
+        },
+      );
       if (!response.ok) {
         throw new Error("Failed to update the user");
       } else {

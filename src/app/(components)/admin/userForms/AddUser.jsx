@@ -36,13 +36,16 @@ const AddUser = () => {
     setError(null);
 
     try {
-      const response = await fetch("/api/Users", {
-        method: "POST",
-        body: JSON.stringify({ formData }),
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `/api/Users?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+        {
+          method: "POST",
+          body: JSON.stringify({ formData }),
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
-      });
+      );
       if (!response.ok) {
         throw new Error("Failed to create the user");
       } else {
