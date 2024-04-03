@@ -119,24 +119,27 @@ function EntryModal({ timesheetId, entry, onClose, onTimesheetUpdate }) {
     }
 
     try {
-      const response = await fetch("/api/Timesheets", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: timesheetId,
-          updatedFields: {
-            entryId: entry._id,
-            clientName,
-            projectName,
-            taskDescription,
-            time: convertTimeToDecimal(time),
-            additionalNotes,
-            taskType: taskType.label,
+      const response = await fetch(
+        `/api/Timesheets?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
           },
-        }),
-      });
+          body: JSON.stringify({
+            id: timesheetId,
+            updatedFields: {
+              entryId: entry._id,
+              clientName,
+              projectName,
+              taskDescription,
+              time: convertTimeToDecimal(time),
+              additionalNotes,
+              taskType: taskType.label,
+            },
+          }),
+        },
+      );
       if (!response.ok) {
         throw new Error("Failed to update timesheet");
       }

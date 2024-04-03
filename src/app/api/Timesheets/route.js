@@ -1,9 +1,17 @@
 import Timesheet from "@/app/(models)/timesheet";
 import { NextResponse } from "next/server";
 
-export async function POST(req) {
+export async function POST(request) {
+  const { searchParams } = new URL(request.url);
+  const password = searchParams.get("password");
+  if (password !== process.env.NEXT_PUBLIC_API_TOKEN) {
+    return NextResponse.json(
+      { message: "Unauthorized access" },
+      { status: 401 },
+    );
+  }
   try {
-    const body = await req.json();
+    const body = await request.json();
     const timesheetData = body.formData;
 
     if (
@@ -44,7 +52,15 @@ export async function POST(req) {
   }
 }
 
-export async function GET() {
+export async function GET(request) {
+  const { searchParams } = new URL(request.url);
+  const password = searchParams.get("password");
+  if (password !== process.env.NEXT_PUBLIC_API_TOKEN) {
+    return NextResponse.json(
+      { message: "Unauthorized access" },
+      { status: 401 },
+    );
+  }
   try {
     const timesheets = await Timesheet.find();
     return NextResponse.json({ timesheets }, { status: 201 });
@@ -54,9 +70,17 @@ export async function GET() {
   }
 }
 
-export async function PATCH(req) {
+export async function PATCH(request) {
+  const { searchParams } = new URL(request.url);
+  const password = searchParams.get("password");
+  if (password !== process.env.NEXT_PUBLIC_API_TOKEN) {
+    return NextResponse.json(
+      { message: "Unauthorized access" },
+      { status: 401 },
+    );
+  }
   try {
-    const { id, updatedFields } = await req.json();
+    const { id, updatedFields } = await request.json();
 
     if (!id || !updatedFields) {
       return NextResponse.json({ message: "Missing fields" }, { status: 400 });
@@ -102,9 +126,17 @@ export async function PATCH(req) {
   }
 }
 
-export async function DELETE(req) {
+export async function DELETE(request) {
+  const { searchParams } = new URL(request.url);
+  const password = searchParams.get("password");
+  if (password !== process.env.NEXT_PUBLIC_API_TOKEN) {
+    return NextResponse.json(
+      { message: "Unauthorized access" },
+      { status: 401 },
+    );
+  }
   try {
-    const { id } = await req.json();
+    const { id } = await request.json();
 
     if (!id) {
       return NextResponse.json(

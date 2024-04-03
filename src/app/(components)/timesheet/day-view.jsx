@@ -63,7 +63,9 @@ function DayViewTimesheet({ date, setDate }) {
 
   const fetchData = async () => {
     try {
-      const response = await fetch("/api/Timesheets");
+      const response = await fetch(
+        `/api/Timesheets?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+      );
       if (!response.ok) {
         throw new Error("Failed to fetch timesheets");
       }
@@ -128,15 +130,18 @@ function DayViewTimesheet({ date, setDate }) {
 
   const handleConfirmDelete = async () => {
     try {
-      const response = await fetch("/api/Timesheets", {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `/api/Timesheets?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: selectedTimesheetForDelete._id,
+          }),
         },
-        body: JSON.stringify({
-          id: selectedTimesheetForDelete._id,
-        }),
-      });
+      );
       if (!response.ok) {
         throw new Error("Failed to delete entry");
       }

@@ -28,7 +28,9 @@ function WeekViewTimesheet({ date }) {
 
   const fetchData = async () => {
     try {
-      const response = await fetch("/api/Timesheets");
+      const response = await fetch(
+        `/api/Timesheets?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+      );
       if (!response.ok) {
         throw new Error("Failed to fetch timesheets");
       }
@@ -308,15 +310,18 @@ function WeekViewTimesheet({ date }) {
 
   async function deleteDB(entryId) {
     try {
-      const response = await fetch("/api/Timesheets", {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `/api/Timesheets?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: entryId,
+          }),
         },
-        body: JSON.stringify({
-          id: entryId,
-        }),
-      });
+      );
       if (!response.ok) {
         throw new Error("Failed to delete entry");
       }
@@ -329,23 +334,26 @@ function WeekViewTimesheet({ date }) {
 
   async function postDB(postParams) {
     try {
-      const response = await fetch("/api/Timesheets", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          formData: {
-            userEmail: postParams.userEmail,
-            clientName: postParams.clientName,
-            projectName: postParams.projectName,
-            taskDescription: postParams.taskDescription,
-            time: parseFloat(postParams.time),
-            date: postParams.date,
-            taskType: postParams.taskType,
+      const response = await fetch(
+        `/api/Timesheets?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
           },
-        }),
-      });
+          body: JSON.stringify({
+            formData: {
+              userEmail: postParams.userEmail,
+              clientName: postParams.clientName,
+              projectName: postParams.projectName,
+              taskDescription: postParams.taskDescription,
+              time: parseFloat(postParams.time),
+              date: postParams.date,
+              taskType: postParams.taskType,
+            },
+          }),
+        },
+      );
       if (!response.ok) {
         throw new Error("Failed to update timesheet");
       }
@@ -356,19 +364,22 @@ function WeekViewTimesheet({ date }) {
 
   async function patchDB(patchParams) {
     try {
-      const response = await fetch("/api/Timesheets", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: patchParams.entryId,
-          updatedFields: {
-            entryId: patchParams.entryId,
-            time: patchParams.time,
+      const response = await fetch(
+        `/api/Timesheets?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
           },
-        }),
-      });
+          body: JSON.stringify({
+            id: patchParams.entryId,
+            updatedFields: {
+              entryId: patchParams.entryId,
+              time: patchParams.time,
+            },
+          }),
+        },
+      );
       if (!response.ok) {
         throw new Error("Failed to update timesheet");
       }
