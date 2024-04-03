@@ -34,19 +34,22 @@ function ManageValuesModal({ onClose, currentProject }) {
 
   const patchDBBudget = async () => {
     try {
-      const response = await fetch("/api/Projects", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          clientname: currentProject[0].clientname,
-          projectname: currentProject[0].projectname,
-          newData: {
-            budget: newBudget,
+      const response = await fetch(
+        `/api/Projects?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
           },
-        }),
-      });
+          body: JSON.stringify({
+            clientname: currentProject[0].clientname,
+            projectname: currentProject[0].projectname,
+            newData: {
+              budget: newBudget,
+            },
+          }),
+        },
+      );
       if (!response.ok) {
         throw new Error("Failed to update timesheet");
       } else {
@@ -64,19 +67,22 @@ function ManageValuesModal({ onClose, currentProject }) {
 
   const patchDBDeadline = async () => {
     try {
-      const response = await fetch("/api/Projects", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          clientname: currentProject[0].clientname,
-          projectname: currentProject[0].projectname,
-          newData: {
-            deadline: newDeadline,
+      const response = await fetch(
+        `/api/Projects?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
           },
-        }),
-      });
+          body: JSON.stringify({
+            clientname: currentProject[0].clientname,
+            projectname: currentProject[0].projectname,
+            newData: {
+              deadline: newDeadline,
+            },
+          }),
+        },
+      );
       if (!response.ok) {
         throw new Error("Failed to update timesheet");
       } else {

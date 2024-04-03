@@ -51,15 +51,18 @@ function NewProject() {
 
   async function addProject(formData) {
     try {
-      const res = await fetch("/api/Projects", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const res = await fetch(
+        `/api/Projects?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            formData: formData,
+          }),
         },
-        body: JSON.stringify({
-          formData: formData,
-        }),
-      });
+      );
 
       if (!res.ok) {
         throw new Error("Failed to create the project");

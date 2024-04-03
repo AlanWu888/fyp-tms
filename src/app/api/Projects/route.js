@@ -1,9 +1,17 @@
 import Project from "@/app/(models)/project";
 import { NextResponse } from "next/server";
 
-export async function POST(req) {
+export async function POST(request) {
+  const { searchParams } = new URL(request.url);
+  const password = searchParams.get("password");
+  if (password !== process.env.NEXT_PUBLIC_API_TOKEN) {
+    return NextResponse.json(
+      { message: "Unauthorized access" },
+      { status: 401 },
+    );
+  }
   try {
-    const body = await req.json();
+    const body = await request.json();
     const projectData = body.formData;
 
     if (
@@ -38,7 +46,15 @@ export async function POST(req) {
   }
 }
 
-export async function GET() {
+export async function GET(request) {
+  const { searchParams } = new URL(request.url);
+  const password = searchParams.get("password");
+  if (password !== process.env.NEXT_PUBLIC_API_TOKEN) {
+    return NextResponse.json(
+      { message: "Unauthorized access" },
+      { status: 401 },
+    );
+  }
   try {
     const projects = await Project.find({});
     return NextResponse.json({ projects }, { status: 201 });
@@ -48,9 +64,17 @@ export async function GET() {
   }
 }
 
-export async function PATCH(req) {
+export async function PATCH(request) {
+  const { searchParams } = new URL(request.url);
+  const password = searchParams.get("password");
+  if (password !== process.env.NEXT_PUBLIC_API_TOKEN) {
+    return NextResponse.json(
+      { message: "Unauthorized access" },
+      { status: 401 },
+    );
+  }
   try {
-    const body = await req.json();
+    const body = await request.json();
     const { clientname, projectname, newData } = body;
 
     if (!clientname || !projectname) {
@@ -100,9 +124,17 @@ export async function PATCH(req) {
   }
 }
 
-export async function DELETE(req) {
+export async function DELETE(request) {
+  const { searchParams } = new URL(request.url);
+  const password = searchParams.get("password");
+  if (password !== process.env.NEXT_PUBLIC_API_TOKEN) {
+    return NextResponse.json(
+      { message: "Unauthorized access" },
+      { status: 401 },
+    );
+  }
   try {
-    const body = await req.json();
+    const body = await request.json();
     const { clientname, projectname } = body;
 
     if (!clientname || !projectname) {

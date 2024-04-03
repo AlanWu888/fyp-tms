@@ -39,7 +39,9 @@ function EntryModal({ timesheetId, entry, onClose, onTimesheetUpdate }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("/api/Projects");
+        const response = await fetch(
+          `/api/Projects?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch projects");
         }

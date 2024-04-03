@@ -146,23 +146,26 @@ function UsersTable({ header, mode, data, date, currentProject }) {
 
   async function patchDB(emailToRemove) {
     try {
-      const response = await fetch("/api/Projects", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          clientname: currentProject[0].clientname,
-          projectname: currentProject[0].projectname,
-          newData: {
-            memberEmails: currentProject[0].memberEmails.filter(
-              (email) => email !== emailToRemove,
-            ),
-            removedEmails:
-              currentProject[0].removedEmails.concat(emailToRemove),
+      const response = await fetch(
+        `/api/Projects?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
           },
-        }),
-      });
+          body: JSON.stringify({
+            clientname: currentProject[0].clientname,
+            projectname: currentProject[0].projectname,
+            newData: {
+              memberEmails: currentProject[0].memberEmails.filter(
+                (email) => email !== emailToRemove,
+              ),
+              removedEmails:
+                currentProject[0].removedEmails.concat(emailToRemove),
+            },
+          }),
+        },
+      );
       if (!response.ok) {
         throw new Error("Failed to update timesheet");
       } else {

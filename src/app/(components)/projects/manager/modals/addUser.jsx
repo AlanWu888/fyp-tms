@@ -41,22 +41,25 @@ function AddUserModal({ onClose, currentProject }) {
 
   async function patchDB() {
     try {
-      const response = await fetch("/api/Projects", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          clientname: currentProject[0].clientname,
-          projectname: currentProject[0].projectname,
-          newData: {
-            memberEmails: currentProject[0].memberEmails.concat(inputValue),
-            removedEmails: currentProject[0].removedEmails.filter(
-              (email) => email !== inputValue,
-            ),
+      const response = await fetch(
+        `/api/Projects?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
           },
-        }),
-      });
+          body: JSON.stringify({
+            clientname: currentProject[0].clientname,
+            projectname: currentProject[0].projectname,
+            newData: {
+              memberEmails: currentProject[0].memberEmails.concat(inputValue),
+              removedEmails: currentProject[0].removedEmails.filter(
+                (email) => email !== inputValue,
+              ),
+            },
+          }),
+        },
+      );
       if (!response.ok) {
         throw new Error("Failed to update timesheet");
       } else {

@@ -37,12 +37,15 @@ function ManagersProjectsList() {
 
   async function fetchProjects() {
     try {
-      const response = await fetch("/api/Projects", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `/api/Projects?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
-      });
+      );
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
