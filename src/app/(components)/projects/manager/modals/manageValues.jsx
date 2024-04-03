@@ -99,19 +99,22 @@ function ManageValuesModal({ onClose, currentProject }) {
     messageType,
   ) => {
     try {
-      const res = await fetch("/api/LogMessages", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const res = await fetch(
+        `/api/LogMessages?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            clientName,
+            projectName,
+            addedBy: userEmail,
+            messageDescription,
+            messageType,
+          }),
         },
-        body: JSON.stringify({
-          clientName,
-          projectName,
-          addedBy: userEmail,
-          messageDescription,
-          messageType,
-        }),
-      });
+      );
 
       if (!res.ok) {
         throw new Error("Failed to update log messages");

@@ -53,12 +53,16 @@ const Logs = () => {
 
   async function fetchProjectLogs() {
     try {
-      const response = await fetch("/api/LogMessages", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `/api/LogMessages?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          passwrod: process.env.API_TOKEN,
         },
-      });
+      );
 
       if (!response.ok) {
         throw new Error("Network response was not ok");

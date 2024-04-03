@@ -73,19 +73,22 @@ function NewProject() {
 
   async function updateLogs(formData) {
     try {
-      const res = await fetch("/api/LogMessages", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const res = await fetch(
+        `/api/LogMessages?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            clientName: formData.clientname,
+            projectName: formData.projectname,
+            addedBy: userEmail,
+            messageDescription: `Client name: ${formData.clientname}, Project name: ${formData.projectname}, Budget: ${formData.budget}, Deadline: ${formData.deadline}, Members: ${formData.memberEmails}`,
+            messageType: "New Project",
+          }),
         },
-        body: JSON.stringify({
-          clientName: formData.clientname,
-          projectName: formData.projectname,
-          addedBy: userEmail,
-          messageDescription: `Client name: ${formData.clientname}, Project name: ${formData.projectname}, Budget: ${formData.budget}, Deadline: ${formData.deadline}, Members: ${formData.memberEmails}`,
-          messageType: "New Project",
-        }),
-      });
+      );
 
       if (!res.ok) {
         throw new Error("Failed to update log messages");

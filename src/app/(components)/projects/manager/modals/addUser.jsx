@@ -14,19 +14,22 @@ function AddUserModal({ onClose, currentProject }) {
 
   async function updateLogs(clientName, projectName, inputValue) {
     try {
-      const res = await fetch("/api/LogMessages", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const res = await fetch(
+        `/api/LogMessages?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            clientName: clientName,
+            projectName: projectName,
+            addedBy: userEmail,
+            messageDescription: `Added member to project: ${inputValue}`,
+            messageType: "Added User",
+          }),
         },
-        body: JSON.stringify({
-          clientName: clientName,
-          projectName: projectName,
-          addedBy: userEmail,
-          messageDescription: `Added member to project: ${inputValue}`,
-          messageType: "Added User",
-        }),
-      });
+      );
 
       if (!res.ok) {
         throw new Error("Failed to update log messages");

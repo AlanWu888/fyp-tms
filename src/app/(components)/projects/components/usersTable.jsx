@@ -119,19 +119,22 @@ function UsersTable({ header, mode, data, date, currentProject }) {
 
   async function updateLogs(clientName, projectName, emailToRemove) {
     try {
-      const res = await fetch("/api/LogMessages", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const res = await fetch(
+        `/api/LogMessages?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            clientName: clientName,
+            projectName: projectName,
+            addedBy: userEmail,
+            messageDescription: `Removed member from project: ${emailToRemove}`,
+            messageType: "Removed User",
+          }),
         },
-        body: JSON.stringify({
-          clientName: clientName,
-          projectName: projectName,
-          addedBy: userEmail,
-          messageDescription: `Removed member from project: ${emailToRemove}`,
-          messageType: "Removed User",
-        }),
-      });
+      );
 
       if (!res.ok) {
         throw new Error("Failed to update log messages");
