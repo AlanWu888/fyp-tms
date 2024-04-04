@@ -107,7 +107,7 @@ function AdditionModal({ date, onClose, onTimesheetUpdate }) {
       return;
     }
 
-    const newDate = new Date(new Date(date).setHours(0, 0, 0, 0)).toISOString();
+    const newDate = new Date(new Date(date).setHours(9, 0, 0, 0)).toISOString();
     try {
       const response = await fetch(
         `/api/Timesheets?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
