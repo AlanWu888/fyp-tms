@@ -79,6 +79,19 @@ export async function PATCH(request) {
       );
     }
 
+    if (newData.email) {
+      const existingUser = await User.findOne({ email: newData.email })
+        .lean()
+        .exec();
+
+      if (existingUser && existingUser._id.toString() !== userId) {
+        return NextResponse.json(
+          { message: "Email already exists." },
+          { status: 409 },
+        );
+      }
+    }
+
     if (newData.password) {
       newData.password = await bcrypt.hash(newData.password, 10);
     }
