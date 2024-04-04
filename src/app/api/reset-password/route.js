@@ -3,8 +3,16 @@ import { NextResponse } from "next/server";
 import crypto from "crypto";
 import sgMail from "@sendgrid/mail";
 
-export const POST = async (req) => {
-  const { email } = await req.json();
+export const POST = async (request) => {
+  const { email } = await request.json();
+  const { searchParams } = new URL(request.url);
+  const password = searchParams.get("password");
+  if (password !== process.env.NEXT_PUBLIC_API_TOKEN) {
+    return NextResponse.json(
+      { message: "Unauthorized access" },
+      { status: 401 },
+    );
+  }
 
   const existingUser = await User.findOne({ email });
   if (!existingUser) {

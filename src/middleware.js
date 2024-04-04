@@ -40,6 +40,5 @@ export const config = {
     "/api/Projects",
     "/api/Tasks",
     "/api/Timesheets",
-    "/api/Users",
   ],
 };
