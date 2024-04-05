@@ -148,6 +148,13 @@ function WeekViewTimesheet({ date }) {
   };
 
   const convertDecimalToTime = (decimalTime) => {
+    if (
+      isNaN(decimalTime) ||
+      decimalTime === null ||
+      decimalTime === undefined
+    ) {
+      return "-- : --";
+    }
     const hours = Math.floor(decimalTime);
     const minutes = Math.round((decimalTime - hours) * 60);
     return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
