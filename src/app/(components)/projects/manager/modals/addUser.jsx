@@ -84,16 +84,8 @@ function AddUserModal({ onClose, currentProject }) {
   }
 
   const handleSubmit = async () => {
-    const userExists = users.some(
-      (user) => user.email.toLowerCase() === inputValue.toLowerCase(),
-    );
-
-    if (userExists) {
-      await patchDB();
-      onClose();
-    } else {
-      setErrorMessage("Please enter a valid user email.");
-    }
+    patchDB();
+    onClose();
   };
 
   const handleChange = (event) => {
