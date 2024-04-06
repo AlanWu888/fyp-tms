@@ -1,3 +1,24 @@
+## [0.23] - XX/04/2024
+
+Fixes
+
+## Added
+
+- added error message to reset password page
+- added no entries message to reports page
+
+## Fixes
+
+- error messages for new Password form updated
+- api route protection for password resetting
+- only allow for unique emails: admin edit user
+- fixed timesheets uploading to the wrong day: timesheets previously uploaded to the day prior
+- Renamed time entry edit modal
+- fixed NaN:NaN on week view
+- manager's manage values: now displaying error messages
+- manager add to project: renamed modal
+- manager add to project: only allow when the email is in the system
+
 ## [0.22] - 03/04/2024
 
 BT-57 Clean up functions
