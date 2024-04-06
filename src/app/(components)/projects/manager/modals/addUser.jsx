@@ -100,8 +100,6 @@ function AddUserModal({ onClose, currentProject }) {
     const value = event.target.value;
     setInputValue(value);
 
-    console.log(users);
-
     const filteredSuggestions = users.filter(
       (user) =>
         (`${user.firstname} ${user.lastname}`
@@ -307,7 +305,6 @@ function AddUserModal({ onClose, currentProject }) {
                   label="+ Add Member"
                   type="submit"
                   disabled={userExists()}
-                  // disabled={!inputValue.trim()}
                   disabledColour={COLOURS.GREEN_DISABLED}
                 />
               </div>
