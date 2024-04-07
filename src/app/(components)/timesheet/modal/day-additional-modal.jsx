@@ -19,15 +19,18 @@ function AdditionModal({ date, onClose, onTimesheetUpdate }) {
     return parseFloat(Number(hours + minutes / 60).toPrecision(5));
   };
 
+  const [timesheets, setTimesheets] = useState([]);
   const [time, setTime] = useState(convertDecimalToTime(0.0));
   const [clientName, setClientName] = useState();
   const [projectName, setProjectName] = useState();
-  const [taskDescription, setTaskDescription] = useState();
+  const [taskDescription, setTaskDescription] = useState("");
   const [additionalNotes, setAdditionalNotes] = useState();
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [clientProjects, setClientProjects] = useState({});
   const [taskType, setTaskType] = useState(null);
+  const [existingTasks, setExistingTasks] = useState([]);
+  const [userSuggestions, setUserSuggestions] = useState([]);
 
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -82,6 +85,51 @@ function AdditionModal({ date, onClose, onTimesheetUpdate }) {
 
     setClientProjects(updatedClientProjects);
   }, [filteredProjects]);
+
+  useEffect(() => {
+    fetchTimesheetData();
+  }, [clientName, projectName]);
+
+  useEffect(() => {
+    setExistingTasks(uniqueTaskDescriptions());
+  }, [timesheets]);
+
+  const handleOptionClick = (taskDescription) => {
+    setTaskDescription(taskDescription);
+    setUserSuggestions([]);
+  };
+
+  async function fetchTimesheetData() {
+    try {
+      const response = await fetch(
+        `/api/Timesheets?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch timesheets");
+      }
+      const data = await response.json();
+
+      const projectTimesheets = data.timesheets.filter((timesheet) => {
+        return (
+          timesheet.clientName === clientName &&
+          timesheet.projectName === projectName
+        );
+      });
+      setTimesheets(projectTimesheets);
+    } catch (error) {
+      console.error("Error fetching timesheets:", error);
+    }
+  }
+
+  function uniqueTaskDescriptions() {
+    let uniqueDescriptions = [];
+    for (let timesheet of timesheets) {
+      if (!uniqueDescriptions.includes(timesheet.taskDescription)) {
+        uniqueDescriptions.push(timesheet.taskDescription);
+      }
+    }
+    return uniqueDescriptions.sort();
+  }
 
   const handleClientChange = (e) => {
     const selectedClient = e.target.value;
@@ -142,6 +190,17 @@ function AdditionModal({ date, onClose, onTimesheetUpdate }) {
         "Failed to update timesheet. Please try again later or check for duplicated entries.",
       );
     }
+  };
+
+  const handleChange = (event) => {
+    const value = event.target.value;
+    setTaskDescription(value);
+
+    const filteredSuggestions = existingTasks.filter((task) =>
+      task.toLowerCase().includes(value.toLowerCase()),
+    );
+
+    setUserSuggestions(filteredSuggestions);
   };
 
   return (
@@ -287,7 +346,7 @@ function AdditionModal({ date, onClose, onTimesheetUpdate }) {
                 <input
                   type="text"
                   value={taskDescription}
-                  onChange={(e) => setTaskDescription(e.target.value)}
+                  onChange={handleChange}
                   style={{
                     width: "100%",
                     fontSize: "16px",
@@ -304,6 +363,49 @@ function AdditionModal({ date, onClose, onTimesheetUpdate }) {
                   required={true}
                 />
               </label>
+              {taskDescription &&
+                taskDescription.length > 1 &&
+                userSuggestions.length > 0 && (
+                  <ul
+                    className="suggestion-list"
+                    style={{
+                      position: "absolute",
+                      borderBottom: "1px solid",
+                      borderLeft: "1px solid",
+                      borderRight: "1px solid",
+                      boxShadow: "2px 2px 4px rgba(0, 0, 0, 0.2)",
+                      borderBottomLeftRadius: "10px",
+                      borderBottomRightRadius: "10px",
+                      width: "660px",
+                      marginTop: "0px",
+                      paddingTop: "5px",
+                      listStyle: "none",
+                      paddingBottom: "10px",
+                      backgroundColor: "white",
+                      zIndex: 1,
+                    }}
+                  >
+                    {userSuggestions.map((task) => (
+                      <li
+                        key={task}
+                        onClick={() => handleOptionClick(task)}
+                        style={{
+                          padding: "5px 10px",
+                          cursor: "pointer",
+                          zIndex: 2,
+                        }}
+                        onMouseEnter={(e) =>
+                          (e.target.style.backgroundColor = COLOURS.GREY)
+                        }
+                        onMouseLeave={(e) =>
+                          (e.target.style.backgroundColor = COLOURS.WHITE)
+                        }
+                      >
+                        {task}
+                      </li>
+                    ))}
+                  </ul>
+                )}
             </div>
 
             <div
