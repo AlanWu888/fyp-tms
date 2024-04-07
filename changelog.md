@@ -1,4 +1,4 @@
-## [0.23] - XX/04/2024
+## [0.23] - 07/04/2024
 
 Fixes
 
@@ -6,6 +6,8 @@ Fixes
 
 - added error message to reset password page
 - added no entries message to reports page
+- routing paths between reports and projects
+- added disabled button state to invoice tasks picker
 
 ## Fixes
 
@@ -20,6 +22,12 @@ Fixes
 - manager add to project: only allow when the email is in the system
 - manager invoices: added disabled state to invoice tasks picker
 - manager manage: routing fixes
+- date picker in reports/view-task now functional
+
+## Removed
+
+- TODO list
+- User Reports page
 
 ## [0.22] - 03/04/2024
 
