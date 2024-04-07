@@ -109,8 +109,8 @@ function UserBreakdownTask({ filteredData, userEmail }) {
         <div>
           <div className="hours-time-breakdown__rows">
             {Object.entries(groupedData).map(([groupKey, group], index) => (
-              <div style={{ marginTop: "10px" }}>
-                <React.Fragment key={index}>
+              <div style={{ marginTop: "10px" }} key={index}>
+                <React.Fragment>
                   <div
                     style={{
                       display: "flex",
