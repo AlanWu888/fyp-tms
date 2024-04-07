@@ -51,7 +51,7 @@ const ManagerViewProjectComponent = () => {
           timesheet.projectName === projectName
         );
       });
-
+      console.log(projectTimesheets);
       setTimesheets(projectTimesheets);
     } catch (error) {
       console.error("Error fetching timesheets:", error);
@@ -82,6 +82,14 @@ const ManagerViewProjectComponent = () => {
     } catch (error) {
       console.error("Error fetching projects:", error);
     }
+  }
+
+  function totalTime() {
+    let total = 0;
+    for (let timesheet of timesheets) {
+      total += timesheet.time;
+    }
+    return total;
   }
 
   function calculateTimeByProperty(property, setResultFunction) {
@@ -373,7 +381,9 @@ const ManagerViewProjectComponent = () => {
                 }}
               >
                 <p>Total Contribution</p>
-                <p style={{ fontSize: "24px", fontWeight: "bold" }}>00:00</p>
+                <p style={{ fontSize: "24px", fontWeight: "bold" }}>
+                  {convertDecimalToTime(totalTime())}
+                </p>
                 <div
                   className="view-project--dashboard-contribution-breakdown"
                   style={{ marginTop: "10px" }}
