@@ -8,6 +8,7 @@ Fixes
 - added no entries message to reports page
 - routing paths between reports and projects
 - added disabled button state to invoice tasks picker
+- manage screen task folding
 
 ## Fixes
 
