@@ -24,6 +24,10 @@ function ManageValuesModal({ onClose, currentProject }) {
   const handleSubmit = (event) => {
     event.preventDefault();
     if (newBudget !== "") {
+      if (isNaN(newBudget) || parseFloat(newBudget) <= 0) {
+        setErrorMessage("Please enter a valid budget amount.");
+        return;
+      }
       patchDBBudget();
     }
     if (newDeadline !== "") {
@@ -56,7 +60,7 @@ function ManageValuesModal({ onClose, currentProject }) {
         await updateLogs(
           currentProject[0].clientname,
           currentProject[0].projectname,
-          `Budget changed to £${newBudget} from ${currentProject[0].budget}`,
+          `Budget changed to £${newBudget} from £${currentProject[0].budget}`,
           "Budget modified",
         );
       }

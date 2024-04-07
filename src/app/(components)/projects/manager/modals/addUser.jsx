@@ -77,6 +77,12 @@ function AddUserModal({ onClose, currentProject }) {
     }
   }
 
+  function userExists() {
+    return !Object.keys(users).some(
+      (key) => users[key].email.toLowerCase() === inputValue.toLowerCase(),
+    );
+  }
+
   const handleSubmit = async () => {
     patchDB();
     onClose();
@@ -198,7 +204,7 @@ function AddUserModal({ onClose, currentProject }) {
             borderBottom: "1px solid black",
           }}
         >
-          <h2>Add a new time entry</h2>
+          <h2>Add a member to this project</h2>
         </div>
 
         <div
@@ -290,7 +296,7 @@ function AddUserModal({ onClose, currentProject }) {
                   colour={COLOURS.WHITE}
                   label="+ Add Member"
                   type="submit"
-                  disabled={!inputValue.trim()}
+                  disabled={userExists()}
                   disabledColour={COLOURS.GREEN_DISABLED}
                 />
               </div>

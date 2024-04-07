@@ -252,12 +252,13 @@ function ManageContainerMain() {
                   alignItems: "center",
                 }}
               >
-                {task.taskDescription} - {task.taskType}
+                {task.taskDescription} ({task.taskType})
                 <Link
                   href={{
-                    pathname: `/manager/report/view-task`,
+                    pathname: `/manager/manage/view-task`,
                     query: {
                       taskName: task.taskDescription,
+                      userEmail: "all",
                     },
                   }}
                 >

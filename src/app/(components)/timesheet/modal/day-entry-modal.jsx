@@ -217,7 +217,7 @@ function EntryModal({ timesheetId, entry, onClose, onTimesheetUpdate }) {
             borderBottom: "1px solid black",
           }}
         >
-          <h2>Editing time entry for task</h2>
+          <h2>Editing time entry</h2>
         </div>
 
         <div

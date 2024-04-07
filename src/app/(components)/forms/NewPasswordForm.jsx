@@ -14,17 +14,20 @@ export default function NewPasswordForm() {
 
   const verifyToken = async (tokenParam) => {
     try {
-      const res = await fetch("/api/verify-token", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const res = await fetch(
+        `/api/verify-token?password=${process.env.NEXT_PUBLIC_API_TOKEN}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            token: tokenParam,
+          }),
         },
-        body: JSON.stringify({
-          token: tokenParam,
-        }),
-      });
+      );
       if (res.status === 400) {
-        setError("Invalid token, or token has expired");
+        setError("Your password reset link is invalid, or has expired.");
       }
       if (res.status === 200) {
         setVerified(true);
@@ -44,7 +47,7 @@ export default function NewPasswordForm() {
     const confirmPassword = e.target[1].value;
 
     if (!user) {
-      setError("User object is not set");
+      setError("User could not be found");
       return;
     }
 
@@ -103,18 +106,60 @@ export default function NewPasswordForm() {
     return passwordRegex.test(password);
   };
 
+  const closeError = () => {
+    setError(null);
+  };
+
+  const closePasswordError = () => {
+    setPasswordError(null);
+  };
+
   return (
     <div className="grid place-items-center h-screen bg-indigo-900">
+      {error && (
+        <div className="fixed top-0 left-0 right-0 z-50">
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-1 rounded relative">
+            <span className="block sm:inline text-sm">{error}</span>
+            <span className="absolute top-0 bottom-0 right-0 px-4 py-1">
+              <svg
+                onClick={closeError}
+                className="fill-current h-6 w-6 text-red-500 cursor-pointer"
+                role="button"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+              >
+                <title>Close</title>
+                <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
+              </svg>
+            </span>
+          </div>
+        </div>
+      )}
+      {passwordError && (
+        <div className="fixed top-0 left-0 right-0 z-50">
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-1 rounded relative">
+            <span className="block sm:inline text-sm">{passwordError}</span>
+            <span className="absolute top-0 bottom-0 right-0 px-4 py-1">
+              <svg
+                onClick={closePasswordError}
+                className="fill-current h-6 w-6 text-red-500 cursor-pointer"
+                role="button"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+              >
+                <title>Close</title>
+                <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
+              </svg>
+            </span>
+          </div>
+        </div>
+      )}
       <div
         className="shadow-lg p-5 rounded-lg bg-white"
         style={{ width: "450px" }}
       >
         <h1 className="text-xl font-bold my-4">Change your password</h1>
         <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700" />
-        {error && <div className="text-red-600 mb-4">{error}</div>}
-        {passwordError && (
-          <div className="text-red-600 mb-4">{passwordError}</div>
-        )}
         {verified && (
           <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
             <p className="text-sm">Enter your new password:</p>

@@ -13,6 +13,7 @@ const EditUser = () => {
   const [user, setUser] = useState();
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const fetchData = async () => {
     try {
@@ -84,10 +85,13 @@ const EditUser = () => {
           }),
         },
       );
-      if (!response.ok) {
-        throw new Error("Failed to update the user");
-      } else {
+
+      if (response.ok) {
         setShowModal(true);
+        setErrorMessage("");
+      } else {
+        const errorData = await response.json();
+        setErrorMessage(errorData.message);
       }
     } catch (error) {
       console.error("Error updating user:", error);
@@ -100,6 +104,9 @@ const EditUser = () => {
         <LoadingSpinner />
       ) : (
         <div>
+          {errorMessage && (
+            <p style={{ color: "red", marginBottom: "10px" }}>{errorMessage}</p>
+          )}
           {user ? (
             <form onSubmit={handleSubmit}>
               <div style={{ display: "flex", marginBottom: "20px" }}>

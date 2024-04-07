@@ -178,6 +178,7 @@ function ReportsBreakdown({ timesheets, selectedTab, date, mode }) {
       return {
         clientName: client,
         projectName: project,
+        backto: "reports",
       };
     } else if (selectedTab === "Team") {
       return { userEmail: param };
@@ -244,6 +245,7 @@ function ReportsBreakdown({ timesheets, selectedTab, date, mode }) {
           </div>
         </div>
         <div
+          className="spacer"
           style={{
             display: "flex",
             justifyContent: "center",
@@ -252,135 +254,154 @@ function ReportsBreakdown({ timesheets, selectedTab, date, mode }) {
         ></div>
       </div>
       <div className={`reports-breakdown-table--${selectedTab}--rows`}>
-        {groupedData.map((group, index) => {
-          const totalHours = calculateTotalHours(group);
-          return (
-            <div
-              key={index}
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                paddingLeft: "20px",
-                paddingRight: "20px",
-                borderBottom: "1px solid black",
-                paddingTop: "10px",
-                paddingBottom: "10px",
-              }}
-            >
-              <div style={{ display: "flex" }}>
-                <div
-                  style={{
-                    width: "400px",
-                    marginRight: "20px",
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  {Object.keys(group)[0]}
-                </div>
-                <div
-                  style={{
-                    width: "70px",
-                    marginRight: "50px",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  {convertDecimalToTime(
-                    Object.values(group)[0].billable +
-                      Object.values(group)[0]["non-billable"] +
-                      Object.values(group)[0].research,
-                  )}
-                </div>
-
-                <div
-                  style={{
-                    width: "60px",
-                    marginRight: "10px",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    borderRadius: "5px",
-                  }}
-                >
-                  {`${((Object.values(group)[0].billable / totalHours) * 100).toFixed(1)} % `}
-                </div>
-                <div
-                  style={{
-                    width: "280px",
-                    marginRight: "20px",
-                    display: "flex",
-                    borderRadius: "5px",
-                    marginTop: "10px",
-                    marginBottom: "10px",
-                    overflow: "hidden",
-                    border: "1px solid black",
-                  }}
-                >
-                  {Object.values(group)[0].billable > 0 && (
-                    <div
-                      style={{
-                        position: "relative",
-                        backgroundColor: "rgba(0, 108, 207, 1)",
-                        width: `${(Object.values(group)[0].billable / totalHours) * 100}%`,
-                      }}
-                      title={`Billable (${((Object.values(group)[0].billable / totalHours) * 100).toFixed(1)}%)\nTime spent: ${convertDecimalToTime(Object.values(group)[0].billable)}`}
-                    >
-                      <span style={{ opacity: 0, position: "absolute" }}>
-                        {convertDecimalToTime(Object.values(group)[0].billable)}
-                      </span>
-                    </div>
-                  )}
-                  {Object.values(group)[0]["non-billable"] > 0 && (
-                    <div
-                      style={{
-                        position: "relative",
-                        backgroundColor: "rgba(252, 181, 0, 1)",
-                        width: `${(Object.values(group)[0]["non-billable"] / totalHours) * 100}%`,
-                      }}
-                      title={`Non-Billable (${((Object.values(group)[0]["non-billable"] / totalHours) * 100).toFixed(1)}%)\nTime spent: ${convertDecimalToTime(Object.values(group)[0]["non-billable"])}`}
-                    >
-                      <span style={{ opacity: 0, position: "absolute" }}>
-                        {convertDecimalToTime(
-                          Object.values(group)[0]["non-billable"],
-                        )}
-                      </span>
-                    </div>
-                  )}
-                  {Object.values(group)[0].research > 0 && (
-                    <div
-                      style={{
-                        position: "relative",
-                        backgroundColor: "rgba(0, 252, 206, 1)",
-                        width: `${(Object.values(group)[0].research / totalHours) * 100}%`,
-                      }}
-                      title={`Research (${((Object.values(group)[0].research / totalHours) * 100).toFixed(1)}%)\nTime spent: ${convertDecimalToTime(Object.values(group)[0].research)}`}
-                    >
-                      <span style={{ opacity: 0, position: "absolute" }}>
-                        {convertDecimalToTime(Object.values(group)[0].research)}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </div>
+        {groupedData.length === 0 ? (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              paddingTop: "10px",
+              paddingBottom: "10px",
+              borderBottom: "1px solid black",
+            }}
+          >
+            No entries found
+          </div>
+        ) : (
+          groupedData.map((group, index) => {
+            const totalHours = calculateTotalHours(group);
+            return (
               <div
+                key={index}
                 style={{
-                  alignItems: "center",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  paddingLeft: "20px",
+                  paddingRight: "20px",
+                  borderBottom: "1px solid black",
+                  paddingTop: "10px",
+                  paddingBottom: "10px",
                 }}
               >
-                <Link
-                  href={{
-                    pathname: getPathname(),
-                    query: getQuery(Object.keys(group)[0]),
+                <div style={{ display: "flex" }}>
+                  <div
+                    style={{
+                      width: "400px",
+                      marginRight: "20px",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    {Object.keys(group)[0]}
+                  </div>
+                  <div
+                    style={{
+                      width: "70px",
+                      marginRight: "50px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    {convertDecimalToTime(
+                      Object.values(group)[0].billable +
+                        Object.values(group)[0]["non-billable"] +
+                        Object.values(group)[0].research,
+                    )}
+                  </div>
+
+                  <div
+                    style={{
+                      width: "60px",
+                      marginRight: "10px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      borderRadius: "5px",
+                    }}
+                  >
+                    {`${((Object.values(group)[0].billable / totalHours) * 100).toFixed(1)} % `}
+                  </div>
+                  <div
+                    style={{
+                      width: "280px",
+                      marginRight: "20px",
+                      display: "flex",
+                      borderRadius: "5px",
+                      marginTop: "10px",
+                      marginBottom: "10px",
+                      overflow: "hidden",
+                      border: "1px solid black",
+                    }}
+                  >
+                    {Object.values(group)[0].billable > 0 && (
+                      <div
+                        style={{
+                          position: "relative",
+                          backgroundColor: "rgba(0, 108, 207, 1)",
+                          width: `${(Object.values(group)[0].billable / totalHours) * 100}%`,
+                        }}
+                        title={`Billable (${((Object.values(group)[0].billable / totalHours) * 100).toFixed(1)}%)\nTime spent: ${convertDecimalToTime(Object.values(group)[0].billable)}`}
+                      >
+                        <span style={{ opacity: 0, position: "absolute" }}>
+                          {convertDecimalToTime(
+                            Object.values(group)[0].billable,
+                          )}
+                        </span>
+                      </div>
+                    )}
+                    {Object.values(group)[0]["non-billable"] > 0 && (
+                      <div
+                        style={{
+                          position: "relative",
+                          backgroundColor: "rgba(252, 181, 0, 1)",
+                          width: `${(Object.values(group)[0]["non-billable"] / totalHours) * 100}%`,
+                        }}
+                        title={`Non-Billable (${((Object.values(group)[0]["non-billable"] / totalHours) * 100).toFixed(1)}%)\nTime spent: ${convertDecimalToTime(Object.values(group)[0]["non-billable"])}`}
+                      >
+                        <span style={{ opacity: 0, position: "absolute" }}>
+                          {convertDecimalToTime(
+                            Object.values(group)[0]["non-billable"],
+                          )}
+                        </span>
+                      </div>
+                    )}
+                    {Object.values(group)[0].research > 0 && (
+                      <div
+                        style={{
+                          position: "relative",
+                          backgroundColor: "rgba(0, 252, 206, 1)",
+                          width: `${(Object.values(group)[0].research / totalHours) * 100}%`,
+                        }}
+                        title={`Research (${((Object.values(group)[0].research / totalHours) * 100).toFixed(1)}%)\nTime spent: ${convertDecimalToTime(Object.values(group)[0].research)}`}
+                      >
+                        <span style={{ opacity: 0, position: "absolute" }}>
+                          {convertDecimalToTime(
+                            Object.values(group)[0].research,
+                          )}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div
+                  style={{
+                    alignItems: "center",
                   }}
                 >
-                  <Button label="view" />
-                </Link>
+                  <Link
+                    href={{
+                      pathname: getPathname(),
+                      query: getQuery(Object.keys(group)[0]),
+                    }}
+                  >
+                    <Button label="view" />
+                  </Link>
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })
+        )}
       </div>
       <div>
         <p>{}</p>

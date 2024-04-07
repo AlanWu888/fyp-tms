@@ -29,14 +29,22 @@ function ManageContainerTask() {
       }
       const data = await response.json();
 
-      const userTimesheets = data.timesheets.filter((timesheet) => {
-        return (
-          timesheet.userEmail === userEmail &&
-          timesheet.taskDescription === taskName
-        );
-      });
-      setTimesheets(userTimesheets);
-      setLoading(false);
+      if (userEmail === "all") {
+        const userTimesheets = data.timesheets.filter((timesheet) => {
+          return timesheet.taskDescription === taskName;
+        });
+        setTimesheets(userTimesheets);
+        setLoading(false);
+      } else {
+        const userTimesheets = data.timesheets.filter((timesheet) => {
+          return (
+            timesheet.userEmail === userEmail &&
+            timesheet.taskDescription === taskName
+          );
+        });
+        setTimesheets(userTimesheets);
+        setLoading(false);
+      }
     } catch (error) {
       console.error("Error fetching timesheets:", error);
       setError(error.message);
@@ -111,6 +119,14 @@ function ManageContainerTask() {
         filteredTimesheets.push(timesheet);
       }
     }
+    filteredTimesheets.sort((a, b) => {
+      if (a.clientName < b.clientName) return -1;
+      if (a.clientName > b.clientName) return 1;
+      if (a.projectName < b.projectName) return -1;
+      if (a.projectName > b.projectName) return 1;
+      return 0;
+    });
+
     setFilteredData(filteredTimesheets);
   };
 
@@ -146,21 +162,38 @@ function ManageContainerTask() {
         <>
           <div style={{ marginBottom: "20px" }}>
             <div>
-              <Link
-                href={{
-                  pathname: `/manager/manage/view-user`,
-                  query: {
-                    userEmail: userEmail,
-                  },
-                }}
-              >
-                <GoBack />
-              </Link>
+              {userEmail === "all" ? (
+                <Link
+                  href={{
+                    pathname: `/manager/manage`,
+                    query: {
+                      userEmail: userEmail,
+                    },
+                  }}
+                >
+                  <GoBack />
+                </Link>
+              ) : (
+                <Link
+                  href={{
+                    pathname: `/manager/manage/view-user`,
+                    query: {
+                      userEmail: userEmail,
+                    },
+                  }}
+                >
+                  <GoBack />
+                </Link>
+              )}
               <div style={{ marginTop: "10px", marginBottom: "10px" }}>
                 <p
                   style={{ fontSize: "28px", fontWeight: "bold" }}
                 >{`Viewing timesheet entries for "${taskName}"`}</p>
-                <p>{`Submitted by the user, ${userEmail}`}</p>
+                {userEmail === "all" ? (
+                  <p>Submitted by all users</p>
+                ) : (
+                  <p>{`Submitted by the user, ${userEmail}`}</p>
+                )}
               </div>
             </div>
             <ReportsHeader

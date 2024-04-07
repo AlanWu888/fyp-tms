@@ -19,6 +19,8 @@ const ManagerViewProjectComponent = () => {
 
   const [clientName, setClientName] = useState("");
   const [projectName, setProjectName] = useState("");
+  const [backTo, setBackTo] = useState("");
+
   const [timesheets, setTimesheets] = useState([]);
   const [projects, setProjects] = useState([]);
   const [currentProject, setCurrentProject] = useState([]);
@@ -250,8 +252,10 @@ const ManagerViewProjectComponent = () => {
     const queryParams = new URLSearchParams(window.location.search);
     const clientNameParam = queryParams.get("clientName") || "";
     const projectNameParam = queryParams.get("projectName") || "";
+    const backto = queryParams.get("backto") || null;
     setClientName(clientNameParam);
     setProjectName(projectNameParam);
+    setBackTo(backto);
   }, []);
 
   useEffect(() => {
@@ -295,9 +299,15 @@ const ManagerViewProjectComponent = () => {
     <div>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <div style={{ display: "flex" }}>
-          <Link href="/manager/project">
-            <GoBack />
-          </Link>
+          {backTo ? (
+            <Link href="/manager/report">
+              <GoBack />
+            </Link>
+          ) : (
+            <Link href="/manager/project">
+              <GoBack />
+            </Link>
+          )}
           <div style={{ marginLeft: "10px" }}>
             <Button
               bgcolour={COLOURS.RED}

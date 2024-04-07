@@ -155,18 +155,27 @@ function TaskPicker() {
               justifyContent: "flex-end",
             }}
           >
-            <Link
-              href={{
-                pathname: "/manager/invoice/generate",
-                query: {
-                  clientname: client,
-                  projectname: project,
-                  selectedTasks: JSON.stringify(selectedTasks),
-                },
-              }}
-            >
-              <Button bgcolour={COLOURS.GREY} label="Next" />
-            </Link>
+            {selectedTasks.length === 0 ? (
+              <Button
+                bgcolour={COLOURS.GREY}
+                label="Next"
+                disabled={true}
+                disabledColour={COLOURS.GREY}
+              />
+            ) : (
+              <Link
+                href={{
+                  pathname: "/manager/invoice/generate",
+                  query: {
+                    clientname: client,
+                    projectname: project,
+                    selectedTasks: JSON.stringify(selectedTasks),
+                  },
+                }}
+              >
+                <Button bgcolour={COLOURS.GREY} label="Next" />
+              </Link>
+            )}
           </div>
         </div>
       )}
