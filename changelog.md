@@ -18,6 +18,8 @@ Fixes
 - manager's manage values: now displaying error messages
 - manager add to project: renamed modal
 - manager add to project: only allow when the email is in the system
+- manager invoices: added disabled state to invoice tasks picker
+- manager manage: routing fixes
 
 ## [0.22] - 03/04/2024
 

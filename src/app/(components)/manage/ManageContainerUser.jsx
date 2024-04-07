@@ -140,7 +140,7 @@ function ManageContainerUser() {
             <div>
               <Link
                 href={{
-                  pathname: `/manager/report`,
+                  pathname: `/manager/manage`,
                 }}
               >
                 <GoBack />

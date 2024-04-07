@@ -29,14 +29,19 @@ function ManageContainerTask() {
       }
       const data = await response.json();
 
-      const userTimesheets = data.timesheets.filter((timesheet) => {
-        return (
-          timesheet.userEmail === userEmail &&
-          timesheet.taskDescription === taskName
-        );
-      });
-      setTimesheets(userTimesheets);
-      setLoading(false);
+      if (userEmail === "all") {
+        setTimesheets(data.timesheets);
+        setLoading(false);
+      } else {
+        const userTimesheets = data.timesheets.filter((timesheet) => {
+          return (
+            timesheet.userEmail === userEmail &&
+            timesheet.taskDescription === taskName
+          );
+        });
+        setTimesheets(userTimesheets);
+        setLoading(false);
+      }
     } catch (error) {
       console.error("Error fetching timesheets:", error);
       setError(error.message);
@@ -146,16 +151,29 @@ function ManageContainerTask() {
         <>
           <div style={{ marginBottom: "20px" }}>
             <div>
-              <Link
-                href={{
-                  pathname: `/manager/manage/view-user`,
-                  query: {
-                    userEmail: userEmail,
-                  },
-                }}
-              >
-                <GoBack />
-              </Link>
+              {userEmail === "all" ? (
+                <Link
+                  href={{
+                    pathname: `/manager/manage`,
+                    query: {
+                      userEmail: userEmail,
+                    },
+                  }}
+                >
+                  <GoBack />
+                </Link>
+              ) : (
+                <Link
+                  href={{
+                    pathname: `/manager/manage/view-user`,
+                    query: {
+                      userEmail: userEmail,
+                    },
+                  }}
+                >
+                  <GoBack />
+                </Link>
+              )}
               <div style={{ marginTop: "10px", marginBottom: "10px" }}>
                 <p
                   style={{ fontSize: "28px", fontWeight: "bold" }}
