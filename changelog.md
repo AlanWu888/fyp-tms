@@ -1,3 +1,15 @@
+## [0.24] - 07/04/2024
+
+Additional Fixes
+
+## Added
+
+- suggestive inputs for task descriptions when adding tasks
+
+## Fixes
+
+- time totals in project view instead of "00:00" placeholder
+
 ## [0.23] - 07/04/2024
 
 Fixes
