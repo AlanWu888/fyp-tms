@@ -30,7 +30,10 @@ function ManageContainerTask() {
       const data = await response.json();
 
       if (userEmail === "all") {
-        setTimesheets(data.timesheets);
+        const userTimesheets = data.timesheets.filter((timesheet) => {
+          return timesheet.taskDescription === taskName;
+        });
+        setTimesheets(userTimesheets);
         setLoading(false);
       } else {
         const userTimesheets = data.timesheets.filter((timesheet) => {
@@ -116,6 +119,14 @@ function ManageContainerTask() {
         filteredTimesheets.push(timesheet);
       }
     }
+    filteredTimesheets.sort((a, b) => {
+      if (a.clientName < b.clientName) return -1;
+      if (a.clientName > b.clientName) return 1;
+      if (a.projectName < b.projectName) return -1;
+      if (a.projectName > b.projectName) return 1;
+      return 0;
+    });
+
     setFilteredData(filteredTimesheets);
   };
 
@@ -178,7 +189,11 @@ function ManageContainerTask() {
                 <p
                   style={{ fontSize: "28px", fontWeight: "bold" }}
                 >{`Viewing timesheet entries for "${taskName}"`}</p>
-                <p>{`Submitted by the user, ${userEmail}`}</p>
+                {userEmail === "all" ? (
+                  <p>Submitted by all users</p>
+                ) : (
+                  <p>{`Submitted by the user, ${userEmail}`}</p>
+                )}
               </div>
             </div>
             <ReportsHeader
