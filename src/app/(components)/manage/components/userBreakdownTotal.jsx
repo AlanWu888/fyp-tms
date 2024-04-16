@@ -67,7 +67,6 @@ function UserBreakdownTask({ filteredData, userEmail }) {
   useEffect(() => {
     calculateTotalHours();
     groupDataByClientAndProject();
-    console.log(groupedData);
   }, [filteredData]);
 
   return (
