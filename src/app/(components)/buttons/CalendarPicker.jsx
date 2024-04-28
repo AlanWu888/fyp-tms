@@ -11,7 +11,7 @@ const CalendarPicker = ({ onDateChange }) => {
   };
 
   const handleDateChange = (date) => {
-    setSelectedDate(date);
+    setSelectedDate(date.setHours(9, 0, 0));
     onDateChange(date);
     setShowCalendar(false);
   };

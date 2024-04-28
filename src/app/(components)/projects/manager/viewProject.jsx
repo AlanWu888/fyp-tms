@@ -51,7 +51,6 @@ const ManagerViewProjectComponent = () => {
           timesheet.projectName === projectName
         );
       });
-      console.log(projectTimesheets);
       setTimesheets(projectTimesheets);
     } catch (error) {
       console.error("Error fetching timesheets:", error);

@@ -1,3 +1,15 @@
+## [0.25] - 17/04/2024
+
+Clean Up
+
+## Fixes
+
+- time totals previosuly broken but are now fixed, 1 + "1:000" previously returned 11, now returns 2
+
+## Removed
+
+- Console.log statements in the code
+
 ## [0.24] - 07/04/2024
 
 Additional Fixes

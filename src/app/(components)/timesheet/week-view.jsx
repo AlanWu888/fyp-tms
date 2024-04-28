@@ -172,9 +172,11 @@ function WeekViewTimesheet({ date }) {
   function getProjectTotalTime(entries) {
     let total = 0;
     entries.forEach((entry) => {
-      total += entry.time;
+      const value = parseFloat(entry.time);
+      if (!isNaN(value)) {
+        total += value;
+      }
     });
-
     return total;
   }
 
