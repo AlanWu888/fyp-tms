@@ -1,33 +1,41 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
-
 ## Getting Started
 
 First, run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## .env File
+You will need to edit the .env file in the root directory of the project and create some API keys and properties.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+```
+NEXTAUTH_URL=http://localhost:3000/
+NEXTAUTH_SECRET= # a secret string of characters, up to you how long you want to make it
+MONGO_COLLECTION= # mongoDB collection (you will have to make this yourself)
+MONGO_USER= # mongoDB username (for access - you will have to make this yourself)
+MONGODB_PASS= # mongoDB password (for access - you will have to make this yourself)
+MONGODB_URI= # mongoDB URI to the database
+BASE_URL=localhost:3000
+SENDGRID_API= # email API key (you will have to make this yourself)
+NEXT_PUBLIC_API_TOKEN= # a secret string of characters, up to you how long you want to make it
+```
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+examples:
+```
+NEXTAUTH_URL=http://localhost:3000/
+NEXTAUTH_SECRET=VEWVGQGQGQQ££!%!"%¬!%T"EDFASWGTHJEWG
+MONGO_COLLECTION=<bast_inc_DEV>       # MUST have the < > parenthesis
+# MONGO_COLLECTION=<bast_inc_PROD>    # MUST have the < > parenthesis
+MONGO_USER= {some username}
+MONGODB_PASS= {some password}
+MONGODB_URI=mongodb+srv://${MONGO_USER}:${MONGODB_PASS}@cluster0.location.mongodb.net/${MONGO_COLLECTION}?retryWrites=true&w=majority
+BASE_URL=localhost:3000
+SENDGRID_API= {sendgrid api}
+NEXT_PUBLIC_API_TOKEN=ASF"53"?qSFA?S5"£!FQFq!!£%^£
+```
 
 ## Deploy on Vercel
 
